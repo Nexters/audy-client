@@ -1,0 +1,41 @@
+{
+  "name": "audy-client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "prettier": "prettier --write src/**/*.{ts,tsx}",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.17.10",
+    "@vanilla-extract/css": "^1.14.0",
+    "axios": "^1.6.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.12",
+    "react-router-dom": "^6.21.2"
+  },
+  "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.17.10",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vanilla-extract/recipes": "^0.5.1",
+    "@vanilla-extract/vite-plugin": "^3.9.3",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "prettier": "^3.2.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8",
+    "vite-plugin-svgr": "^4.2.0"
+  }
+}
