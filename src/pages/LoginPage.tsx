@@ -1,7 +1,7 @@
 export default function LoginPage() {
     const appleLoginConfig = {
-        client_id: import.meta.env.VITE_APPLE_LOGIN_CLIENT_ID as string,
-        redirect_uri: import.meta.env.VITE_APPLE_LOGIN_REDIRECT_URL as string,
+        client_id: import.meta.env.VITE_APPLE_CLIENT_ID as string,
+        redirect_uri: import.meta.env.VITE_APPLE_REDIRECT_URL as string,
         response_type: 'code id_token',
         state: 'origin:web',
         scope: 'name email',
@@ -12,7 +12,7 @@ export default function LoginPage() {
     };
 
     const kakaoLoginConfig = {
-        client_id: import.meta.env.VITE_KAKAO_REST_API_KEY as string,
+        client_id: import.meta.env.VITE_LOGIN_CLIENT_ID as string,
         redirect_uri: import.meta.env.VITE_KAKAO_REDIRECTION_URL as string,
         response_type: 'code',
     };
