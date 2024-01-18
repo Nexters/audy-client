@@ -10,11 +10,18 @@ import './App.css';
 function App() {
     const [count, setCount] = useState(0);
 
-    const { tmapModule, mapContainerRef } = useTmap({
+    const { tmapModuleRef, mapContainerRef } = useTmap({
         mapId: 'tmap',
         latitude: 37.5652045,
         longitude: 126.98702028,
     });
+
+    const handleTestAddMarker = () => {
+        if (!tmapModuleRef.current) return;
+        console.log(tmapModuleRef.current);
+        tmapModuleRef.current.setMarker({latitude: 37.56520450, longitude:  126.98602028});
+
+    }
 
     return (
         <>
@@ -33,7 +40,7 @@ function App() {
             </div>
             <h1>Vite + React</h1>
             <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
+                <button onClick={handleTestAddMarker}>
                     count is {count}
                 </button>
                 <p>

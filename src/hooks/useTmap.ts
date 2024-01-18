@@ -11,13 +11,13 @@ export const useTmap = ({
     longitude,
 }: TmapConstructorType) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    const mapModuleRef = useRef<TMapModule | null>(null);
+    const tmapModuleRef = useRef<TMapModule | null>(null);
 
     useEffect(() => {
         if (!mapContainerRef.current) return;
 
         mapContainerRef.current.id = mapId;
-        mapModuleRef.current = new TMapModule({
+        tmapModuleRef.current = new TMapModule({
             mapId,
             width,
             height,
@@ -27,5 +27,5 @@ export const useTmap = ({
         });
     }, [height, latitude, longitude, mapId, width, zoom]);
 
-    return { mapContainerRef, tmapModule: mapModuleRef.current };
+    return { mapContainerRef, tmapModuleRef };
 };
