@@ -13,13 +13,8 @@ interface TmapProps {
     longitude: number;
 }
 
-type TmapEvent = "ConfigLoad" | "Click" | "Drag" | "DragStart" | "DragEnd" | "TouchStart" | "TouchEnd"
-
 export class TMapModule {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     #mapInstance: typeof window.Tmapv3;
-
-    #markerList: (typeof window.Tmapv3.Marker)[] = [];
 
     constructor({
         mapId = 'tmap',
@@ -33,40 +28,19 @@ export class TMapModule {
             throw new Error('T Map 은 Server Side 에서 사용할 수 없습니다.');
         }
 
+        const mapElement = document.getElementById(mapId);
+
+        if (!mapElement) {
+            throw new Error(
+                'T Map 을 렌더링하기 위해 필요한 HTMLDivElement 가 없습니다.',
+            );
+        }
+
         this.#mapInstance = new window.Tmapv3.Map(mapId, {
             center: new window.Tmapv3.LatLng(latitude, longitude),
             width: `${width}px`,
             height: `${height}px`,
             zoom,
         });
-    }
-
-    // TMapModule 클래스 인스턴스에서 보유 중인 Map Instance 반환
-    getInstance() {
-        return this.#mapInstance;
-    }
-
-    // Map Instance 에 새로운 마커를 추가하는 메서드 setMarker
-    setMarker({
-        latitude,
-        longitude,
-    }: {
-        latitude: number;
-        longitude: number;
-    }) {
-        const marker = new window.Tmapv3.Marker({
-            position: new window.Tmapv3.LatLng(latitude, longitude),
-            map: this.#mapInstance,
-        });
-
-        this.#markerList = [...this.#markerList, marker];
-    }
-
-    // Map Instance 에 생성된 마커 중 하나를 제거하는 메서드 setMarker
-    removeMarker(removedIndex: number) {
-        if (this.#markerList.length < removedIndex) return;
-        this.#markerList = this.#markerList.filter(
-            (_, index) => index !== removedIndex,
-        );
     }
 }
