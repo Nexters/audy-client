@@ -3,7 +3,7 @@ export interface TmapConstructorType {
     mapId?: string;
     /** 지도 Element 의 width (px) */
     width?: number;
-    /** 지도 Element 의 width (px) */
+    /** 지도 Element 의 height (px) */
     height?: number;
     /** 지도 Element 의 확대 정도 (1 ~ 15) */
     zoom?: number;
