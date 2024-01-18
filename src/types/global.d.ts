@@ -1,9 +1,3 @@
-//  SVGR Plugin NameSpace
-declare module '*.svg' {
-    const svg: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
-    export default svg;
-}
-
 // T-MAP API NameSpace
 declare global {
     interface Window {
@@ -12,3 +6,11 @@ declare global {
         Tmapv3: any;
     }
 }
+
+//  SVGR Plugin NameSpace
+declare module '*.svg' {
+    const svg: React.FunctionComponent<React.SVGAttributes<SVGElement>>;
+    export default svg;
+}
+
+export {};
