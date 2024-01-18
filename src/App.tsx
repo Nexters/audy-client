@@ -1,16 +1,25 @@
 import { useState } from 'react';
 
+import reactLogo from '@/assets/react.svg';
+import { useTmap } from '@/hooks/useTmap';
+
 import viteLogo from '/vite.svg';
 
 import './App.css';
-import reactLogo from './assets/react.svg';
 
 function App() {
     const [count, setCount] = useState(0);
 
+    const { tmapModule, mapContainerRef } = useTmap({
+        mapId: 'tmap',
+        latitude: 37.5652045,
+        longitude: 126.98702028,
+    });
+
     return (
         <>
             <div>
+                <div ref={mapContainerRef} />
                 <a href="https://vitejs.dev" target="_blank">
                     <img src={viteLogo} className="logo" alt="Vite logo" />
                 </a>

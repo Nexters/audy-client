@@ -1,4 +1,4 @@
-interface TmapProps {
+export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
     mapId?: string;
     /** 지도 Element 의 width (px) */
@@ -23,7 +23,7 @@ export class TMapModule {
         zoom = 10,
         latitude,
         longitude,
-    }: TmapProps) {
+    }: TmapConstructorType) {
         if (typeof window === 'undefined') {
             throw new Error('T Map 은 Server Side 에서 사용할 수 없습니다.');
         }
