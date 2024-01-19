@@ -8,8 +8,8 @@ export default function LoginPage() {
         apple: {
             url: 'https://appleid.apple.com/auth/authorize',
             config: {
-                client_id: import.meta.env.VITE_APPLE_CLIENT_ID as string,
-                redirect_uri: import.meta.env.VITE_APPLE_REDIRECT_URL as string,
+                client_id: import.meta.env.VITE_APPLE_CLIENT_ID,
+                redirect_uri: import.meta.env.VITE_APPLE_REDIRECT_URL,
                 response_type: 'code id_token',
                 state: 'origin:web',
                 scope: 'name email',
@@ -22,8 +22,8 @@ export default function LoginPage() {
         kakao: {
             url: 'https://kauth.kakao.com/oauth/authorize',
             config: {
-                client_id: import.meta.env.VITE_KAKAO_CLIENT_ID as string,
-                redirect_uri: import.meta.env.VITE_KAKAO_REDIRECT_URL as string,
+                client_id: import.meta.env.VITE_KAKAO_CLIENT_ID,
+                redirect_uri: import.meta.env.VITE_KAKAO_REDIRECT_URL,
                 response_type: 'code',
             },
         },
