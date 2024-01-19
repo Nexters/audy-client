@@ -13,8 +13,11 @@ export interface TmapConstructorType {
     longitude: number;
 }
 
+const { Tmapv3 } = window;
+
 export class TMapModule {
     #mapInstance: typeof window.Tmapv3;
+    #markers: (typeof window.Tmapv3.Marker)[] = [];
 
     constructor({
         mapId = 'tmap',
@@ -36,11 +39,29 @@ export class TMapModule {
             );
         }
 
-        this.#mapInstance = new window.Tmapv3.Map(mapId, {
+        this.#mapInstance = new Tmapv3.Map(mapId, {
             center: new window.Tmapv3.LatLng(latitude, longitude),
             width: `${width}px`,
             height: `${height}px`,
             zoom,
         });
+    }
+
+    createMarker({
+        latitude,
+        longitude,
+        iconUrl,
+    }: {
+        latitude: number;
+        longitude: number;
+        iconUrl: string;
+    }) {
+        const marker = new Tmapv3.Marker({
+            position: new Tmapv3.LatLng(latitude, longitude),
+            iconUrl,
+            map: this.#mapInstance,
+        });
+
+        this.#markers.push(marker);
     }
 }
