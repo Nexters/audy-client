@@ -47,6 +47,7 @@ export class TMapModule {
         });
     }
 
+    // 마커 생성
     createMarker({
         latitude,
         longitude,
@@ -63,5 +64,24 @@ export class TMapModule {
         });
 
         this.#markers.push(marker);
+    }
+
+    // 마커 삭제
+    removeMarker({
+        latitude,
+        longitude,
+    }: {
+        latitude: number;
+        longitude: number;
+    }) {
+        const marker = this.#markers.find(
+            (marker) =>
+                marker.getPosition().lat() === latitude &&
+                marker.getPosition().lng() === longitude,
+        );
+
+        if (!marker) return;
+
+        marker.setMap(null);
     }
 }
