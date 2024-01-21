@@ -19,8 +19,9 @@ export interface TmapConstructorType {
 const { Tmapv3 } = window;
 
 export class TMapModule {
-    #mapInstance: typeof window.Tmapv3;
-    #markers: (typeof window.Tmapv3.Marker)[] = [];
+    #mapInstance: typeof Tmapv3;
+    #markers: (typeof Tmapv3.Marker)[] = [];
+    #polylines: (typeof Tmapv3.Polyline)[] = [];
 
     constructor({
         mapId = 'tmap',
@@ -170,7 +171,7 @@ export class TMapModule {
             });
         }
 
-        pathList.map(
+        const polylines = pathList.map(
             (path) =>
                 new Tmapv3.Polyline({
                     path,
@@ -181,5 +182,14 @@ export class TMapModule {
                     map: this.#mapInstance,
                 }),
         );
+
+        this.#polylines = polylines;
+    }
+
+    // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePathInMap
+    removePathInMap() {
+        if (!this.#polylines.length) return;
+        this.#polylines.map((polyline) => polyline.setMap(null));
+        this.#polylines = [];
     }
 }

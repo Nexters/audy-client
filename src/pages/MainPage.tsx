@@ -11,14 +11,20 @@ function MainPage() {
         if (!tmapModuleRef.current) return;
         await tmapModuleRef.current.drawPathBetweenMarkers({
             startIndex: 0,
-            endIndex: 8,
+            endIndex: 2,
         });
     };
+
+    const handleTestRemovePath = () => {
+        if (!tmapModuleRef.current) return;
+        tmapModuleRef.current.removePathInMap();
+    }
 
     return (
         <div>
             <div ref={mapContainerRef} />
-            <button onClick={handleTestRoutePath}>test</button>
+            <button onClick={handleTestRoutePath}>draw</button>
+            <button onClick={handleTestRemovePath}>remove</button>
         </div>
     );
 }
