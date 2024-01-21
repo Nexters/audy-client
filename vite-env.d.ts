@@ -4,3 +4,7 @@ interface ImportMetaEnv {
     readonly VITE_APPLE_CLIENT_ID: string;
     readonly VITE_APPLE_REDIRECT_URL: string;
 }
+
+interface ImportMeta {
+    readonly env: ImportMetaEnv;
+}
