@@ -1,8 +1,7 @@
 import { socialLoginProvider } from '@/constants';
+import { SocialLoginProviderType } from '@/types';
 
 export default function LoginPage() {
-    type SocialLoginProviderType = 'apple' | 'kakao';
-
     const makeQueryString = (
         config: Record<string, string | number | boolean>,
     ) => {
