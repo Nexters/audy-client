@@ -116,8 +116,6 @@ export class TMapModule {
             return;
         }
 
-        const markerAmount = endIndex - startIndex + 1;
-        console.log(markerAmount);
         const pathList: (typeof window.Tmapv3.LatLng)[] = [];
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
