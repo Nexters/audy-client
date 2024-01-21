@@ -103,7 +103,7 @@ export class TMapModule {
         const markerLatLng = marker.getPosition();
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
-    
+
     // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 함수 drawPathBetweenMarkers
     async drawPathBetweenMarkers({
         startIndex,
@@ -112,40 +112,67 @@ export class TMapModule {
         startIndex: number;
         endIndex: number;
     }) {
-        const startMarker = this.#markers.at(startIndex);
-        const endMarker = this.#markers.at(endIndex);
-
-        if (!startMarker || !endMarker) {
+        if (startIndex < 0 || endIndex >= this.#markers.length) {
             return;
         }
 
-        const [startX, startY] = this.#extractMarkerPosition(startMarker);
-        const [endX, endY] = this.#extractMarkerPosition(endMarker);
+        const markerAmount = endIndex - startIndex + 1;
+        console.log(markerAmount);
+        const pathList: (typeof window.Tmapv3.LatLng)[] = [];
 
-        const passMarkers = this.#markers.slice(startIndex + 1, endMarker);
-        const passList = passMarkers.length
-            ? passMarkers
-                  .map((markers) =>
-                      this.#extractMarkerPosition(markers).join(','),
-                  )
-                  .join('_')
-            : undefined;
+        // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
+        for (let i = 0; i <= endIndex; i += 6) {
+            // NOTE : 시작점이 아니라면, 바로 직전의 종점도 포함하여 경로를 그려야 한다.
+            const currentStartIndex = i === 0 ? i : i - 1;
+            const currentEndIndex = i + 6 >= endIndex ? endIndex : i + 6;
 
-        const { features } = await TmapRepository.getRoutePathAsync({
-            startX,
-            startY,
-            endX,
-            endY,
-            passList,
-        });
+            const [startMarker, ...passMarkers] = this.#markers.slice(
+                currentStartIndex,
+                currentEndIndex + 1,
+            );
+            const endMarker = passMarkers.pop();
 
-        features.forEach((feature) => {
-            if (feature.geometry.type === 'LineString') {
-                const path = feature.geometry.coordinates.map(
-                    ([lng, lat]) => new Tmapv3.LatLng(lat, lng),
-                );
+            const [startX, startY] = this.#extractMarkerPosition(startMarker);
+            const [endX, endY] = this.#extractMarkerPosition(endMarker);
 
-                // TODO : 추후 디자인 시안 확정 시 컬러 수정 필요
+            const passList = passMarkers.length
+                ? passMarkers
+                      .map((markers) =>
+                          this.#extractMarkerPosition(markers).join(','),
+                      )
+                      .join('_')
+                : undefined;
+
+            const { features } = await TmapRepository.getRoutePathAsync({
+                startX,
+                startY,
+                endX,
+                endY,
+                passList,
+            });
+
+            features.forEach((feature, index) => {
+                if (feature.geometry.type === 'LineString') {
+                    const path = feature.geometry.coordinates.map(
+                        ([lng, lat]) => new Tmapv3.LatLng(lat, lng),
+                    );
+
+                    // 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
+                    const prevFeature =
+                        index > 0 ? features[index - 1] : undefined;
+                    if (prevFeature && prevFeature.geometry.type === 'Point') {
+                        const [prevLng, prevLat] =
+                            prevFeature.geometry.coordinates;
+                        path.unshift(new Tmapv3.LatLng(prevLat, prevLng));
+                    }
+
+                    pathList.push(path);
+                }
+            });
+        }
+
+        pathList.map(
+            (path) =>
                 new Tmapv3.Polyline({
                     path,
                     fillColor: '#FF0000',
@@ -153,8 +180,7 @@ export class TMapModule {
                     strokeColor: '#FF0000',
                     strokeOpacity: 5,
                     map: this.#mapInstance,
-                });
-            }
-        });
+                }),
+        );
     }
 }

@@ -11,7 +11,7 @@ function MainPage() {
         if (!tmapModuleRef.current) return;
         await tmapModuleRef.current.drawPathBetweenMarkers({
             startIndex: 0,
-            endIndex: 2,
+            endIndex: 8,
         });
     };
 
