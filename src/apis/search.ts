@@ -1,21 +1,7 @@
+import { GetPOIType } from '@/types';
 import { makeQueryString } from '@/utils/queryString';
 
 import { getAsync } from './api';
-
-interface POIType {
-    // TODO: POIType 정의하기
-}
-
-interface GetPOIType {
-    searchPoiInfo: {
-        count: string;
-        page: string;
-        totalCount: string;
-        pois: {
-            poi: POIType[];
-        };
-    };
-}
 
 export const searchRepository = {
     getPOI: async (keyword: string) => {
