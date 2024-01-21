@@ -21,7 +21,11 @@ const { Tmapv3 } = window;
 export class TMapModule {
     #mapInstance: typeof Tmapv3;
     #markers: (typeof Tmapv3.Marker)[] = [];
-    #polylines: (typeof Tmapv3.Polyline)[] = [];
+
+    #pathList: [number, number][] = [];
+    #polylineList: (typeof Tmapv3.Polyline)[] = [];
+
+    #isPathVisible: boolean = true;
 
     constructor({
         mapId = 'tmap',
@@ -171,7 +175,7 @@ export class TMapModule {
             });
         }
 
-        const polylines = pathList.map(
+        const polylineList = pathList.map(
             (path) =>
                 new Tmapv3.Polyline({
                     path,
@@ -183,13 +187,23 @@ export class TMapModule {
                 }),
         );
 
-        this.#polylines = polylines;
+        this.#pathList = pathList;
+        this.#polylineList = polylineList;
+    }
+
+    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 toggleVisiblePathInMap
+    toggleVisiblePathInMap() {
+        const updatedVisible = !this.#isPathVisible;
+        this.#polylineList.map((polyline) =>
+            polyline.setMap(updatedVisible ? this.#mapInstance : null),
+        );
+        this.#isPathVisible = updatedVisible;
     }
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePathInMap
     removePathInMap() {
-        if (!this.#polylines.length) return;
-        this.#polylines.map((polyline) => polyline.setMap(null));
-        this.#polylines = [];
+        if (!this.#polylineList.length) return;
+        this.#polylineList.map((polyline) => polyline.setMap(null));
+        this.#polylineList = [];
     }
 }

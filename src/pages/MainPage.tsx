@@ -20,11 +20,17 @@ function MainPage() {
         tmapModuleRef.current.removePathInMap();
     }
 
+    const handleTestTogglePath = () => {
+        if (!tmapModuleRef.current) return;
+        tmapModuleRef.current.toggleVisiblePathInMap();
+    }
+
     return (
         <div>
             <div ref={mapContainerRef} />
             <button onClick={handleTestRoutePath}>draw</button>
             <button onClick={handleTestRemovePath}>remove</button>
+            <button onClick={handleTestTogglePath}>toggle</button>
         </div>
     );
 }
