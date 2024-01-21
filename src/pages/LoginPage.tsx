@@ -1,5 +1,5 @@
 export default function LoginPage() {
-    type SocialLoginProvider = 'apple' | 'kakao';
+    type SocialLoginProviderType = 'apple' | 'kakao';
 
     const socialLoginProvider = {
         apple: {
@@ -34,7 +34,7 @@ export default function LoginPage() {
             .join('&');
     };
 
-    const makeSocialLoginUrl = (provider: SocialLoginProvider) => {
+    const makeSocialLoginUrl = (provider: SocialLoginProviderType) => {
         const { url, config } = socialLoginProvider[provider];
         const queryString = makeQueryString(config);
 
