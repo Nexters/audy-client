@@ -84,24 +84,27 @@ export class TMapModule {
         latitude: number;
         longitude: number;
     }) {
-        const marker = this.#markers.find(
+        const targetMarkerIndex = this.#markers.findIndex(
             (marker) =>
                 marker.getPosition().lat() === latitude &&
                 marker.getPosition().lng() === longitude,
         );
 
-        if (!marker) return;
+        if (targetMarkerIndex === -1) return;
 
-        marker.setMap(null);
+        const targetMarker = this.#markers.splice(targetMarkerIndex, 1)[0];
+        targetMarker.setMap(null);
     }
 
+    // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 extractMarkerPosition
     #extractMarkerPosition(
         marker: typeof window.Tmapv3.Marker,
     ): [number, number] {
         const markerLatLng = marker.getPosition();
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
-
+    
+    // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 함수 drawPathBetweenMarkers
     async drawPathBetweenMarkers({
         startIndex,
         endIndex,
