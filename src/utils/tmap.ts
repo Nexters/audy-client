@@ -40,7 +40,7 @@ export class TMapModule {
         }
 
         this.#mapInstance = new Tmapv3.Map(mapId, {
-            center: new window.Tmapv3.LatLng(latitude, longitude),
+            center: new Tmapv3.LatLng(latitude, longitude),
             width: `${width}px`,
             height: `${height}px`,
             zoom,
@@ -74,14 +74,15 @@ export class TMapModule {
         latitude: number;
         longitude: number;
     }) {
-        const marker = this.#markers.find(
+        const targetMarkerIndex = this.#markers.findIndex(
             (marker) =>
                 marker.getPosition().lat() === latitude &&
                 marker.getPosition().lng() === longitude,
         );
 
-        if (!marker) return;
+        if (targetMarkerIndex === -1) return;
 
-        marker.setMap(null);
+        const targetMarker = this.#markers.splice(targetMarkerIndex, 1)[0];
+        targetMarker.setMap(null);
     }
 }
