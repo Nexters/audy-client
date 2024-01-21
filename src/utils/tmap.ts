@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { TmapRepository } from '@/apis/tmap';
+
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
     mapId?: string;
@@ -45,6 +48,13 @@ export class TMapModule {
             height: `${height}px`,
             zoom,
         });
+
+        const handleClickMap = (event: any) => {
+            const { _lat: latitude, _lng: longitude } = event._data.lngLat;
+            this.createMarker({ latitude, longitude });
+        };
+
+        this.#mapInstance.on('Click', handleClickMap);
     }
 
     // 마커 생성
@@ -55,7 +65,7 @@ export class TMapModule {
     }: {
         latitude: number;
         longitude: number;
-        iconUrl: string;
+        iconUrl?: string;
     }) {
         const marker = new Tmapv3.Marker({
             position: new Tmapv3.LatLng(latitude, longitude),
@@ -83,5 +93,65 @@ export class TMapModule {
         if (!marker) return;
 
         marker.setMap(null);
+    }
+
+    #extractMarkerPosition(
+        marker: typeof window.Tmapv3.Marker,
+    ): [number, number] {
+        const markerLatLng = marker.getPosition();
+        return [markerLatLng.lng(), markerLatLng.lat()];
+    }
+
+    async drawPathBetweenMarkers({
+        startIndex,
+        endIndex,
+    }: {
+        startIndex: number;
+        endIndex: number;
+    }) {
+        const startMarker = this.#markers.at(startIndex);
+        const endMarker = this.#markers.at(endIndex);
+
+        if (!startMarker || !endMarker) {
+            return;
+        }
+
+        const [startX, startY] = this.#extractMarkerPosition(startMarker);
+        const [endX, endY] = this.#extractMarkerPosition(endMarker);
+
+        const passMarkers = this.#markers.slice(startIndex + 1, endMarker);
+        const passList = passMarkers.length
+            ? passMarkers
+                  .map((markers) =>
+                      this.#extractMarkerPosition(markers).join(','),
+                  )
+                  .join('_')
+            : undefined;
+
+        const { features } = await TmapRepository.getRoutePathAsync({
+            startX,
+            startY,
+            endX,
+            endY,
+            passList,
+        });
+
+        features.forEach((feature) => {
+            if (feature.geometry.type === 'LineString') {
+                const path = feature.geometry.coordinates.map(
+                    ([lng, lat]) => new Tmapv3.LatLng(lat, lng),
+                );
+
+                // TODO : 추후 디자인 시안 확정 시 컬러 수정 필요
+                new Tmapv3.Polyline({
+                    path,
+                    fillColor: '#FF0000',
+                    fillOpacity: 1,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 5,
+                    map: this.#mapInstance,
+                });
+            }
+        });
     }
 }
