@@ -1,13 +1,37 @@
-export default function LoginPage() {
-    const KAKAO_REST_API_KEY = ''; // TODO: 임시 KEY
-    const KAKAO_REDIRECT_URI = 'http://localhost:5173/redirect'; // TODO: 임시 URL
-    const kakaoLoginLink = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+import { socialLoginProvider } from '@/constants';
+import { SocialLoginProviderType } from '@/types';
 
-    const handleLogin = () => (window.location.href = kakaoLoginLink);
+export default function LoginPage() {
+    const makeQueryString = (
+        config: Record<string, string | number | boolean>,
+    ) => {
+        return Object.entries(config)
+            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+            .join('&');
+    };
+
+    const makeSocialLoginUrl = (provider: SocialLoginProviderType) => {
+        const { url, config } = socialLoginProvider[provider];
+        const queryString = makeQueryString(config);
+
+        return `${url}?${queryString}`;
+    };
+
+    const handleKakaoLogin = () => {
+        window.location.href = makeSocialLoginUrl('kakao');
+    };
+
+    const handleAppleLogin = () => {
+        window.location.href = makeSocialLoginUrl('apple');
+    };
+
     return (
         <div>
-            <button type="button" onClick={handleLogin}>
+            <button type="button" onClick={handleKakaoLogin}>
                 카카오로 로그인
+            </button>
+            <button type="button" onClick={handleAppleLogin}>
+                애플로 로그인
             </button>
         </div>
     );
