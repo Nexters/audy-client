@@ -13,8 +13,11 @@ export interface TmapConstructorType {
     longitude: number;
 }
 
+const { Tmapv3 } = window;
+
 export class TMapModule {
     #mapInstance: typeof window.Tmapv3;
+    #markers: (typeof window.Tmapv3.Marker)[] = [];
 
     constructor({
         mapId = 'tmap',
@@ -36,11 +39,49 @@ export class TMapModule {
             );
         }
 
-        this.#mapInstance = new window.Tmapv3.Map(mapId, {
+        this.#mapInstance = new Tmapv3.Map(mapId, {
             center: new window.Tmapv3.LatLng(latitude, longitude),
             width: `${width}px`,
             height: `${height}px`,
             zoom,
         });
+    }
+
+    // 마커 생성
+    createMarker({
+        latitude,
+        longitude,
+        iconUrl,
+    }: {
+        latitude: number;
+        longitude: number;
+        iconUrl: string;
+    }) {
+        const marker = new Tmapv3.Marker({
+            position: new Tmapv3.LatLng(latitude, longitude),
+            iconUrl,
+            map: this.#mapInstance,
+        });
+
+        this.#markers.push(marker);
+    }
+
+    // 마커 삭제
+    removeMarker({
+        latitude,
+        longitude,
+    }: {
+        latitude: number;
+        longitude: number;
+    }) {
+        const marker = this.#markers.find(
+            (marker) =>
+                marker.getPosition().lat() === latitude &&
+                marker.getPosition().lng() === longitude,
+        );
+
+        if (!marker) return;
+
+        marker.setMap(null);
     }
 }
