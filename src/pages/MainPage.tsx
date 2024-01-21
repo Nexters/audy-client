@@ -1,30 +1,25 @@
-import reactLogo from '@/assets/react.svg';
 import { useTmap } from '@/hooks/useTmap';
 
-import viteLogo from '/vite.svg';
-
 function MainPage() {
-
     const { tmapModuleRef, mapContainerRef } = useTmap({
         mapId: 'tmap',
         latitude: 37.5652045,
         longitude: 126.98702028,
     });
 
+    const handleTestRoutePath = async () => {
+        if (!tmapModuleRef.current) return;
+        await tmapModuleRef.current.drawPathBetweenMarkers({
+            startIndex: 0,
+            endIndex: 2,
+        });
+    };
+
     return (
-            <div>
-                <div ref={mapContainerRef} />
-                <a href="https://vitejs.dev" target="_blank">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
-            </div>
+        <div>
+            <div ref={mapContainerRef} />
+            <button onClick={handleTestRoutePath}>test</button>
+        </div>
     );
 }
 
