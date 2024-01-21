@@ -49,6 +49,7 @@ export class TMapModule {
             zoom,
         });
 
+        // FIXME : 마커 생성을 위해 임시로 추가한 코드, 제거 필요
         const handleClickMap = (event: any) => {
             const { _lat: latitude, _lng: longitude } = event._data.lngLat;
             this.createMarker({ latitude, longitude });
