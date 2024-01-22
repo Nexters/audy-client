@@ -1,3 +1,6 @@
+import { socialLoginProvider } from '@/constants';
+import { SocialLoginProviderType } from '@/types';
+
 export default function LoginPage() {
     type SocialLoginProvider = 'apple' | 'kakao';
 
@@ -26,15 +29,8 @@ export default function LoginPage() {
         },
     };
 
-    const makeQueryString = (
-        config: Record<string, string | number | boolean>,
-    ) => {
-        return Object.entries(config)
-            .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-            .join('&');
-    };
+    const makeSocialLoginUrl = (provider: SocialLoginProviderType) => {
 
-    const makeSocialLoginUrl = (provider: SocialLoginProvider) => {
         const { url, config } = socialLoginProvider[provider];
         const queryString = makeQueryString(config);
 
