@@ -1,10 +1,7 @@
-import { createTheme } from '@vanilla-extract/css';
+import { createGlobalTheme } from '@vanilla-extract/css';
 
-export const [themeClass, vars] = createTheme({
-    color: {
-        brand: 'blue',
-    },
-    font: {
-        body: 'arial',
-    },
+import { FONT } from './foundation';
+
+export const theme = createGlobalTheme(':root', {
+    font: FONT,
 });
