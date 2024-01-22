@@ -9,6 +9,7 @@ function MainPage() {
 
     return (
         <div>
+            <p>test test test test test test</p>
             <div ref={mapContainerRef} />
         </div>
     );
