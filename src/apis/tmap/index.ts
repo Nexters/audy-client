@@ -1,9 +1,12 @@
 import { postAsync } from '@/apis/api';
 
-import type { TmapReqParams, TmapResponses } from './type';
+import type { TmapReqParamsType, TmapResponseType } from './type';
 
-export class TmapRepository {
-    static async getRoutePathAsync({
+export const TmapRepository = {
+    baseUrl: `https://apis.openapi.sk.com/tmap`,
+    appKey: import.meta.env.VITE_TMAP_APP_KEY,
+
+    async getRoutePathAsync({
         startX,
         startY,
         endX,
@@ -11,10 +14,10 @@ export class TmapRepository {
         passList,
         reqCoordType = 'WGS84GEO',
         resCoordType = 'WGS84GEO',
-    }: TmapReqParams['getRoutePath']) {
+    }: TmapReqParamsType['getRoutePath']) {
         return postAsync<
-            TmapResponses['getRoutePath'],
-            TmapReqParams['getRoutePath']
+            TmapResponseType['getRoutePath'],
+            TmapReqParamsType['getRoutePath']
         >(
             `/routes`,
             {
@@ -27,9 +30,9 @@ export class TmapRepository {
                 resCoordType,
             },
             {
-                baseURL: `https://apis.openapi.sk.com/tmap`,
+                baseURL: this.baseUrl,
                 headers: {
-                    appKey: import.meta.env.VITE_TMAP_APP_KEY,
+                    appKey: this.appKey,
                 },
                 params: {
                     version: 1,
@@ -37,5 +40,5 @@ export class TmapRepository {
                 },
             },
         );
-    }
-}
+    },
+};

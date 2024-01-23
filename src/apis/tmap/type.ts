@@ -1,4 +1,4 @@
-export interface TmapReqParams {
+export interface TmapReqParamsType {
     getRoutePath: {
         startX: number;
         startY: number;
@@ -10,7 +10,7 @@ export interface TmapReqParams {
     };
 }
 
-export interface TmapResponses {
+export interface TmapResponseType {
     getRoutePath: {
         features: {
             type: 'Feature';
