@@ -102,10 +102,8 @@ export class TMapModule {
         targetMarker.setMap(null);
     }
 
-    // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 extractMarkerPosition
-    #extractMarkerPosition(
-        marker: typeof window.Tmapv3.Marker,
-    ): [number, number] {
+    // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 getMarkerPosition
+    #getMarkerPosition(marker: typeof Tmapv3.Marker): [number, number] {
         const markerLatLng = marker.getPosition();
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
@@ -123,12 +121,14 @@ export class TMapModule {
         }
 
         const pathList: (typeof window.Tmapv3.LatLng)[] = [];
+        const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
-        for (let i = 0; i <= endIndex; i += 6) {
+        for (let index = 0; index <= endIndex; index += MAX_POINTS) {
             // NOTE : 시작점이 아니라면, 바로 직전의 종점도 포함하여 경로를 그려야 한다.
-            const currentStartIndex = i === 0 ? i : i - 1;
-            const currentEndIndex = i + 6 >= endIndex ? endIndex : i + 6;
+            const currentStartIndex = index === 0 ? index : index - 1;
+            const currentEndIndex =
+                endIndex <= index + MAX_POINTS ? endIndex : index + MAX_POINTS;
 
             const [startMarker, ...passMarkers] = this.#markers.slice(
                 currentStartIndex,
@@ -136,13 +136,13 @@ export class TMapModule {
             );
             const endMarker = passMarkers.pop();
 
-            const [startX, startY] = this.#extractMarkerPosition(startMarker);
-            const [endX, endY] = this.#extractMarkerPosition(endMarker);
+            const [startX, startY] = this.#getMarkerPosition(startMarker);
+            const [endX, endY] = this.#getMarkerPosition(endMarker);
 
             const passList = passMarkers.length
                 ? passMarkers
                       .map((markers) =>
-                          this.#extractMarkerPosition(markers).join(','),
+                          this.#getMarkerPosition(markers).join(','),
                       )
                       .join('_')
                 : undefined;
@@ -161,7 +161,7 @@ export class TMapModule {
                         ([lng, lat]) => new Tmapv3.LatLng(lat, lng),
                     );
 
-                    // 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
+                    // NOTE : 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
                     const prevFeature =
                         index > 0 ? features[index - 1] : undefined;
                     if (prevFeature && prevFeature.geometry.type === 'Point') {
@@ -191,8 +191,8 @@ export class TMapModule {
         this.#polylineList = polylineList;
     }
 
-    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 toggleVisiblePathInMap
-    toggleVisiblePathInMap() {
+    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 togglePathVisibility
+    togglePathVisibility() {
         const updatedVisible = !this.#isPathVisible;
         this.#polylineList.map((polyline) =>
             polyline.setMap(updatedVisible ? this.#mapInstance : null),
@@ -200,8 +200,8 @@ export class TMapModule {
         this.#isPathVisible = updatedVisible;
     }
 
-    // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePathInMap
-    removePathInMap() {
+    // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
+    removePath() {
         if (!this.#polylineList.length) return;
         this.#polylineList.map((polyline) => polyline.setMap(null));
         this.#polylineList = [];
