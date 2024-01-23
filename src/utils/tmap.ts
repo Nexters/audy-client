@@ -194,7 +194,7 @@ export class TMapModule {
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 togglePathVisibility
     togglePathVisibility() {
         const updatedVisible = !this.#isPathVisible;
-        this.#polylineList.map((polyline) =>
+        this.#polylineList.forEach((polyline) =>
             polyline.setMap(updatedVisible ? this.#mapInstance : null),
         );
         this.#isPathVisible = updatedVisible;
@@ -203,7 +203,7 @@ export class TMapModule {
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
     removePath() {
         if (!this.#polylineList.length) return;
-        this.#polylineList.map((polyline) => polyline.setMap(null));
+        this.#polylineList.forEach((polyline) => polyline.setMap(null));
         this.#polylineList = [];
     }
 }
