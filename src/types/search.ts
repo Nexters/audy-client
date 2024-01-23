@@ -1,5 +1,13 @@
+export interface NewAdressType {
+    centerLat: string;
+    centerLon: string;
+    fullAddressRoad: string;
+}
+
 export interface POIType {
-    // TODO: POIType 정의하기
+    id: string;
+    name: string;
+    newAddressList: { newAddress: NewAdressType[] };
 }
 
 export interface GetPOIType {
