@@ -1,6 +1,10 @@
-import { postAsync } from '@/apis/api';
+import { getAsync, postAsync } from '@/apis/api';
 
-import type { TmapReqParamsType, TmapResponseType } from './type';
+import {
+    GetReverseGeoCodingType,
+    type TmapReqParamsType,
+    type TmapResponseType,
+} from './type';
 
 export const TmapRepository = {
     baseUrl: `https://apis.openapi.sk.com/tmap`,
@@ -40,5 +44,31 @@ export const TmapRepository = {
                 },
             },
         );
+    },
+
+    getAddressFromLatLng: async function ({
+        latitude,
+        longitude,
+    }: {
+        latitude: number;
+        longitude: number;
+    }) {
+        const response = await getAsync<GetReverseGeoCodingType>(
+            '/geo/reversegeocoding',
+            {
+                baseURL: this.baseUrl,
+                headers: { appKey: this.appKey },
+                params: {
+                    version: 1,
+                    lat: latitude,
+                    lon: longitude,
+                    coordType: 'WGS84GEO',
+                    addressType: 'A04', // TODO: 논의 후 수정 예정
+                    callback: 'result',
+                },
+            },
+        );
+
+        return response.addressInfo;
     },
 };
