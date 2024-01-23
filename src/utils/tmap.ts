@@ -83,22 +83,9 @@ export class TMapModule {
     }
 
     // 마커 삭제
-    removeMarker({
-        latitude,
-        longitude,
-    }: {
-        latitude: number;
-        longitude: number;
-    }) {
-        const targetMarkerIndex = this.#markers.findIndex(
-            (marker) =>
-                marker.getPosition().lat() === latitude &&
-                marker.getPosition().lng() === longitude,
-        );
+    removeMarker({ markerIndex }: { markerIndex: number }) {
+        const targetMarker = this.#markers.splice(markerIndex, 1)[0];
 
-        if (targetMarkerIndex === -1) return;
-
-        const targetMarker = this.#markers.splice(targetMarkerIndex, 1)[0];
         targetMarker.setMap(null);
     }
 
