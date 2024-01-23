@@ -210,20 +210,16 @@ export class TMapModule {
     }) {
         this.removeInfoWindow();
 
-        const content =
-            "<div style=' position: relative; border-bottom: 1px solid #dcdcdc; line-height: 18px; padding: 0 35px 2px 0;'>" +
-            "<div style='font-size: 12px; line-height: 15px;'>" +
-            "<span style='display: inline-block; width: 14px; height: 14px; background-image: url('/resources/images/common/footer_logo.png'); vertical-align: middle; margin-right: 5px;'></span>티맵 모빌리티" +
-            '</div>' +
-            '</div>' +
-            "<div style='position: relative; padding-top: 5px; display:inline-block'>" +
-            "<div style='display:inline-block; border:1px solid #dcdcdc;'><img src='/resources/images/common/footer_logo.png' width='90' height='70'></div>" +
-            "<div style='display:inline-block; margin-left:5px; vertical-align: top;'>" +
-            "<span style='font-size: 12px; margin-left:2px; margin-bottom:2px; display:block;'>서울 중구 삼일대로 343 (우)04538</span>" +
-            "<span style='font-size: 12px; color:#888; margin-left:2px; margin-bottom:2px; display:block;'>(지번) 저동1가 114</span>" +
-            "<span style='font-size: 12px; margin-left:2px;'><a href='https://openapi.sk.com/' target='blank'>개발자센터</a></span>" +
-            '</div>' +
-            '</div>';
+        const content = /*html*/ `
+        <div style="display: flex; align-items: center; gap: 24px;">
+            <div>
+                <p>${name}</p>
+                <p>${address}</p>
+            </div>
+            <div>
+                <button>핀</button>
+            </div>
+        </div>`; // TODO: 임시 디자인
 
         const infoWindow = new Tmapv3.InfoWindow({
             position: new Tmapv3.LatLng(latitude, longitude),
