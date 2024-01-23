@@ -1,3 +1,7 @@
+export const ZIndex = {
+    globalNavigation: 999,
+}
+
 export const FONT = {
     pretendard: 'Pretendard',
 };
