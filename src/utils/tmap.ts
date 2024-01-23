@@ -27,6 +27,8 @@ export class TMapModule {
 
     #isPathVisible: boolean = true;
 
+    #infoWindows: (typeof window.Tmapv3.InfoWindow)[] = [];
+
     constructor({
         mapId = 'tmap',
         width = 640,
@@ -192,5 +194,46 @@ export class TMapModule {
         if (!this.#polylineList.length) return;
         this.#polylineList.forEach((polyline) => polyline.setMap(null));
         this.#polylineList = [];
+    }
+
+    // 인포창 생성
+    createInfoWindow({
+        latitude,
+        longitude,
+        name,
+        address,
+    }: {
+        latitude: number;
+        longitude: number;
+        name: string;
+        address: string;
+    }) {
+        this.#infoWindows.forEach((infoWindow) => infoWindow.setMap(null));
+
+        const content =
+            "<div style=' position: relative; border-bottom: 1px solid #dcdcdc; line-height: 18px; padding: 0 35px 2px 0;'>" +
+            "<div style='font-size: 12px; line-height: 15px;'>" +
+            "<span style='display: inline-block; width: 14px; height: 14px; background-image: url('/resources/images/common/footer_logo.png'); vertical-align: middle; margin-right: 5px;'></span>티맵 모빌리티" +
+            '</div>' +
+            '</div>' +
+            "<div style='position: relative; padding-top: 5px; display:inline-block'>" +
+            "<div style='display:inline-block; border:1px solid #dcdcdc;'><img src='/resources/images/common/footer_logo.png' width='90' height='70'></div>" +
+            "<div style='display:inline-block; margin-left:5px; vertical-align: top;'>" +
+            "<span style='font-size: 12px; margin-left:2px; margin-bottom:2px; display:block;'>서울 중구 삼일대로 343 (우)04538</span>" +
+            "<span style='font-size: 12px; color:#888; margin-left:2px; margin-bottom:2px; display:block;'>(지번) 저동1가 114</span>" +
+            "<span style='font-size: 12px; margin-left:2px;'><a href='https://openapi.sk.com/' target='blank'>개발자센터</a></span>" +
+            '</div>' +
+            '</div>';
+
+        const infoWindow = new Tmapv3.InfoWindow({
+            position: new Tmapv3.LatLng(latitude, longitude),
+            content,
+            map: this.#mapInstance,
+        });
+
+        infoWindow.setMap(this.#mapInstance);
+        this.#infoWindows.push(infoWindow);
+
+        this.#mapInstance.setCenter(new Tmapv3.LatLng(latitude, longitude));
     }
 }
