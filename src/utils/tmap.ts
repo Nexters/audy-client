@@ -206,43 +206,4 @@ export class TMapModule {
         this.#polylineList.map((polyline) => polyline.setMap(null));
         this.#polylineList = [];
     }
-
-    // 마커 생성
-    createMarker({
-        latitude,
-        longitude,
-        iconUrl,
-    }: {
-        latitude: number;
-        longitude: number;
-        iconUrl: string;
-    }) {
-        const marker = new Tmapv3.Marker({
-            position: new Tmapv3.LatLng(latitude, longitude),
-            iconUrl,
-            map: this.#mapInstance,
-        });
-
-        this.#markers.push(marker);
-    }
-
-    // 마커 삭제
-    removeMarker({
-        latitude,
-        longitude,
-    }: {
-        latitude: number;
-        longitude: number;
-    }) {
-        const targetMarkerIndex = this.#markers.findIndex(
-            (marker) =>
-                marker.getPosition().lat() === latitude &&
-                marker.getPosition().lng() === longitude,
-        );
-
-        if (targetMarkerIndex === -1) return;
-
-        const targetMarker = this.#markers.splice(targetMarkerIndex, 1)[0];
-        targetMarker.setMap(null);
-    }
 }
