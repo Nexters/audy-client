@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TmapRepository } from '@/apis/tmap';
+import InfoWindow from '@/features/map/InfoWindow';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -210,20 +211,12 @@ export class TMapModule {
     }) {
         this.removeInfoWindow();
 
-        const content = /*html*/ `
-        <div style="display: flex; align-items: center; gap: 24px;">
-            <div>
-                <p>${name}</p>
-                <p>${address}</p>
-            </div>
-            <div>
-                <button>핀</button>
-            </div>
-        </div>`; // TODO: 임시 디자인
-
         const infoWindow = new Tmapv3.InfoWindow({
             position: new Tmapv3.LatLng(latitude, longitude),
-            content,
+            content: InfoWindow({ name, address }),
+            type: 2,
+            border: '0px',
+            background: 'none',
             map: this.#mapInstance,
         });
 
@@ -231,6 +224,7 @@ export class TMapModule {
         this.#infoWindows.push(infoWindow);
 
         this.#mapInstance.setCenter(new Tmapv3.LatLng(latitude, longitude));
+        // 줌인하기
     }
 
     // 인포창 삭제
