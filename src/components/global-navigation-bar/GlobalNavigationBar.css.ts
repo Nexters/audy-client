@@ -9,6 +9,10 @@ export const wrapper = style({
 
     display: 'flex',
     alignItems: 'center',
+    
+    position: 'sticky',
+    top: 0,
+    zIndex: 999,
 
     backgroundColor: COLOR['MonoWhite'],
     borderBottom: `1px solid ${COLOR['Gray50']}`,

@@ -1,3 +1,4 @@
+import GlobalNavigationbar from '@/components/global-navigation-bar';
 import { useTmap } from '@/hooks/useTmap';
 
 function MainPage() {
@@ -17,22 +18,25 @@ function MainPage() {
 
     const handleTestRemovePath = () => {
         if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.removePathInMap();
+        tmapModuleRef.current.removePath();
     }
 
     const handleTestTogglePath = () => {
         if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.toggleVisiblePathInMap();
+        tmapModuleRef.current.togglePathVisibility();
     }
 
     return (
-        <div>
-            <p>test test test test test test</p>
-            <div ref={mapContainerRef} />
-            <button onClick={handleTestRoutePath}>draw</button>
-            <button onClick={handleTestRemovePath}>remove</button>
-            <button onClick={handleTestTogglePath}>toggle</button>
-        </div>
+        <>
+            <GlobalNavigationbar />
+            <div>
+                <p>test test test test test test</p>
+                <div ref={mapContainerRef} />
+                <button onClick={handleTestRoutePath}>draw</button>
+                <button onClick={handleTestRemovePath}>remove</button>
+                <button onClick={handleTestTogglePath}>toggle</button>
+            </div>
+        </>
     );
 }
 
