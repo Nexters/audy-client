@@ -224,7 +224,7 @@ export class TMapModule {
         this.#infoWindows.push(infoWindow);
 
         this.#mapInstance.setCenter(new Tmapv3.LatLng(latitude, longitude));
-        // 줌인하기
+        this.#mapInstance.setZoom(17);
     }
 
     // 인포창 삭제
