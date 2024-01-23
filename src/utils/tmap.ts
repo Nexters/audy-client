@@ -208,7 +208,7 @@ export class TMapModule {
         name: string;
         address: string;
     }) {
-        this.#infoWindows.forEach((infoWindow) => infoWindow.setMap(null));
+        this.removeInfoWindow();
 
         const content =
             "<div style=' position: relative; border-bottom: 1px solid #dcdcdc; line-height: 18px; padding: 0 35px 2px 0;'>" +
@@ -235,5 +235,10 @@ export class TMapModule {
         this.#infoWindows.push(infoWindow);
 
         this.#mapInstance.setCenter(new Tmapv3.LatLng(latitude, longitude));
+    }
+
+    // 인포창 삭제
+    removeInfoWindow() {
+        this.#infoWindows.forEach((infoWindow) => infoWindow.setMap(null));
     }
 }
