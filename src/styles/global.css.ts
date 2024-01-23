@@ -1,4 +1,4 @@
-import { globalStyle } from '@vanilla-extract/css';
+import { globalStyle, globalFontFace } from '@vanilla-extract/css';
 
 import { theme } from '@/styles/theme.css';
 
@@ -19,8 +19,12 @@ globalStyle(
 
 globalStyle('*, *:after, *:before', {
     boxSizing: 'border-box',
-  });
-  
+});
+
+globalStyle('body', {
+    WebkitFontSmoothing: 'antialiased',
+    MozOsxFontSmoothing: 'grayscale',
+});
 
 globalStyle('h1, h2, h3, h4, h5, h6, p', {
     wordBreak: 'keep-all',
@@ -30,7 +34,7 @@ globalStyle('h1, h2, h3, h4, h5, h6, p', {
 globalStyle('img, picture, video, canvas, svg', {
     display: 'block',
     maxWidth: '100%',
-})
+});
 
 globalStyle('button, select, input, textarea', {
     border: 0,
@@ -53,3 +57,34 @@ globalStyle('ol, ul', {
     padding: 0,
     listStyle: 'none',
 });
+
+globalFontFace(theme.font.pretendard, {
+    src: "url('/fonts/Pretendard-Black.subset.woff2') format('woff2')",
+    fontWeight: 800,
+})
+
+globalFontFace(theme.font.pretendard, {
+    src: "url('/fonts/Pretendard-ExtraBold.subset.woff2') format('woff2')",
+    fontWeight: 700,
+})
+
+
+globalFontFace(theme.font.pretendard, {
+    src: "url('/fonts/Pretendard-Bold.subset.woff2') format('woff2')",
+    fontWeight: 600,
+})
+
+globalFontFace(theme.font.pretendard, {
+    src: "url('/fonts/Pretendard-SemiBold.subset.woff2') format('woff2')",
+    fontWeight: 500,
+})
+
+globalFontFace(theme.font.pretendard, {
+    src: "url('/fonts/Pretendard-Medium.subset.woff2') format('woff2')",
+    fontWeight: 400,
+})
+
+globalFontFace(theme.font.pretendard, {
+    src: "url('/fonts/Pretendard-Regular.subset.woff2') format('woff2')",
+    fontWeight: 300,
+})
