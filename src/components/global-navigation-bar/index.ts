@@ -1,3 +1,3 @@
-import GlobalNavigationbar from "./GlobalNavigationBar";
+import GlobalNavigationBar from "./GlobalNavigationBar";
 
-export default GlobalNavigationbar;
+export default GlobalNavigationBar;

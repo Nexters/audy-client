@@ -1,4 +1,4 @@
-import GlobalNavigationbar from '@/components/global-navigation-bar';
+import GlobalNavigationBar from '@/components/global-navigation-bar';
 import { useTmap } from '@/hooks/useTmap';
 
 function MainPage() {
@@ -28,7 +28,7 @@ function MainPage() {
 
     return (
         <>
-            <GlobalNavigationbar />
+            <GlobalNavigationBar />
             <div>
                 <p>test test test test test test</p>
                 <div ref={mapContainerRef} />
