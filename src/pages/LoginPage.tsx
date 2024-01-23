@@ -9,7 +9,7 @@ export default function LoginPage() {
             .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
             .join('&');
     };
-
+    
     const makeSocialLoginUrl = (provider: SocialLoginProviderType) => {
         const { url, config } = socialLoginProvider[provider];
         const queryString = makeQueryString(config);
