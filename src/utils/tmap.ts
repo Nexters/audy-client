@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/InfoWindow';
+import { MarkersType } from '@/types/map';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -21,7 +21,7 @@ const { Tmapv3 } = window;
 
 export class TMapModule {
     #mapInstance: typeof Tmapv3;
-    #markers: (typeof Tmapv3.Marker)[] = [];
+    #markers: MarkersType[] = [];
 
     #pathList: [number, number][] = [];
     #polylineList: (typeof Tmapv3.Polyline)[] = [];
@@ -62,7 +62,14 @@ export class TMapModule {
         // FIXME : 마커 생성을 위해 임시로 추가한 코드, 제거 필요
         // const handleClickMap = (event: any) => {
         //     const { _lat: latitude, _lng: longitude } = event._data.lngLat;
-        //     this.createMarker({ latitude, longitude });
+        //     this.createMarker({
+        //         name: '임시',
+        //         originName: '임시',
+        //         address: '임시',
+        //         id: '임시',
+        //         latitude,
+        //         longitude,
+        //     });
         // };
 
         // this.#mapInstance.on('Click', handleClickMap);
@@ -88,10 +95,18 @@ export class TMapModule {
 
     // 마커 생성
     createMarker({
+        name,
+        originName,
+        address,
+        id,
         latitude,
         longitude,
         iconUrl,
     }: {
+        name: string;
+        originName: string;
+        address: string;
+        id: string;
         latitude: number;
         longitude: number;
         iconUrl?: string;
@@ -102,12 +117,31 @@ export class TMapModule {
             map: this.#mapInstance,
         });
 
-        this.#markers.push(marker);
+        const handleClickMarker = () => {
+            this.createInfoWindow({
+                latitude,
+                longitude,
+                name,
+                address,
+            });
+        };
+
+        marker.on('Click', handleClickMarker);
+
+        this.#markers.push({
+            marker,
+            name,
+            originName,
+            address,
+            id,
+            latitude,
+            longitude,
+        });
     }
 
     // 마커 삭제
     removeMarker(markerIndex: number) {
-        const targetMarker = this.#markers.splice(markerIndex, 1)[0];
+        const targetMarker = this.#markers.splice(markerIndex, 1)[0].marker;
         targetMarker.setMap(null);
     }
 
