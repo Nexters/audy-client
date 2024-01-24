@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/InfoWindow';
 import { MarkersType } from '@/types/map';
