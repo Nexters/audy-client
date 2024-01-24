@@ -27,6 +27,7 @@ function MainPage() {
 
     return (
         <div>
+            <p>test test test test test test</p>
             <div ref={mapContainerRef} />
             <button onClick={handleTestRoutePath}>draw</button>
             <button onClick={handleTestRemovePath}>remove</button>
