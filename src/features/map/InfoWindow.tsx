@@ -13,17 +13,25 @@ export default function InfoWindow({
 
     return /* html */ `
         <div style="${layoutStyle}">
-            <div>
-                <p style="${nameStyle} ${textStyle}">${name}</p>
-                <p style="${addressStyle} ${textStyle}">${address}</p>
+            <div style="${windowStyle}">
+                <div>
+                    <p style="${nameStyle} ${textStyle}">${name}</p>
+                    <p style="${addressStyle} ${textStyle}">${address}</p>
+                </div>
+                <button style="${buttonStyle}"></button>
+        
             </div>
-            <button style="${buttonStyle}"></button>
-     
         </div>
     `;
 }
 
 const layoutStyle = `
+    background-color: transparent;
+    padding: 0 0 50px 0;
+    width: 338px;
+`;
+
+const windowStyle = `
     align-items: center;
     background-color: white;
     border: 1px solid #6B7280;
@@ -31,8 +39,8 @@ const layoutStyle = `
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
-    padding: 18px 32px 16px 32px;
-    width: 338px;
+    padding: 18px 32px 16px 32px; 
+    width: 100%;
 `;
 
 const textStyle = `
