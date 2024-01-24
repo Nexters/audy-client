@@ -63,7 +63,14 @@ export class TMapModule {
         // FIXME : 마커 생성을 위해 임시로 추가한 코드, 제거 필요
         // const handleClickMap = (event: any) => {
         //     const { _lat: latitude, _lng: longitude } = event._data.lngLat;
-        //     this.createMarker({ latitude, longitude });
+        //     this.createMarker({
+        //         name: '임시',
+        //         originName: '임시',
+        //         address: '임시',
+        //         id: '임시',
+        //         latitude,
+        //         longitude,
+        //     });
         // };
 
         // this.#mapInstance.on('Click', handleClickMap);
@@ -110,6 +117,17 @@ export class TMapModule {
             iconUrl,
             map: this.#mapInstance,
         });
+
+        const handleClickMarker = () => {
+            this.createInfoWindow({
+                latitude,
+                longitude,
+                name,
+                address,
+            });
+        };
+
+        marker.on('Click', handleClickMarker);
 
         this.#markers.push({
             marker,
