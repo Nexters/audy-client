@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TmapRepository } from '@/apis/tmap';
+import InfoWindow from '@/features/map/InfoWindow';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -26,6 +27,10 @@ export class TMapModule {
     #polylineList: (typeof Tmapv3.Polyline)[] = [];
 
     #isPathVisible: boolean = true;
+
+    #infoWindows: (typeof window.Tmapv3.InfoWindow)[] = [];
+
+    #zoomInLevel: number = 17; // TODO: 임시
 
     constructor({
         mapId = 'tmap',
@@ -83,22 +88,8 @@ export class TMapModule {
     }
 
     // 마커 삭제
-    removeMarker({
-        latitude,
-        longitude,
-    }: {
-        latitude: number;
-        longitude: number;
-    }) {
-        const targetMarkerIndex = this.#markers.findIndex(
-            (marker) =>
-                marker.getPosition().lat() === latitude &&
-                marker.getPosition().lng() === longitude,
-        );
-
-        if (targetMarkerIndex === -1) return;
-
-        const targetMarker = this.#markers.splice(targetMarkerIndex, 1)[0];
+    removeMarker(markerIndex: number) {
+        const targetMarker = this.#markers.splice(markerIndex, 1)[0];
         targetMarker.setMap(null);
     }
 
@@ -205,5 +196,41 @@ export class TMapModule {
         if (!this.#polylineList.length) return;
         this.#polylineList.forEach((polyline) => polyline.setMap(null));
         this.#polylineList = [];
+    }
+
+    // 인포창 생성
+    createInfoWindow({
+        latitude,
+        longitude,
+        name,
+        address,
+    }: {
+        latitude: number;
+        longitude: number;
+        name: string;
+        address: string;
+    }) {
+        this.removeInfoWindow();
+
+        const infoWindowLatLng = new Tmapv3.LatLng(latitude, longitude);
+        const infoWindow = new Tmapv3.InfoWindow({
+            position: infoWindowLatLng,
+            content: InfoWindow({ name, address }),
+            type: 2,
+            border: '0px',
+            background: 'none',
+            map: this.#mapInstance,
+        });
+
+        infoWindow.setMap(this.#mapInstance);
+        this.#infoWindows.push(infoWindow);
+
+        this.#mapInstance.setCenter(infoWindowLatLng);
+        this.#mapInstance.setZoom(this.#zoomInLevel);
+    }
+
+    // 인포창 삭제
+    removeInfoWindow() {
+        this.#infoWindows.forEach((infoWindow) => infoWindow.setMap(null));
     }
 }
