@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/InfoWindow';
+import { MarkersType } from '@/types/map';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -21,7 +22,7 @@ const { Tmapv3 } = window;
 
 export class TMapModule {
     #mapInstance: typeof Tmapv3;
-    #markers: (typeof Tmapv3.Marker)[] = [];
+    #markers: MarkersType[] = [];
 
     #pathList: [number, number][] = [];
     #polylineList: (typeof Tmapv3.Polyline)[] = [];
@@ -88,10 +89,18 @@ export class TMapModule {
 
     // 마커 생성
     createMarker({
+        name,
+        originName,
+        address,
+        id,
         latitude,
         longitude,
         iconUrl,
     }: {
+        name: string;
+        originName: string;
+        address: string;
+        id: string;
         latitude: number;
         longitude: number;
         iconUrl?: string;
@@ -102,12 +111,20 @@ export class TMapModule {
             map: this.#mapInstance,
         });
 
-        this.#markers.push(marker);
+        this.#markers.push({
+            marker,
+            name,
+            originName,
+            address,
+            id,
+            latitude,
+            longitude,
+        });
     }
 
     // 마커 삭제
     removeMarker(markerIndex: number) {
-        const targetMarker = this.#markers.splice(markerIndex, 1)[0];
+        const targetMarker = this.#markers.splice(markerIndex, 1)[0].marker;
         targetMarker.setMap(null);
     }
 
