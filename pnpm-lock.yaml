@@ -11,6 +11,12 @@ dependencies:
   '@vanilla-extract/css':
     specifier: ^1.14.0
     version: 1.14.0
+  '@vanilla-extract/recipes':
+    specifier: ^0.5.1
+    version: 0.5.1(@vanilla-extract/css@1.14.0)
+  '@vanilla-extract/sprinkles':
+    specifier: ^1.6.1
+    version: 1.6.1(@vanilla-extract/css@1.14.0)
   axios:
     specifier: ^1.6.5
     version: 1.6.5
@@ -49,9 +55,6 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.14.0
     version: 6.18.1(eslint@8.56.0)(typescript@5.3.3)
-  '@vanilla-extract/recipes':
-    specifier: ^0.5.1
-    version: 0.5.1(@vanilla-extract/css@1.14.0)
   '@vanilla-extract/vite-plugin':
     specifier: ^3.9.3
     version: 3.9.3(@types/node@20.11.5)(vite@5.0.11)
@@ -1638,7 +1641,15 @@ packages:
       '@vanilla-extract/css': ^1.0.0
     dependencies:
       '@vanilla-extract/css': 1.14.0
-    dev: true
+    dev: false
+
+  /@vanilla-extract/sprinkles@1.6.1(@vanilla-extract/css@1.14.0):
+    resolution: {integrity: sha512-N/RGKwGAAidBupZ436RpuweRQHEFGU+mvAqBo8PRMAjJEmHoPDttV8RObaMLrJHWLqvX+XUMinHUnD0hFRQISw==}
+    peerDependencies:
+      '@vanilla-extract/css': ^1.0.0
+    dependencies:
+      '@vanilla-extract/css': 1.14.0
+    dev: false
 
   /@vanilla-extract/vite-plugin@3.9.3(@types/node@20.11.5)(vite@5.0.11):
     resolution: {integrity: sha512-bGyHG98OYTRs5roLRv7LDeyRnD72+vBLonk8cC9VG/xd6hsiHPPj5GyBwoKElT7DyDRfapxWLwLlhgYynrW2Fw==}
