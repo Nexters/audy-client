@@ -30,6 +30,8 @@ export class TMapModule {
 
     #infoWindows: (typeof window.Tmapv3.InfoWindow)[] = [];
 
+    #zoomInLevel: number = 17; // TODO: 임시
+
     constructor({
         mapId = 'tmap',
         width = 640,
@@ -88,7 +90,6 @@ export class TMapModule {
     // 마커 삭제
     removeMarker(markerIndex: number) {
         const targetMarker = this.#markers.splice(markerIndex, 1)[0];
-
         targetMarker.setMap(null);
     }
 
@@ -211,8 +212,9 @@ export class TMapModule {
     }) {
         this.removeInfoWindow();
 
+        const infoWindowLatLng = new Tmapv3.LatLng(latitude, longitude);
         const infoWindow = new Tmapv3.InfoWindow({
-            position: new Tmapv3.LatLng(latitude, longitude),
+            position: infoWindowLatLng,
             content: InfoWindow({ name, address }),
             type: 2,
             border: '0px',
@@ -223,8 +225,8 @@ export class TMapModule {
         infoWindow.setMap(this.#mapInstance);
         this.#infoWindows.push(infoWindow);
 
-        this.#mapInstance.setCenter(new Tmapv3.LatLng(latitude, longitude));
-        this.#mapInstance.setZoom(17);
+        this.#mapInstance.setCenter(infoWindowLatLng);
+        this.#mapInstance.setZoom(this.#zoomInLevel);
     }
 
     // 인포창 삭제
