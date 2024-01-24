@@ -23,8 +23,7 @@ export const wrapper = style([
 export const savingStatus = style([
     sprinkles({ typography: 'Regular15' }),
     {
-        marginLeft: '4px',
-        marginRight: 'auto',
+        margin: '0 auto 4px',
     },
 ]);
 
