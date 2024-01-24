@@ -15,12 +15,12 @@ export const wrapper = style([
         position: 'sticky',
         top: 0,
 
-        backgroundColor: COLOR['MonoWhite'],
-        borderBottom: `1px solid ${COLOR['Gray50']}`,
+        backgroundColor: COLOR.MonoWhite,
+        borderBottom: `1px solid ${COLOR.Gray50}`,
     },
 ]);
 
-export const savedText = style([
+export const savingStatus = style([
     sprinkles({ typography: 'Regular15' }),
     {
         marginLeft: '4px',
@@ -29,5 +29,5 @@ export const savedText = style([
 ]);
 
 export const settingIcon = style({
-    color: COLOR['Gray500'],
+    color: COLOR.Gray500,
 });

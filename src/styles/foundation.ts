@@ -775,7 +775,7 @@ export const TYPOGRAPHY = {
         lineHeight: LINE_HEIGHT,
         letterSpacing: LETTER_SPACING,
     },
-};
+} as const;
 
 export const COLOR = {
     MonoWhite: '#FFFFFF',
@@ -837,4 +837,4 @@ export const COLOR = {
     SurfaceLevel2: '#F3F4F6',
     SurfaceLevel3: '#E5E7EB',
     SurfaceLevel4: '#C5CBD3',
-};
+} as const;

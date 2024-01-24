@@ -6,7 +6,7 @@ import * as styles from './GlobalNavigationBar.css';
 const GlobalNavigationBar = () => (
     <div className={styles.wrapper}>
         <AudyLogoIcon />
-        <p className={styles.savedText}>수정된 코스 저장중...</p>
+        <p className={styles.savingStatus}>수정된 코스 저장중...</p>
         <SettingIcon className={styles.settingIcon} />
     </div>
 );
