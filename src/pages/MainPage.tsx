@@ -1,5 +1,6 @@
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import { useTmap } from '@/hooks/useTmap';
+import CourseView from '@/components/course-view/CourseView';
 
 function MainPage() {
     const { tmapModuleRef, mapContainerRef } = useTmap({
@@ -29,6 +30,11 @@ function MainPage() {
     return (
         <>
             <GlobalNavigationBar />
+            <CourseView index={1} address='경기도 화성시 동탄중앙로 189' name='우리집'/>
+            <CourseView index={2} address='경기도 화성시 동탄중앙로 189' name='우리집'/>
+            <CourseView index={3} address='경기도 화성시 동탄중앙로 189' name='우리집'/>
+            <CourseView index={4} address='경기도 화성시 동탄중앙로 189' name='우리집'/>
+            <CourseView index={5} address='경기도 화성시 동탄중앙로 189' name='우리집'/>
             <div>
                 <p>test test test test test test</p>
                 <div ref={mapContainerRef} />
