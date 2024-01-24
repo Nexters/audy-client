@@ -60,9 +60,27 @@ export class TMapModule {
         });
 
         // FIXME : 마커 생성을 위해 임시로 추가한 코드, 제거 필요
-        const handleClickMap = (event: any) => {
-            const { _lat: latitude, _lng: longitude } = event._data.lngLat;
-            this.createMarker({ latitude, longitude });
+        // const handleClickMap = (event: any) => {
+        //     const { _lat: latitude, _lng: longitude } = event._data.lngLat;
+        //     this.createMarker({ latitude, longitude });
+        // };
+
+        // this.#mapInstance.on('Click', handleClickMap);
+
+        const handleClickMap = async (e: typeof Tmapv3.maps.MouseEvent) => {
+            const { _lat: lat, _lng: lng } = e._data.lngLat;
+
+            const { fullAddress } = await TmapRepository.getAddressFromLatLng({
+                latitude: lat,
+                longitude: lng,
+            });
+
+            this.createInfoWindow({
+                latitude: lat,
+                longitude: lng,
+                name: `장소${this.#markers.length + 1}`,
+                address: fullAddress,
+            });
         };
 
         this.#mapInstance.on('Click', handleClickMap);
@@ -229,7 +247,7 @@ export class TMapModule {
         this.#mapInstance.setZoom(this.#zoomInLevel);
     }
 
-    // 인포창 삭제
+    // 인포창 전체 삭제
     removeInfoWindow() {
         this.#infoWindows.forEach((infoWindow) => infoWindow.setMap(null));
     }

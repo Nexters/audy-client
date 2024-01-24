@@ -31,3 +31,10 @@ export interface TmapResponseType {
         }[];
     };
 }
+
+export interface GetReverseGeoCodingType {
+    addressInfo: {
+        buildingName: string;
+        fullAddress: string;
+    };
+}

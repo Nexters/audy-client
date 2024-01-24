@@ -19,12 +19,12 @@ function MainPage() {
     const handleTestRemovePath = () => {
         if (!tmapModuleRef.current) return;
         tmapModuleRef.current.removePath();
-    }
+    };
 
     const handleTestTogglePath = () => {
         if (!tmapModuleRef.current) return;
         tmapModuleRef.current.togglePathVisibility();
-    }
+    };
 
     return (
         <>
