@@ -77,7 +77,7 @@ export class TMapModule {
 
         // this.#mapInstance.on('Click', handleClickMap);
 
-        const handleClickMap = async (e: typeof Tmapv3.maps.MouseEvent) => {
+        const handleMapClick = async (e: typeof Tmapv3.maps.MouseEvent) => {
             const { _lat: lat, _lng: lng } = e._data.lngLat;
 
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
@@ -93,7 +93,7 @@ export class TMapModule {
             });
         };
 
-        this.#mapInstance.on('Click', handleClickMap);
+        this.#mapInstance.on('Click', handleMapClick);
     }
 
     // 마커 생성
@@ -120,7 +120,7 @@ export class TMapModule {
             map: this.#mapInstance,
         });
 
-        const handleClickMarker = () => {
+        const handleMarkerClick = () => {
             this.createInfoWindow({
                 latitude,
                 longitude,
@@ -129,7 +129,7 @@ export class TMapModule {
             });
         };
 
-        marker.on('Click', handleClickMarker);
+        marker.on('Click', handleMarkerClick);
 
         this.#markers.push({
             marker,
