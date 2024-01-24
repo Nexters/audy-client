@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { renderToString } from 'react-dom/server';
+
 import { TmapRepository } from '@/apis/tmap';
-import InfoWindow from '@/features/map/InfoWindow';
+import InfoWindow from '@/features/map/info-window/InfoWindow';
 import { MarkersType } from '@/types/map';
 
 export interface TmapConstructorType {
@@ -265,9 +268,13 @@ export class TMapModule {
         this.removeInfoWindow();
 
         const infoWindowLatLng = new Tmapv3.LatLng(latitude, longitude);
+        const content = renderToString(
+            <InfoWindow name={name} address={address} />,
+        );
+
         const infoWindow = new Tmapv3.InfoWindow({
             position: infoWindowLatLng,
-            content: InfoWindow({ name, address }),
+            content,
             type: 2,
             border: '0px',
             background: 'none',
