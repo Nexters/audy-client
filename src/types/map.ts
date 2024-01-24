@@ -7,3 +7,5 @@ export interface MarkersType {
     latitude: number;
     longitude: number;
 }
+
+export interface ClickedLocationType {}
