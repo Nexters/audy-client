@@ -86,7 +86,7 @@ export class TMapModule {
     }
 
     // 마커 삭제
-    removeMarker({ markerIndex }: { markerIndex: number }) {
+    removeMarker(markerIndex: number) {
         const targetMarker = this.#markers.splice(markerIndex, 1)[0];
 
         targetMarker.setMap(null);
