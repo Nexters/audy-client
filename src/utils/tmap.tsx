@@ -90,6 +90,7 @@ export class TMapModule {
                 longitude: lng,
                 name: `장소${this.#markers.length + 1}`,
                 address: fullAddress,
+                isPinned: false,
             });
         };
 
@@ -126,6 +127,7 @@ export class TMapModule {
                 longitude,
                 name,
                 address,
+                isPinned: true,
             });
         };
 
@@ -259,17 +261,19 @@ export class TMapModule {
         longitude,
         name,
         address,
+        isPinned,
     }: {
         latitude: number;
         longitude: number;
         name: string;
         address: string;
+        isPinned: boolean;
     }) {
         this.removeInfoWindow();
 
         const infoWindowLatLng = new Tmapv3.LatLng(latitude, longitude);
         const content = renderToString(
-            <InfoWindow name={name} address={address} />,
+            <InfoWindow name={name} address={address} isPinned={isPinned} />,
         );
 
         const infoWindow = new Tmapv3.InfoWindow({

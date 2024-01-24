@@ -3,15 +3,11 @@ import * as styles from './InfoWindow.css';
 interface PropsType {
     name: string;
     address: string;
-    // isPinned: boolean;
+    isPinned: boolean;
 }
 
-export default function InfoWindow({
-    name,
-    address,
-    // isPinned,
-}: PropsType) {
-    // TODO: isPinned에 따라서 버튼 스타일 변경
+export default function InfoWindow({ name, address, isPinned }: PropsType) {
+    const handlePinButtonClick = () => {};
 
     return (
         <div className={styles.layoutStyle}>
@@ -20,7 +16,10 @@ export default function InfoWindow({
                     <p className={styles.nameStyle}>{name}</p>
                     <p className={styles.addressStyle}>{address}</p>
                 </div>
-                <button className={styles.buttonStyle}></button>
+                <button
+                    className={styles.buttonStyle}
+                    onClick={handlePinButtonClick}
+                ></button>
             </div>
         </div>
     );
