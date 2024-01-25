@@ -27,7 +27,7 @@ const text = style({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    width: '230px',
+    width: '210px',
 });
 
 export const name = style([
@@ -36,16 +36,21 @@ export const name = style([
         color: '#111827',
         fontSize: '18px',
         fontWeight: 700,
-        margin: '0 0 4px 0',
     },
 ]);
+
+export const addressContainer = style({
+    display: 'flex',
+    alignItems: 'center',
+    margin: '4px 0 0 0',
+});
 
 export const address = style([
     text,
     {
         color: '#9CA3AF',
         fontSize: '15px',
-        margin: '0px',
+        margin: '0 0 0 4px',
     },
 ]);
 

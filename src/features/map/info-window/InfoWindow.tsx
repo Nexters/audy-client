@@ -1,6 +1,7 @@
 import AddIcon from '@/assets/icons/add.svg?react';
 import CheckIcon from '@/assets/icons/check.svg?react';
 import InfoWindowLayout from '@/assets/icons/infoWindowLayout.svg?react';
+import LocationIcon from '@/assets/icons/location.svg?react';
 
 import * as styles from './InfoWindow.css';
 
@@ -36,7 +37,10 @@ export default function InfoWindow({ name, address, isPinned }: PropsType) {
             <div className={styles.contentsContainer}>
                 <div>
                     <p className={styles.name}>{name}</p>
-                    <p className={styles.address}>{address}</p>
+                    <div className={styles.addressContainer}>
+                        <LocationIcon />
+                        <p className={styles.address}>{address}</p>
+                    </div>
                 </div>
 
                 {isPinned ? <DisabledButton /> : <PinButton />}
