@@ -1,32 +1,37 @@
 import { style } from '@vanilla-extract/css';
 
-export const layoutStyle = style({
+export const layout = style({
     backgroundColor: 'transparent',
-    padding: '0 0 50px 0',
     width: '338px',
 });
 
-export const windowStyle = style({
-    alignItems: 'center',
-    backgroundColor: 'white',
-    border: '1px solid #6B7280',
-    borderRadius: '14px',
-    boxSizing: 'border-box',
-    display: 'flex',
-    justifyContent: 'space-between',
-    padding: '18px 32px 16px 32px',
-    width: '100%',
+export const layoutMargin = style({
+    margin: '0 0 50px 0',
 });
 
-const textStyle = style({
+export const window = style({
+    width: '500px',
+    position: 'relative',
+});
+
+export const contentsContainer = style({
+    position: 'absolute',
+    alignItems: 'center',
+    display: 'flex',
+    justifyContent: 'space-between',
+    top: '24px',
+    left: '32px',
+});
+
+const text = style({
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     width: '230px',
 });
 
-export const nameStyle = style([
-    textStyle,
+export const name = style([
+    text,
     {
         color: '#111827',
         fontSize: '18px',
@@ -35,8 +40,8 @@ export const nameStyle = style([
     },
 ]);
 
-export const addressStyle = style([
-    textStyle,
+export const address = style([
+    text,
     {
         color: '#9CA3AF',
         fontSize: '15px',
@@ -44,9 +49,10 @@ export const addressStyle = style([
     },
 ]);
 
-export const buttonStyle = style({
+export const pinButton = style({
     backgroundColor: 'white',
     border: '1px solid #E5E7EB',
     borderRadius: '10px',
     padding: '16px',
+    margin: '0 0 0 12px',
 });

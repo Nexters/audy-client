@@ -1,3 +1,5 @@
+import InfoWindowLayout from '@/assets/icons/infoWindowLayout.svg?react';
+
 import * as styles from './InfoWindow.css';
 
 interface PropsType {
@@ -10,14 +12,16 @@ export default function InfoWindow({ name, address, isPinned }: PropsType) {
     const handlePinButtonClick = () => {};
 
     return (
-        <div className={styles.layoutStyle}>
-            <div className={styles.windowStyle}>
+        <div className={`${styles.layout} ${isPinned && styles.layoutMargin}`}>
+            <InfoWindowLayout className={styles.window} />
+
+            <div className={styles.contentsContainer}>
                 <div>
-                    <p className={styles.nameStyle}>{name}</p>
-                    <p className={styles.addressStyle}>{address}</p>
+                    <p className={styles.name}>{name}</p>
+                    <p className={styles.address}>{address}</p>
                 </div>
                 <button
-                    className={styles.buttonStyle}
+                    className={styles.pinButton}
                     onClick={handlePinButtonClick}
                 ></button>
             </div>
