@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderToString } from 'react-dom/server';
 
 import { TmapRepository } from '@/apis/tmap';
