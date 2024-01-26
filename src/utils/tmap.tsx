@@ -215,12 +215,17 @@ export class TMapModule {
                     );
 
                     // NOTE : 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
-                    const prevFeature =
+                    const previousFeature =
                         index > 0 ? features[index - 1] : undefined;
-                    if (prevFeature && prevFeature.geometry.type === 'Point') {
-                        const [prevLng, prevLat] =
-                            prevFeature.geometry.coordinates;
-                        path.unshift(new Tmapv3.LatLng(prevLat, prevLng));
+                    if (
+                        previousFeature &&
+                        previousFeature.geometry.type === 'Point'
+                    ) {
+                        const [previousLng, previousLat] =
+                            previousFeature.geometry.coordinates;
+                        path.unshift(
+                            new Tmapv3.LatLng(previousLat, previousLng),
+                        );
                     }
 
                     paths.push(path);
