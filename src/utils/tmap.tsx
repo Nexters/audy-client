@@ -26,6 +26,7 @@ export class TMapModule {
     #mapInstance: typeof Tmapv3;
     #markers: MarkersType[] = [];
 
+
     #_paths: [number, number][] = [];
     #polylines: (typeof Tmapv3.Polyline)[] = [];
 
@@ -247,6 +248,7 @@ export class TMapModule {
                     map: this.#mapInstance,
                 }),
         );
+
 
         this.#_paths = paths;
         this.#polylines = polylines;
