@@ -29,7 +29,7 @@ export const TmapRepository = {
                 startY,
                 endX,
                 endY,
-                ...(passes && { passes }),
+                ...(passes && { passList: passes }),
                 reqCoordType,
                 resCoordType,
             },
