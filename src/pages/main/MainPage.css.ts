@@ -20,6 +20,7 @@ export const sidePanel = style({
     rowGap: '18px',
 
     flexGrow: 1,
+    borderRadius: '6px',
     backgroundColor: COLOR.SurfaceLevel1,
     overflowY: 'hidden',
 });
