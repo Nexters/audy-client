@@ -248,7 +248,7 @@ export class TMapModule {
                 }),
         );
 
-        this.#paths = paths;
+        // this.#paths = paths;
         this.#polylines = polylines;
     }
 
