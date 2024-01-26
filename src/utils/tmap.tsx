@@ -171,7 +171,10 @@ export class TMapModule {
             return;
         }
 
-        if (startIndex === endIndex) return;
+        if (startIndex === endIndex) {
+            this.removePath();
+            return;
+        }
 
         const paths: (typeof window.Tmapv3.LatLng)[] = [];
         const MAX_POINTS = 6;
