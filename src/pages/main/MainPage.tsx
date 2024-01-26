@@ -1,3 +1,6 @@
+import LeftArrowIcon from '@/assets/icons/leftArrow.svg?react';
+import ModifyFilledIcon from '@/assets/icons/modifyFilled.svg?react';
+import Searchicon from '@/assets/icons/search.svg?react';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import CourseView from '@/features/course/course-view';
 import { useTmap } from '@/hooks/useTmap';
@@ -18,6 +21,28 @@ function MainPage() {
             <GlobalNavigationBar />
             <div className={styles.wrapper}>
                 <div className={styles.sidePanel}>
+                    <div className={styles.header}>
+                        <LeftArrowIcon
+                            width={24}
+                            height={24}
+                            className={styles.backArrowIcon}
+                        />
+                        <p className={styles.courseName}>테스트 코스</p>
+                        <ModifyFilledIcon
+                            width={24}
+                            height={24}
+                            className={styles.modifyIcon}
+                        />
+                    </div>
+                    <div className={styles.searchBox}>
+                        <div className={styles.searchInner}>
+                            <Searchicon width={20} height={20} />
+                            <input
+                                className={styles.searchInput}
+                                placeholder="장소를 입력해주세요."
+                            />
+                        </div>
+                    </div>
                     <CourseView />
                 </div>
                 <div className={styles.map} ref={mapContainerRef} />
