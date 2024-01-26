@@ -25,9 +25,6 @@ const { Tmapv3 } = window;
 export class TMapModule {
     #mapInstance: typeof Tmapv3;
     #markers: MarkersType[] = [];
-
-
-    #_paths: [number, number][] = [];
     #polylines: (typeof Tmapv3.Polyline)[] = [];
 
     #isPathVisible: boolean = true;
@@ -249,8 +246,6 @@ export class TMapModule {
                 }),
         );
 
-
-        this.#_paths = paths;
         this.#polylines = polylines;
     }
 
