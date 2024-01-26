@@ -25,7 +25,6 @@ const { Tmapv3 } = window;
 export class TMapModule {
     #mapInstance: typeof Tmapv3;
     #markers: MarkersType[] = [];
-
     #polylines: (typeof Tmapv3.Polyline)[] = [];
 
     #isPathVisible: boolean = true;
