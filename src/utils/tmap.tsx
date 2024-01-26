@@ -171,6 +171,8 @@ export class TMapModule {
             return;
         }
 
+        if (startIndex === endIndex) return;
+
         const paths: (typeof window.Tmapv3.LatLng)[] = [];
         const MAX_POINTS = 6;
 
@@ -181,10 +183,10 @@ export class TMapModule {
             const currentEndIndex =
                 endIndex <= index + MAX_POINTS ? endIndex : index + MAX_POINTS;
 
-            const [startMarker, ...passMarkers] = this.#markers.slice(
-                currentStartIndex,
-                currentEndIndex + 1,
-            );
+            const [startMarker, ...passMarkers] = this.#markers
+                .slice(currentStartIndex, currentEndIndex + 1)
+                .map(({ marker }) => marker);
+
             const endMarker = passMarkers.pop();
 
             const [startX, startY] = this.#getMarkerPosition(startMarker);
@@ -319,6 +321,12 @@ export class TMapModule {
                 name,
                 address,
                 isPinned: true,
+            });
+
+            this.removePath();
+            this.drawPathBetweenMarkers({
+                startIndex: 0,
+                endIndex: this.#markers.length - 1,
             });
         };
 
