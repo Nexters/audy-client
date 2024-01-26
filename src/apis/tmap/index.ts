@@ -15,7 +15,7 @@ export const TmapRepository = {
         startY,
         endX,
         endY,
-        passes,
+        passList,
         reqCoordType = 'WGS84GEO',
         resCoordType = 'WGS84GEO',
     }: TmapRequestParamsType['getRoutePath']) {
@@ -29,7 +29,7 @@ export const TmapRepository = {
                 startY,
                 endX,
                 endY,
-                ...(passes && { passList: passes }),
+                ...(passList && { passList }),
                 reqCoordType,
                 resCoordType,
             },
