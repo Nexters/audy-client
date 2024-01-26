@@ -1,7 +1,7 @@
 import { socialLoginProvider } from '@/constants';
 import { SocialLoginProviderType } from '@/types';
 
-export default function LoginPage() {
+const LoginPage = () => {
     const makeQueryString = (
         config: Record<string, string | number | boolean>,
     ) => {
@@ -9,7 +9,7 @@ export default function LoginPage() {
             .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
             .join('&');
     };
-    
+
     const makeSocialLoginUrl = (provider: SocialLoginProviderType) => {
         const { url, config } = socialLoginProvider[provider];
         const queryString = makeQueryString(config);
@@ -35,4 +35,6 @@ export default function LoginPage() {
             </button>
         </div>
     );
-}
+};
+
+export default LoginPage;

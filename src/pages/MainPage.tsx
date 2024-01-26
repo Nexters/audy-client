@@ -1,7 +1,7 @@
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import { useTmap } from '@/hooks/useTmap';
 
-function MainPage() {
+const MainPage = () => {
     const { tmapModuleRef, mapContainerRef } = useTmap({
         mapId: 'tmap',
         lat: 37.5652045,
@@ -38,6 +38,6 @@ function MainPage() {
             </div>
         </>
     );
-}
+};
 
 export default MainPage;

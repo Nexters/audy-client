@@ -13,7 +13,7 @@ interface PropsType {
     isPinned: boolean;
 }
 
-export default function InfoWindow({ name, address, isPinned }: PropsType) {
+const InfoWindow = ({ name, address, isPinned }: PropsType) => {
     const handlePinButtonClick = () => {};
 
     return (
@@ -44,4 +44,6 @@ export default function InfoWindow({ name, address, isPinned }: PropsType) {
             </div>
         </div>
     );
-}
+};
+
+export default InfoWindow;
