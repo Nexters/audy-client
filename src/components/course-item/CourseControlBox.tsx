@@ -9,20 +9,21 @@ import { useDisclosure } from '@/hooks/useDisclosure';
 import * as styles from './CourseControlBox.css';
 
 interface PropsType {
-    isHover: boolean;
     id: number;
     name: string;
     address: string;
 }
 
-const CourseControlBox = ({ isHover, id, name, address }: PropsType) => {
+const CourseControlBox = ({ id, name, address }: PropsType) => {
     const { selectedId } = useContext(CourseViewContextValue);
-
     const courseInputRef = useRef<HTMLInputElement | null>(null);
     const [modifiedCourseName, setModifiedCourseName] = useState(name);
 
     const { value: isModifyCourseName, toggle: toggleModifyCourseName } =
         useDisclosure(false);
+
+    const isSelected = selectedId === id;
+    const isDisabledCourseInput = !isSelected || !isModifyCourseName;
 
     const handleModifyCourseName = (
         event: React.ChangeEvent<HTMLInputElement>,
@@ -35,9 +36,6 @@ const CourseControlBox = ({ isHover, id, name, address }: PropsType) => {
         if (!isModifyCourseName) courseInputRef.current.focus();
         toggleModifyCourseName();
     };
-
-    const isSelected = selectedId === id;
-    const isDisabledCourseInput = !isSelected || !isModifyCourseName;
 
     return (
         <div className={styles.wrapper}>

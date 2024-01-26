@@ -2,7 +2,6 @@ import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { COLOR } from '@/styles/foundation';
-import { sprinkles } from '@/styles/sprinkle.css';
 
 export const wrapper = recipe({
     base: {
@@ -14,11 +13,6 @@ export const wrapper = recipe({
         columnGap: '12px',
     
         overflowX: 'hidden',
-
-        ':hover': {
-            borderRadius: '100px',
-            backgroundColor: `${COLOR.MonoBlack}08`,
-        },
     },
 
     variants: {

@@ -20,9 +20,10 @@ const CourseCheckBox = ({ id, order, isHover }: PropsType) => {
     const isChecked = selectedId === id;
 
     const handleClickCheckBox = () => {
-        if (!isHover) return;
-        setSelectedId(isChecked ? null : id);
+        if (isHover) setSelectedId(isChecked ? null : id);
     };
+
+    const isShowOrder = !isChecked && !isHover;
 
     return (
         <svg
@@ -32,7 +33,7 @@ const CourseCheckBox = ({ id, order, isHover }: PropsType) => {
             onClick={handleClickCheckBox}
         >
             <rect x={1} y={1} className={styles.orderRect} rx={4} />
-            {!isHover && !isChecked && (
+            {isShowOrder && (
                 <text x="50%" y="50%" className={styles.orderText}>
                     {order}
                 </text>
