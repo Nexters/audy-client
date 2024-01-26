@@ -1,4 +1,5 @@
 import GlobalNavigationBar from '@/components/global-navigation-bar';
+import CourseView from '@/features/course/course-view';
 import { useTmap } from '@/hooks/useTmap';
 
 const MainPage = () => {
@@ -29,6 +30,7 @@ const MainPage = () => {
     return (
         <>
             <GlobalNavigationBar />
+            <CourseView />
             <div>
                 <p>test test test test test test</p>
                 <div ref={mapContainerRef} />
