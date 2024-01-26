@@ -2,6 +2,7 @@ import { renderToString } from 'react-dom/server';
 
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
+import Marker from '@/features/map/marker/Marker';
 import { MarkersType } from '@/types/map';
 
 export interface TmapConstructorType {
@@ -33,6 +34,7 @@ export class TMapModule {
     #infoWindows: (typeof window.Tmapv3.InfoWindow)[] = [];
 
     #zoomInLevel: number = 17; // TODO: 임시
+    #maxMarkerCount: number = 15;
 
     constructor({
         mapId = 'tmap',
@@ -104,7 +106,7 @@ export class TMapModule {
         id,
         lat,
         lng,
-        iconUrl,
+        iconHTML,
     }: {
         name: string;
         originName: string;
@@ -112,11 +114,13 @@ export class TMapModule {
         id: string;
         lat: number;
         lng: number;
-        iconUrl?: string;
+        iconHTML?: string;
     }) {
+        if (this.#markers.length >= this.#maxMarkerCount) return;
+
         const marker = new Tmapv3.Marker({
             position: new Tmapv3.LatLng(lat, lng),
-            iconUrl,
+            iconHTML,
             map: this.#mapInstance,
         });
 
@@ -290,13 +294,41 @@ export class TMapModule {
         this.#mapInstance.setCenter(infoWindowLatLng);
         this.#mapInstance.setZoom(this.#zoomInLevel);
 
+        const handlePinButtonClick = () => {
+            if (this.#markers.length >= this.#maxMarkerCount) return;
+
+            const iconHTML = renderToString(
+                <Marker number={this.#markers.length + 1} />,
+            );
+
+            this.createMarker({
+                name,
+                originName: name, // FIXME : 임시
+                address,
+                id: '임시', // FIXME : 임시
+                lat,
+                lng,
+                iconHTML,
+            });
+
+            this.removeInfoWindow();
+
+            this.createInfoWindow({
+                lat,
+                lng,
+                name,
+                address,
+                isPinned: true,
+            });
+        };
+
         document
             .querySelector('#infoWindow')
             ?.addEventListener('click', (e) => e.stopPropagation());
 
         document
             .querySelector('#pinButton')
-            ?.addEventListener('click', (e) => {});
+            ?.addEventListener('click', handlePinButtonClick);
     }
 
     // 인포창 전체 삭제

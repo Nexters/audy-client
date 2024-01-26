@@ -1,10 +1,16 @@
 import MarkerImage from '@/assets/icons/marker.svg?react';
 
-const Marker = (number: number) => {
+import * as S from './Marker.css';
+
+interface PropsType {
+    number: number;
+}
+
+const Marker = ({ number }: PropsType) => {
     return (
         <div>
-            <MarkerImage />
-            <p>{number}</p>
+            <MarkerImage className={S.marker} />
+            <p className={S.numberWrapper}>{number}</p>
         </div>
     );
 };
