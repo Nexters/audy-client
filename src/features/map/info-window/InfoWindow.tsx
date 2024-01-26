@@ -14,22 +14,6 @@ interface PropsType {
 export default function InfoWindow({ name, address, isPinned }: PropsType) {
     const handlePinButtonClick = () => {};
 
-    const PinButton = () => {
-        return (
-            <button className={styles.pinButton} onClick={handlePinButtonClick}>
-                <AddIcon />
-            </button>
-        );
-    };
-
-    const DisabledButton = () => {
-        return (
-            <button className={styles.disabledButton} disabled>
-                <CheckIcon />
-            </button>
-        );
-    };
-
     return (
         <div className={`${styles.layout} ${isPinned && styles.layoutMargin}`}>
             <InfoWindowLayout className={styles.window} />
@@ -43,7 +27,18 @@ export default function InfoWindow({ name, address, isPinned }: PropsType) {
                     </div>
                 </div>
 
-                {isPinned ? <DisabledButton /> : <PinButton />}
+                {isPinned ? (
+                    <button className={styles.disabledButton} disabled>
+                        <CheckIcon />
+                    </button>
+                ) : (
+                    <button
+                        className={styles.pinButton}
+                        onClick={handlePinButtonClick}
+                    >
+                        <AddIcon />
+                    </button>
+                )}
             </div>
         </div>
     );
