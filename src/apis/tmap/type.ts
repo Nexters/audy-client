@@ -1,10 +1,10 @@
-export interface TmapReqParamsType {
+export interface TmapRequestParamsType {
     getRoutePath: {
         startX: number;
         startY: number;
         endX: number;
         endY: number;
-        passList?: string;
+        passes?: string;
         reqCoordType?: string;
         resCoordType?: string;
     };

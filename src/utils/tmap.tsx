@@ -2,6 +2,7 @@ import { renderToString } from 'react-dom/server';
 
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
+import Marker from '@/features/map/marker/Marker';
 import { MarkersType } from '@/types/map';
 
 export interface TmapConstructorType {
@@ -14,9 +15,9 @@ export interface TmapConstructorType {
     /** 지도 Element 의 확대 정도 (1 ~ 15) */
     zoom?: number;
     /** 지도 의 중심점 위도 */
-    latitude: number;
+    lat: number;
     /** 지도 의 중심점 경도 */
-    longitude: number;
+    lng: number;
 }
 
 const { Tmapv3 } = window;
@@ -25,22 +26,23 @@ export class TMapModule {
     #mapInstance: typeof Tmapv3;
     #markers: MarkersType[] = [];
 
-    #pathList: [number, number][] = [];
-    #polylineList: (typeof Tmapv3.Polyline)[] = [];
+    #paths: [number, number][] = [];
+    #polylines: (typeof Tmapv3.Polyline)[] = [];
 
     #isPathVisible: boolean = true;
 
     #infoWindows: (typeof window.Tmapv3.InfoWindow)[] = [];
 
     #zoomInLevel: number = 17; // TODO: 임시
+    #maxMarkerCount: number = 15;
 
     constructor({
         mapId = 'tmap',
         width = 640,
         height = 480,
         zoom = 10,
-        latitude,
-        longitude,
+        lat,
+        lng,
     }: TmapConstructorType) {
         if (typeof window === 'undefined') {
             throw new Error('T Map 은 Server Side 에서 사용할 수 없습니다.');
@@ -55,7 +57,7 @@ export class TMapModule {
         }
 
         this.#mapInstance = new Tmapv3.Map(mapId, {
-            center: new Tmapv3.LatLng(latitude, longitude),
+            center: new Tmapv3.LatLng(lat, lng),
             width: `${width}px`,
             height: `${height}px`,
             zoom,
@@ -63,14 +65,14 @@ export class TMapModule {
 
         // FIXME : 마커 생성을 위해 임시로 추가한 코드, 제거 필요
         // const handleClickMap = (event: any) => {
-        //     const { _lat: latitude, _lng: longitude } = event._data.lngLat;
+        //     const { _lat: lat, _lng: lng } = event._data.lngLat;
         //     this.createMarker({
         //         name: '임시',
         //         originName: '임시',
         //         address: '임시',
         //         id: '임시',
-        //         latitude,
-        //         longitude,
+        //         lat,
+        //         lng,
         //     });
         // };
 
@@ -80,13 +82,13 @@ export class TMapModule {
             const { _lat: lat, _lng: lng } = e._data.lngLat;
 
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
-                latitude: lat,
-                longitude: lng,
+                lat,
+                lng,
             });
 
             this.createInfoWindow({
-                latitude: lat,
-                longitude: lng,
+                lat,
+                lng,
                 name: `장소${this.#markers.length + 1}`,
                 address: fullAddress,
                 isPinned: false,
@@ -102,28 +104,30 @@ export class TMapModule {
         originName,
         address,
         id,
-        latitude,
-        longitude,
-        iconUrl,
+        lat,
+        lng,
+        iconHTML,
     }: {
         name: string;
         originName: string;
         address: string;
         id: string;
-        latitude: number;
-        longitude: number;
-        iconUrl?: string;
+        lat: number;
+        lng: number;
+        iconHTML?: string;
     }) {
+        if (this.#markers.length >= this.#maxMarkerCount) return;
+
         const marker = new Tmapv3.Marker({
-            position: new Tmapv3.LatLng(latitude, longitude),
-            iconUrl,
+            position: new Tmapv3.LatLng(lat, lng),
+            iconHTML,
             map: this.#mapInstance,
         });
 
         const handleMarkerClick = () => {
             this.createInfoWindow({
-                latitude,
-                longitude,
+                lat,
+                lng,
                 name,
                 address,
                 isPinned: true,
@@ -138,8 +142,8 @@ export class TMapModule {
             originName,
             address,
             id,
-            latitude,
-            longitude,
+            lat,
+            lng,
         });
     }
 
@@ -167,7 +171,12 @@ export class TMapModule {
             return;
         }
 
-        const pathList: (typeof window.Tmapv3.LatLng)[] = [];
+        if (startIndex === endIndex) {
+            this.removePath();
+            return;
+        }
+
+        const paths: (typeof window.Tmapv3.LatLng)[] = [];
         const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
@@ -177,16 +186,16 @@ export class TMapModule {
             const currentEndIndex =
                 endIndex <= index + MAX_POINTS ? endIndex : index + MAX_POINTS;
 
-            const [startMarker, ...passMarkers] = this.#markers.slice(
-                currentStartIndex,
-                currentEndIndex + 1,
-            );
+            const [startMarker, ...passMarkers] = this.#markers
+                .slice(currentStartIndex, currentEndIndex + 1)
+                .map(({ marker }) => marker);
+
             const endMarker = passMarkers.pop();
 
             const [startX, startY] = this.#getMarkerPosition(startMarker);
             const [endX, endY] = this.#getMarkerPosition(endMarker);
 
-            const passList = passMarkers.length
+            const passes = passMarkers.length
                 ? passMarkers
                       .map((markers) =>
                           this.#getMarkerPosition(markers).join(','),
@@ -199,7 +208,7 @@ export class TMapModule {
                 startY,
                 endX,
                 endY,
-                passList,
+                passes,
             });
 
             features.forEach((feature, index) => {
@@ -209,20 +218,25 @@ export class TMapModule {
                     );
 
                     // NOTE : 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
-                    const prevFeature =
+                    const previousFeature =
                         index > 0 ? features[index - 1] : undefined;
-                    if (prevFeature && prevFeature.geometry.type === 'Point') {
-                        const [prevLng, prevLat] =
-                            prevFeature.geometry.coordinates;
-                        path.unshift(new Tmapv3.LatLng(prevLat, prevLng));
+                    if (
+                        previousFeature &&
+                        previousFeature.geometry.type === 'Point'
+                    ) {
+                        const [previousLng, previousLat] =
+                            previousFeature.geometry.coordinates;
+                        path.unshift(
+                            new Tmapv3.LatLng(previousLat, previousLng),
+                        );
                     }
 
-                    pathList.push(path);
+                    paths.push(path);
                 }
             });
         }
 
-        const polylineList = pathList.map(
+        const polylines = paths.map(
             (path) =>
                 new Tmapv3.Polyline({
                     path,
@@ -234,14 +248,14 @@ export class TMapModule {
                 }),
         );
 
-        this.#pathList = pathList;
-        this.#polylineList = polylineList;
+        this.#paths = paths;
+        this.#polylines = polylines;
     }
 
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 togglePathVisibility
     togglePathVisibility() {
         const updatedVisible = !this.#isPathVisible;
-        this.#polylineList.forEach((polyline) =>
+        this.#polylines.forEach((polyline) =>
             polyline.setMap(updatedVisible ? this.#mapInstance : null),
         );
         this.#isPathVisible = updatedVisible;
@@ -249,28 +263,28 @@ export class TMapModule {
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
     removePath() {
-        if (!this.#polylineList.length) return;
-        this.#polylineList.forEach((polyline) => polyline.setMap(null));
-        this.#polylineList = [];
+        if (!this.#polylines.length) return;
+        this.#polylines.forEach((polyline) => polyline.setMap(null));
+        this.#polylines = [];
     }
 
     // 인포창 생성
     createInfoWindow({
-        latitude,
-        longitude,
+        lat,
+        lng,
         name,
         address,
         isPinned,
     }: {
-        latitude: number;
-        longitude: number;
+        lat: number;
+        lng: number;
         name: string;
         address: string;
         isPinned: boolean;
     }) {
         this.removeInfoWindow();
 
-        const infoWindowLatLng = new Tmapv3.LatLng(latitude, longitude);
+        const infoWindowLatLng = new Tmapv3.LatLng(lat, lng);
         const content = renderToString(
             <InfoWindow name={name} address={address} isPinned={isPinned} />,
         );
@@ -289,6 +303,48 @@ export class TMapModule {
 
         this.#mapInstance.setCenter(infoWindowLatLng);
         this.#mapInstance.setZoom(this.#zoomInLevel);
+
+        const handlePinButtonClick = () => {
+            if (this.#markers.length >= this.#maxMarkerCount) return;
+
+            const iconHTML = renderToString(
+                <Marker number={this.#markers.length + 1} />,
+            );
+
+            this.createMarker({
+                name,
+                originName: name, // FIXME : 임시
+                address,
+                id: '임시', // FIXME : 임시
+                lat,
+                lng,
+                iconHTML,
+            });
+
+            this.removeInfoWindow();
+
+            this.createInfoWindow({
+                lat,
+                lng,
+                name,
+                address,
+                isPinned: true,
+            });
+
+            this.removePath();
+            this.drawPathBetweenMarkers({
+                startIndex: 0,
+                endIndex: this.#markers.length - 1,
+            });
+        };
+
+        document
+            .querySelector('#infoWindow')
+            ?.addEventListener('click', (e) => e.stopPropagation());
+
+        document
+            .querySelector('#pinButton')
+            ?.addEventListener('click', handlePinButtonClick);
     }
 
     // 인포창 전체 삭제

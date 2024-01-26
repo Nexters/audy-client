@@ -2,11 +2,11 @@ import GlobalNavigationBar from '@/components/global-navigation-bar';
 import CourseView from '@/features/course/course-view';
 import { useTmap } from '@/hooks/useTmap';
 
-function MainPage() {
+const MainPage = () => {
     const { tmapModuleRef, mapContainerRef } = useTmap({
         mapId: 'tmap',
-        latitude: 37.5652045,
-        longitude: 126.98702028,
+        lat: 37.5652045,
+        lng: 126.98702028,
     });
 
     const handleTestRoutePath = async () => {
@@ -40,6 +40,6 @@ function MainPage() {
             </div>
         </>
     );
-}
+};
 
 export default MainPage;

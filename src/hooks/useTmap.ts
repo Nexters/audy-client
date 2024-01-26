@@ -7,8 +7,8 @@ export const useTmap = ({
     width = 640,
     height = 480,
     zoom = 10,
-    latitude,
-    longitude,
+    lat,
+    lng,
 }: TmapConstructorType) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const tmapModuleRef = useRef<TMapModule | null>(null);
@@ -22,10 +22,10 @@ export const useTmap = ({
             width,
             height,
             zoom,
-            latitude,
-            longitude,
+            lat,
+            lng,
         });
-    }, [height, latitude, longitude, mapId, width, zoom]);
+    }, [height, lat, lng, mapId, width, zoom]);
 
     return { mapContainerRef, tmapModuleRef };
 };
