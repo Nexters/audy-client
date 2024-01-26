@@ -47,11 +47,11 @@ export const TmapRepository = {
     },
 
     getAddressFromLatLng: async function ({
-        latitude,
-        longitude,
+        lat,
+        lng,
     }: {
-        latitude: number;
-        longitude: number;
+        lat: number;
+        lng: number;
     }) {
         const response = await getAsync<GetReverseGeoCodingType>(
             '/geo/reversegeocoding',
@@ -60,8 +60,8 @@ export const TmapRepository = {
                 headers: { appKey: this.appKey },
                 params: {
                     version: 1,
-                    lat: latitude,
-                    lon: longitude,
+                    lat,
+                    lon: lng,
                     coordType: 'WGS84GEO',
                     addressType: 'A04', // TODO: 논의 후 수정 예정
                     callback: 'result',

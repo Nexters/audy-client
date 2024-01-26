@@ -14,9 +14,9 @@ export interface TmapConstructorType {
     /** 지도 Element 의 확대 정도 (1 ~ 15) */
     zoom?: number;
     /** 지도 의 중심점 위도 */
-    latitude: number;
+    lat: number;
     /** 지도 의 중심점 경도 */
-    longitude: number;
+    lng: number;
 }
 
 const { Tmapv3 } = window;
@@ -39,8 +39,8 @@ export class TMapModule {
         width = 640,
         height = 480,
         zoom = 10,
-        latitude,
-        longitude,
+        lat,
+        lng,
     }: TmapConstructorType) {
         if (typeof window === 'undefined') {
             throw new Error('T Map 은 Server Side 에서 사용할 수 없습니다.');
@@ -55,7 +55,7 @@ export class TMapModule {
         }
 
         this.#mapInstance = new Tmapv3.Map(mapId, {
-            center: new Tmapv3.LatLng(latitude, longitude),
+            center: new Tmapv3.LatLng(lat, lng),
             width: `${width}px`,
             height: `${height}px`,
             zoom,
@@ -63,14 +63,14 @@ export class TMapModule {
 
         // FIXME : 마커 생성을 위해 임시로 추가한 코드, 제거 필요
         // const handleClickMap = (event: any) => {
-        //     const { _lat: latitude, _lng: longitude } = event._data.lngLat;
+        //     const { _lat: lat, _lng: lng } = event._data.lngLat;
         //     this.createMarker({
         //         name: '임시',
         //         originName: '임시',
         //         address: '임시',
         //         id: '임시',
-        //         latitude,
-        //         longitude,
+        //         lat,
+        //         lng,
         //     });
         // };
 
@@ -80,13 +80,13 @@ export class TMapModule {
             const { _lat: lat, _lng: lng } = e._data.lngLat;
 
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
-                latitude: lat,
-                longitude: lng,
+                lat,
+                lng,
             });
 
             this.createInfoWindow({
-                latitude: lat,
-                longitude: lng,
+                lat,
+                lng,
                 name: `장소${this.#markers.length + 1}`,
                 address: fullAddress,
                 isPinned: false,
@@ -102,28 +102,28 @@ export class TMapModule {
         originName,
         address,
         id,
-        latitude,
-        longitude,
+        lat,
+        lng,
         iconUrl,
     }: {
         name: string;
         originName: string;
         address: string;
         id: string;
-        latitude: number;
-        longitude: number;
+        lat: number;
+        lng: number;
         iconUrl?: string;
     }) {
         const marker = new Tmapv3.Marker({
-            position: new Tmapv3.LatLng(latitude, longitude),
+            position: new Tmapv3.LatLng(lat, lng),
             iconUrl,
             map: this.#mapInstance,
         });
 
         const handleMarkerClick = () => {
             this.createInfoWindow({
-                latitude,
-                longitude,
+                lat,
+                lng,
                 name,
                 address,
                 isPinned: true,
@@ -138,8 +138,8 @@ export class TMapModule {
             originName,
             address,
             id,
-            latitude,
-            longitude,
+            lat,
+            lng,
         });
     }
 
@@ -256,21 +256,21 @@ export class TMapModule {
 
     // 인포창 생성
     createInfoWindow({
-        latitude,
-        longitude,
+        lat,
+        lng,
         name,
         address,
         isPinned,
     }: {
-        latitude: number;
-        longitude: number;
+        lat: number;
+        lng: number;
         name: string;
         address: string;
         isPinned: boolean;
     }) {
         this.removeInfoWindow();
 
-        const infoWindowLatLng = new Tmapv3.LatLng(latitude, longitude);
+        const infoWindowLatLng = new Tmapv3.LatLng(lat, lng);
         const content = renderToString(
             <InfoWindow name={name} address={address} isPinned={isPinned} />,
         );
