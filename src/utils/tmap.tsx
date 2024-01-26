@@ -25,8 +25,8 @@ export class TMapModule {
     #mapInstance: typeof Tmapv3;
     #markers: MarkersType[] = [];
 
-    #pathList: [number, number][] = [];
-    #polylineList: (typeof Tmapv3.Polyline)[] = [];
+    #paths: [number, number][] = [];
+    #polylines: (typeof Tmapv3.Polyline)[] = [];
 
     #isPathVisible: boolean = true;
 
@@ -167,7 +167,7 @@ export class TMapModule {
             return;
         }
 
-        const pathList: (typeof window.Tmapv3.LatLng)[] = [];
+        const paths: (typeof window.Tmapv3.LatLng)[] = [];
         const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
@@ -186,7 +186,7 @@ export class TMapModule {
             const [startX, startY] = this.#getMarkerPosition(startMarker);
             const [endX, endY] = this.#getMarkerPosition(endMarker);
 
-            const passList = passMarkers.length
+            const passes = passMarkers.length
                 ? passMarkers
                       .map((markers) =>
                           this.#getMarkerPosition(markers).join(','),
@@ -199,7 +199,7 @@ export class TMapModule {
                 startY,
                 endX,
                 endY,
-                passList,
+                passes,
             });
 
             features.forEach((feature, index) => {
@@ -217,12 +217,12 @@ export class TMapModule {
                         path.unshift(new Tmapv3.LatLng(prevLat, prevLng));
                     }
 
-                    pathList.push(path);
+                    paths.push(path);
                 }
             });
         }
 
-        const polylineList = pathList.map(
+        const polylines = paths.map(
             (path) =>
                 new Tmapv3.Polyline({
                     path,
@@ -234,14 +234,14 @@ export class TMapModule {
                 }),
         );
 
-        this.#pathList = pathList;
-        this.#polylineList = polylineList;
+        this.#paths = paths;
+        this.#polylines = polylines;
     }
 
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 togglePathVisibility
     togglePathVisibility() {
         const updatedVisible = !this.#isPathVisible;
-        this.#polylineList.forEach((polyline) =>
+        this.#polylines.forEach((polyline) =>
             polyline.setMap(updatedVisible ? this.#mapInstance : null),
         );
         this.#isPathVisible = updatedVisible;
@@ -249,9 +249,9 @@ export class TMapModule {
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
     removePath() {
-        if (!this.#polylineList.length) return;
-        this.#polylineList.forEach((polyline) => polyline.setMap(null));
-        this.#polylineList = [];
+        if (!this.#polylines.length) return;
+        this.#polylines.forEach((polyline) => polyline.setMap(null));
+        this.#polylines = [];
     }
 
     // 인포창 생성
