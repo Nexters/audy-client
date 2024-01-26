@@ -1,3 +1,5 @@
+import clsx from 'clsx';
+
 import AddIcon from '@/assets/icons/add.svg?react';
 import CheckIcon from '@/assets/icons/check.svg?react';
 import InfoWindowLayout from '@/assets/icons/infoWindowLayout.svg?react';
@@ -15,7 +17,7 @@ export default function InfoWindow({ name, address, isPinned }: PropsType) {
     const handlePinButtonClick = () => {};
 
     return (
-        <div className={`${S.layout} ${isPinned && S.layoutMargin}`}>
+        <div className={clsx(S.layout, isPinned && S.layoutMargin)}>
             <InfoWindowLayout className={S.window} />
 
             <div className={S.contentsContainer}>

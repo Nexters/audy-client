@@ -12,10 +12,11 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.17.10",
+    "@vanilla-extract/css": "^1.14.0",
     "@vanilla-extract/recipes": "^0.5.1",
     "@vanilla-extract/sprinkles": "^1.6.1",
-    "@vanilla-extract/css": "^1.14.0",
     "axios": "^1.6.5",
+    "clsx": "^2.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.12",
