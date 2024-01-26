@@ -6,7 +6,7 @@ export const layout = style({
 });
 
 export const layoutMargin = style({
-    margin: '0 0 50px 0',
+    margin: '0 0 60px 0',
 });
 
 export const window = style({
