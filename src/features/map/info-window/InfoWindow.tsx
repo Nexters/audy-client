@@ -3,7 +3,7 @@ import CheckIcon from '@/assets/icons/check.svg?react';
 import InfoWindowLayout from '@/assets/icons/infoWindowLayout.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
 
-import * as styles from './InfoWindow.css';
+import * as S from './InfoWindow.css';
 
 interface PropsType {
     name: string;
@@ -15,15 +15,15 @@ export default function InfoWindow({ name, address, isPinned }: PropsType) {
     const handlePinButtonClick = () => {};
 
     return (
-        <div className={`${styles.layout} ${isPinned && styles.layoutMargin}`}>
-            <InfoWindowLayout className={styles.window} />
+        <div className={`${S.layout} ${isPinned && S.layoutMargin}`}>
+            <InfoWindowLayout className={S.window} />
 
-            <div className={styles.contentsContainer}>
+            <div className={S.contentsContainer}>
                 <div>
-                    <p className={styles.name}>{name}</p>
-                    <div className={styles.addressContainer}>
+                    <p className={S.name}>{name}</p>
+                    <div className={S.addressContainer}>
                         <LocationIcon />
-                        <p className={styles.address}>{address}</p>
+                        <p className={S.address}>{address}</p>
                     </div>
                 </div>
 
