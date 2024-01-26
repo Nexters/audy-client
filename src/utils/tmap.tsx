@@ -57,7 +57,7 @@ export class TMapModule {
         }
 
         this.#mapInstance = new Tmapv3.Map(mapId, {
-            center: new Tmapv3.LatLng(latitude, longitude),
+            center: new Tmapv3.LatLng(lat, lng),
             width: typeof width === 'number' ? `${width}px` : width,
             height: typeof height === 'number' ? `${height}px` : height,
             zoom,

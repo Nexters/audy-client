@@ -4,7 +4,7 @@ export interface TmapRequestParamsType {
         startY: number;
         endX: number;
         endY: number;
-        passList?: string;
+        passes?: string;
         reqCoordType?: string;
         resCoordType?: string;
     };
