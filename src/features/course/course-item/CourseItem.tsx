@@ -11,7 +11,7 @@ import ListIcon from '@/assets/icons/list.svg?react';
 import {
     CourseViewContextAction,
     CourseViewContextValue,
-} from '@/components/course-view/CourseViewContextProvider';
+} from '@/features/course/course-view/CourseViewContextProvider';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 
 import CourseCheckBox from './CourseCheckBox';

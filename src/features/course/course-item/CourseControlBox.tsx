@@ -6,7 +6,7 @@ import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import {
     CourseViewContextAction,
     CourseViewContextValue,
-} from '@/components/course-view/CourseViewContextProvider';
+} from '@/features/course/course-view/CourseViewContextProvider';
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 

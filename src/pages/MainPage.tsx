@@ -1,6 +1,6 @@
 import GlobalNavigationBar from '@/components/global-navigation-bar';
+import CourseView from '@/features/course/course-view';
 import { useTmap } from '@/hooks/useTmap';
-import CourseView from '@/components/course-view/CourseView';
 
 function MainPage() {
     const { tmapModuleRef, mapContainerRef } = useTmap({

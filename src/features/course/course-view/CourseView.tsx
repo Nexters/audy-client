@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { Reorder } from 'framer-motion';
 
-import CourseItem from '@/components/course-item';
+import CourseItem from '@/features/course/course-item';
 import { dummyCourseList } from '@/constants/dummy';
 
 import * as styles from './CourseView.css';

@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import {
     CourseViewContextAction,
     CourseViewContextValue,
-} from '@/components/course-view/CourseViewContextProvider';
+} from '@/features/course/course-view/CourseViewContextProvider';
 
 import * as styles from './CourseCheckBox.css';
 
