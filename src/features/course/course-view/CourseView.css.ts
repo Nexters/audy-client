@@ -7,6 +7,9 @@ export const wrapper = style({
     backgroundColor: COLOR.MonoWhite,
     overflowY: 'scroll',
 
+    display: 'flex',
+    flexDirection: 'column',
+
     "::-webkit-scrollbar": {
         width: '8px',
     },

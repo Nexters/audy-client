@@ -8,10 +8,10 @@ import { MarkersType } from '@/types/map';
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
     mapId?: string;
-    /** 지도 Element 의 width (px) */
-    width?: number;
-    /** 지도 Element 의 height (px) */
-    height?: number;
+    /** 지도 Element 의 width */
+    width?: number | string;
+    /** 지도 Element 의 height */
+    height?: number | string;
     /** 지도 Element 의 확대 정도 (1 ~ 15) */
     zoom?: number;
     /** 지도 의 중심점 위도 */
@@ -57,9 +57,9 @@ export class TMapModule {
         }
 
         this.#mapInstance = new Tmapv3.Map(mapId, {
-            center: new Tmapv3.LatLng(lat, lng),
-            width: `${width}px`,
-            height: `${height}px`,
+            center: new Tmapv3.LatLng(latitude, longitude),
+            width: typeof width === 'number' ? `${width}px` : width,
+            height: typeof height === 'number' ? `${height}px` : height,
             zoom,
         });
 

@@ -17,6 +17,7 @@ export const useTmap = ({
         if (!mapContainerRef.current) return;
 
         mapContainerRef.current.id = mapId;
+
         tmapModuleRef.current = new TMapModule({
             mapId,
             width,
