@@ -3,8 +3,12 @@ import { useContext, useRef, useState } from 'react';
 import LocationIcon from '@/assets/icons/location.svg?react';
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
-import { CourseViewContextValue } from '@/components/course-view/CourseViewContextProvider';
+import {
+    CourseViewContextAction,
+    CourseViewContextValue,
+} from '@/components/course-view/CourseViewContextProvider';
 import { useDisclosure } from '@/hooks/useDisclosure';
+import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 
 import * as styles from './CourseControlBox.css';
 
@@ -16,6 +20,8 @@ interface PropsType {
 
 const CourseControlBox = ({ id, name, address }: PropsType) => {
     const { selectedId } = useContext(CourseViewContextValue);
+    const { setSelectedId } = useContext(CourseViewContextAction);
+
     const courseInputRef = useRef<HTMLInputElement | null>(null);
     const [modifiedCourseName, setModifiedCourseName] = useState(name);
 
@@ -31,11 +37,22 @@ const CourseControlBox = ({ id, name, address }: PropsType) => {
         setModifiedCourseName(event.target.value);
     };
 
+    const handleClickInputOutside = () => {
+        if (!isModifyCourseName) return;
+        toggleModifyCourseName();
+        setSelectedId(null);
+    };
+
     const handleClickModifyIcon = () => {
         if (!courseInputRef.current) return;
         if (!isModifyCourseName) courseInputRef.current.focus();
         toggleModifyCourseName();
     };
+
+    useOnClickOutside({
+        ref: courseInputRef,
+        handler: handleClickInputOutside,
+    });
 
     return (
         <div className={styles.wrapper}>
