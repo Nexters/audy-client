@@ -8,7 +8,9 @@ interface PropsType {
 export const useOnClickOutside = ({ ref, handler }: PropsType) => {
     useEffect(() => {
         const eventListener = (event: PointerEvent) => {
-            if (!ref.current) return;
+            // NOTE : ref 에 element 가 없거나, 클릭한 대상이 ref의 자식 요소인지를 판별
+            if (!ref.current || ref.current.contains(event.target as Node))
+                return;
             handler(event);
         };
         document.addEventListener('pointerdown', eventListener);

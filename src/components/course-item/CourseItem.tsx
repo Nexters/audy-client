@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 import {
     Reorder,
@@ -12,7 +12,6 @@ import {
     CourseViewContextAction,
     CourseViewContextValue,
 } from '@/components/course-view/CourseViewContextProvider';
-import { useDisclosure } from '@/hooks/useDisclosure';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 
 import CourseCheckBox from './CourseCheckBox';
@@ -29,7 +28,7 @@ interface PropsType {
 }
 
 const CourseItem = ({ course, order }: PropsType) => {
-    const { value: isHover, toggle: toggleIsHover } = useDisclosure(false);
+    const [isHover, setIsHover] = useState(false);
 
     const { selectedId } = useContext(CourseViewContextValue);
     const { setSelectedId } = useContext(CourseViewContextAction);
@@ -41,11 +40,19 @@ const CourseItem = ({ course, order }: PropsType) => {
 
     const isSelected = selectedId === course.id;
 
-    const handleClickOutside = () => {
-        if (isSelected) setSelectedId(null);
+    const handleToggleHover = (updatedStatus: boolean) => {
+        if (selectedId === null) setIsHover(updatedStatus);
     };
 
-    const onPointerDown = (event: React.PointerEvent<SVGSVGElement>) => {
+    const handleClickOutside = () => {
+        if (!isSelected) return;
+        setSelectedId(null);
+        setIsHover(false);
+    };
+
+    const handlePointerDownListIcon = (
+        event: React.PointerEvent<SVGSVGElement>,
+    ) => {
         controls.start(event);
     };
 
@@ -59,8 +66,8 @@ const CourseItem = ({ course, order }: PropsType) => {
             dragListener={false}
             dragControls={controls}
             onDragEnd={() => animate(y, 0)}
-            onPointerOver={toggleIsHover}
-            onPointerOut={toggleIsHover}
+            onPointerOver={() => handleToggleHover(true)}
+            onPointerOut={() => handleToggleHover(false)}
             style={{ y }}
             className={styles.wrapper({
                 status: isHover || isSelected ? 'selected' : 'none',
@@ -68,13 +75,12 @@ const CourseItem = ({ course, order }: PropsType) => {
         >
             <CourseCheckBox isHover={isHover} id={course.id} order={order} />
             <CourseControlBox
-                isHover={isHover}
                 id={course.id}
                 name={course.name}
                 address={course.address}
             />
             <ListIcon
-                onPointerDown={onPointerDown}
+                onPointerDown={handlePointerDownListIcon}
                 className={styles.listIcon}
             />
         </Reorder.Item>
