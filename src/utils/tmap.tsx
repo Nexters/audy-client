@@ -1,5 +1,7 @@
+import { renderToString } from 'react-dom/server';
+
 import { TmapRepository } from '@/apis/tmap';
-import InfoWindow from '@/features/map/InfoWindow';
+import InfoWindow from '@/features/map/info-window/InfoWindow';
 import { MarkersType } from '@/types/map';
 
 export interface TmapConstructorType {
@@ -74,7 +76,7 @@ export class TMapModule {
 
         // this.#mapInstance.on('Click', handleClickMap);
 
-        const handleClickMap = async (e: typeof Tmapv3.maps.MouseEvent) => {
+        const handleMapClick = async (e: typeof Tmapv3.maps.MouseEvent) => {
             const { _lat: lat, _lng: lng } = e._data.lngLat;
 
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
@@ -87,10 +89,11 @@ export class TMapModule {
                 longitude: lng,
                 name: `장소${this.#markers.length + 1}`,
                 address: fullAddress,
+                isPinned: false,
             });
         };
 
-        this.#mapInstance.on('Click', handleClickMap);
+        this.#mapInstance.on('Click', handleMapClick);
     }
 
     // 마커 생성
@@ -117,16 +120,17 @@ export class TMapModule {
             map: this.#mapInstance,
         });
 
-        const handleClickMarker = () => {
+        const handleMarkerClick = () => {
             this.createInfoWindow({
                 latitude,
                 longitude,
                 name,
                 address,
+                isPinned: true,
             });
         };
 
-        marker.on('Click', handleClickMarker);
+        marker.on('Click', handleMarkerClick);
 
         this.#markers.push({
             marker,
@@ -256,18 +260,24 @@ export class TMapModule {
         longitude,
         name,
         address,
+        isPinned,
     }: {
         latitude: number;
         longitude: number;
         name: string;
         address: string;
+        isPinned: boolean;
     }) {
         this.removeInfoWindow();
 
         const infoWindowLatLng = new Tmapv3.LatLng(latitude, longitude);
+        const content = renderToString(
+            <InfoWindow name={name} address={address} isPinned={isPinned} />,
+        );
+
         const infoWindow = new Tmapv3.InfoWindow({
             position: infoWindowLatLng,
-            content: InfoWindow({ name, address }),
+            content,
             type: 2,
             border: '0px',
             background: 'none',
