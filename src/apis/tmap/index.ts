@@ -2,7 +2,7 @@ import { getAsync, postAsync } from '@/apis/api';
 
 import {
     GetReverseGeoCodingType,
-    type TmapReqParamsType,
+    type TmapRequestParamsType,
     type TmapResponseType,
 } from './type';
 
@@ -18,10 +18,10 @@ export const TmapRepository = {
         passes,
         reqCoordType = 'WGS84GEO',
         resCoordType = 'WGS84GEO',
-    }: TmapReqParamsType['getRoutePath']) {
+    }: TmapRequestParamsType['getRoutePath']) {
         return postAsync<
             TmapResponseType['getRoutePath'],
-            TmapReqParamsType['getRoutePath']
+            TmapRequestParamsType['getRoutePath']
         >(
             `/routes`,
             {
