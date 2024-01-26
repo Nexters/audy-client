@@ -5,12 +5,12 @@ import { useTmap } from '@/hooks/useTmap';
 import * as styles from './MainPage.css';
 
 function MainPage() {
-    const { tmapModuleRef, mapContainerRef } = useTmap({
+    const { mapContainerRef } = useTmap({
         mapId: 'tmap',
         width: '100%',
         height: 'calc(100vh - 64px)',
-        latitude: 37.5652045,
-        longitude: 126.98702028,
+        lat: 37.5652045,
+        lng: 126.98702028,
     });
 
     return (
