@@ -289,6 +289,14 @@ export class TMapModule {
 
         this.#mapInstance.setCenter(infoWindowLatLng);
         this.#mapInstance.setZoom(this.#zoomInLevel);
+
+        document
+            .querySelector('#infoWindow')
+            ?.addEventListener('click', (e) => e.stopPropagation());
+
+        document
+            .querySelector('#pinButton')
+            ?.addEventListener('click', (e) => {});
     }
 
     // 인포창 전체 삭제

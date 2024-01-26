@@ -14,10 +14,11 @@ interface PropsType {
 }
 
 const InfoWindow = ({ name, address, isPinned }: PropsType) => {
-    const handlePinButtonClick = () => {};
-
     return (
-        <div className={clsx(S.layout, isPinned && S.layoutMargin)}>
+        <div
+            className={clsx(S.layout, isPinned && S.layoutMargin)}
+            id="infoWindow"
+        >
             <InfoWindowLayout className={S.window} />
 
             <div className={S.contentsContainer}>
@@ -30,14 +31,11 @@ const InfoWindow = ({ name, address, isPinned }: PropsType) => {
                 </div>
 
                 {isPinned ? (
-                    <button className={styles.disabledButton} disabled>
+                    <button className={S.disabledButton} disabled>
                         <CheckIcon />
                     </button>
                 ) : (
-                    <button
-                        className={styles.pinButton}
-                        onClick={handlePinButtonClick}
-                    >
+                    <button className={S.pinButton} id="pinButton">
                         <AddIcon />
                     </button>
                 )}
