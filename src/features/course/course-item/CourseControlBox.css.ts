@@ -4,12 +4,14 @@ import { sprinkles } from '@/styles/sprinkle.css';
 
 export const wrapper = style({
     display: 'flex',
+    justifyContent: 'space-between',
     flexGrow: 1,
     flexShrink: 1,
 });
 
 export const courseBox = style({
-    minWidth: 0,
+    maxWidth: '220px',
+
     display: 'flex',
     flexDirection: 'column',
     rowGap: '4px',
