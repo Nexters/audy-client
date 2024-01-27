@@ -156,7 +156,24 @@ export class TMapModule {
 
     // 마커 수정
     modifyMarker(modifiedMarkers: MarkersType[]) {
-        this.#markers = modifiedMarkers;
+        // 기존의 경로와 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
+        this.removePath();
+        this.#markers.forEach(({ marker }) => marker.setMap(null));
+        this.#markers = modifiedMarkers.map(
+            ({ marker, lat, lng, ...rest }, index) => {
+                marker.setMap(null);
+                const updatedIconHTML = renderToString(
+                    <Marker number={index + 1} />,
+                );
+                const updatedMarker = new Tmapv3.Marker({
+                    position: new Tmapv3.LatLng(lat, lng),
+                    iconHTML: updatedIconHTML,
+                    map: this.#mapInstance,
+                });
+                return { lat, lng, marker: updatedMarker, ...rest };
+            },
+        );
+
         const startIndex = 0;
         const endIndex = modifiedMarkers.length - 1;
         this.drawPathBetweenMarkers({ startIndex, endIndex });
