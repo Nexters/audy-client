@@ -3,11 +3,11 @@ import type { Dispatch, PropsWithChildren, SetStateAction } from 'react';
 
 
 interface CourseViewContextValueType {
-    selectedId: number | null;
+    selectedId: string | null;
 }
 
 interface CourseViewContextActionType {
-    setSelectedId: Dispatch<SetStateAction<number | null>>;
+    setSelectedId: Dispatch<SetStateAction<string | null>>;
 }
 
 export const CourseViewContextValue = createContext<CourseViewContextValueType>(
@@ -19,7 +19,7 @@ export const CourseViewContextAction =
     );
 
 const CourseViewContextProvider = ({ children }: PropsWithChildren) => {
-    const [selectedId, setSelectedId] = useState<number | null>(null);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
     const value = useMemo(
         () => ({

@@ -13,7 +13,7 @@ import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 import * as styles from './CourseControlBox.css';
 
 interface PropsType {
-    id: number;
+    id: string;
     name: string;
     address: string;
 }
