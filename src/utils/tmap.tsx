@@ -8,10 +8,10 @@ import { MarkersType } from '@/types/map';
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
     mapId?: string;
-    /** 지도 Element 의 width (px) */
-    width?: number;
-    /** 지도 Element 의 height (px) */
-    height?: number;
+    /** 지도 Element 의 width */
+    width?: number | string;
+    /** 지도 Element 의 height */
+    height?: number | string;
     /** 지도 Element 의 확대 정도 (1 ~ 15) */
     zoom?: number;
     /** 지도 의 중심점 위도 */
@@ -56,25 +56,10 @@ export class TMapModule {
 
         this.#mapInstance = new Tmapv3.Map(mapId, {
             center: new Tmapv3.LatLng(lat, lng),
-            width: `${width}px`,
-            height: `${height}px`,
+            width: typeof width === 'number' ? `${width}px` : width,
+            height: typeof height === 'number' ? `${height}px` : height,
             zoom,
         });
-
-        // FIXME : 마커 생성을 위해 임시로 추가한 코드, 제거 필요
-        // const handleClickMap = (event: any) => {
-        //     const { _lat: lat, _lng: lng } = event._data.lngLat;
-        //     this.createMarker({
-        //         name: '임시',
-        //         originName: '임시',
-        //         address: '임시',
-        //         id: '임시',
-        //         lat,
-        //         lng,
-        //     });
-        // };
-
-        // this.#mapInstance.on('Click', handleClickMap);
 
         const handleMapClick = async (e: typeof Tmapv3.maps.MouseEvent) => {
             const { _lat: lat, _lng: lng } = e._data.lngLat;
@@ -94,6 +79,14 @@ export class TMapModule {
         };
 
         this.#mapInstance.on('Click', handleMapClick);
+
+        window.addEventListener(
+            'reorderMarkers',
+            (event: WindowEventMap['reorderMarkers']) => {
+                console.log(event.detail);
+                this.modifyMarker(event.detail);
+            },
+        );
     }
 
     // 마커 생성
@@ -143,12 +136,45 @@ export class TMapModule {
             lat,
             lng,
         });
+
+        window.dispatchEvent(
+            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+        );
     }
 
     // 마커 삭제
     removeMarker(markerIndex: number) {
         const targetMarker = this.#markers.splice(markerIndex, 1)[0].marker;
         targetMarker.setMap(null);
+
+        window.dispatchEvent(
+            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+        );
+    }
+
+    // 마커 수정
+    modifyMarker(modifiedMarkers: MarkersType[]) {
+        // 기존의 경로와 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
+        this.removePath();
+        this.#markers.forEach(({ marker }) => marker.setMap(null));
+        this.#markers = modifiedMarkers.map(
+            ({ marker, lat, lng, ...rest }, index) => {
+                marker.setMap(null);
+                const updatedIconHTML = renderToString(
+                    <Marker number={index + 1} />,
+                );
+                const updatedMarker = new Tmapv3.Marker({
+                    position: new Tmapv3.LatLng(lat, lng),
+                    iconHTML: updatedIconHTML,
+                    map: this.#mapInstance,
+                });
+                return { lat, lng, marker: updatedMarker, ...rest };
+            },
+        );
+
+        const startIndex = 0;
+        const endIndex = modifiedMarkers.length - 1;
+        this.drawPathBetweenMarkers({ startIndex, endIndex });
     }
 
     // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 getMarkerPosition
@@ -193,7 +219,7 @@ export class TMapModule {
             const [startX, startY] = this.#getMarkerPosition(startMarker);
             const [endX, endY] = this.#getMarkerPosition(endMarker);
 
-            const passes = passMarkers.length
+            const passList = passMarkers.length
                 ? passMarkers
                       .map((markers) =>
                           this.#getMarkerPosition(markers).join(','),
@@ -206,7 +232,7 @@ export class TMapModule {
                 startY,
                 endX,
                 endY,
-                passList: passes,
+                passList,
             });
 
             features.forEach((feature, index) => {
@@ -310,9 +336,9 @@ export class TMapModule {
 
             this.createMarker({
                 name,
-                originName: name, // FIXME : 임시
+                originName: name,
                 address,
-                id: '임시', // FIXME : 임시
+                id: String(Math.random()), // FIXME : 임시
                 lat,
                 lng,
                 iconHTML,

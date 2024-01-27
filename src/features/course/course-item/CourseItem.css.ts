@@ -13,6 +13,7 @@ export const wrapper = recipe({
         columnGap: '12px',
     
         overflowX: 'hidden',
+        flexShrink: 0,
     },
 
     variants: {

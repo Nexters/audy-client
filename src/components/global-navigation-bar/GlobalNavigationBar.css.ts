@@ -6,7 +6,7 @@ import { sprinkles } from '@/styles/sprinkle.css';
 export const wrapper = style([
     sprinkles({ zIndex: 'globalNavigation' }),
     {
-        width: '100vw',
+        width: '100%',
         padding: '17px 30px',
 
         display: 'flex',
@@ -23,7 +23,7 @@ export const wrapper = style([
 export const savingStatus = style([
     sprinkles({ typography: 'Regular15' }),
     {
-        margin: '0 auto 4px',
+        margin: '0 auto 0 4px',
     },
 ]);
 

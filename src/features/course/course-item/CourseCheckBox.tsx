@@ -8,7 +8,7 @@ import {
 import * as styles from './CourseCheckBox.css';
 
 interface PropsType {
-    id: number;
+    id: string;
     order: number;
     isHover: boolean;
 }
