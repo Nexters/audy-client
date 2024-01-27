@@ -130,14 +130,21 @@ export class TMapModule {
             lat,
             lng,
         });
+
+        window.dispatchEvent(
+            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+        );
     }
 
     // 마커 삭제
     removeMarker(markerIndex: number) {
         const targetMarker = this.#markers.splice(markerIndex, 1)[0].marker;
         targetMarker.setMap(null);
-    }
 
+        window.dispatchEvent(
+            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+        );
+    }
 
     getMarkers() {
         return this.#markers;

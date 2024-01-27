@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { TMapModule, type TmapConstructorType } from '@/utils/tmap';
 
@@ -28,5 +28,5 @@ export const useTmap = ({
         });
     }, [height, lat, lng, mapId, width, zoom]);
 
-    return { mapContainerRef, tmapModuleRef, markers };
+    return { mapContainerRef, tmapModuleRef };
 };
