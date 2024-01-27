@@ -81,6 +81,14 @@ export class TMapModule {
         };
 
         this.#mapInstance.on('Click', handleMapClick);
+
+        window.addEventListener(
+            'reorderMarkers',
+            (event: WindowEventMap['reorderMarkers']) => {
+                console.log(event.detail);
+                this.modifyMarker(event.detail);
+            },
+        );
     }
 
     // 마커 생성
@@ -146,8 +154,12 @@ export class TMapModule {
         );
     }
 
-    getMarkers() {
-        return this.#markers;
+    // 마커 수정
+    modifyMarker(modifiedMarkers: MarkersType[]) {
+        this.#markers = modifiedMarkers;
+        const startIndex = 0;
+        const endIndex = modifiedMarkers.length - 1;
+        this.drawPathBetweenMarkers({ startIndex, endIndex });
     }
 
     // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 getMarkerPosition
@@ -310,9 +322,9 @@ export class TMapModule {
 
             this.createMarker({
                 name,
-                originName: name, // FIXME : 임시
+                originName: name,
                 address,
-                id: '임시', // FIXME : 임시
+                id: String(Math.random()), // FIXME : 임시
                 lat,
                 lng,
                 iconHTML,

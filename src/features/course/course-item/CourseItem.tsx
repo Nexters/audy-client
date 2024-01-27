@@ -20,11 +20,11 @@ import CourseControlBox from './CourseControlBox';
 import * as styles from './CourseItem.css';
 
 interface PropsType {
-    course: MarkersType;
+    marker: MarkersType;
     order: number;
 }
 
-const CourseItem = ({ course, order }: PropsType) => {
+const CourseItem = ({ marker, order }: PropsType) => {
     const [isHover, setIsHover] = useState(false);
 
     const { selectedId } = useContext(CourseViewContextValue);
@@ -35,7 +35,7 @@ const CourseItem = ({ course, order }: PropsType) => {
     const controls = useDragControls();
     const y = useMotionValue(0);
 
-    const isSelected = selectedId === course.id;
+    const isSelected = selectedId === marker.id;
 
     const handleToggleHover = (updatedStatus: boolean) => {
         if (selectedId === null) setIsHover(updatedStatus);
@@ -57,7 +57,7 @@ const CourseItem = ({ course, order }: PropsType) => {
 
     return (
         <Reorder.Item
-            value={course}
+            value={marker}
             as="div"
             ref={containerRef}
             dragListener={false}
@@ -70,11 +70,11 @@ const CourseItem = ({ course, order }: PropsType) => {
                 status: isHover || isSelected ? 'selected' : 'none',
             })}
         >
-            <CourseCheckBox isHover={isHover} id={course.id} order={order} />
+            <CourseCheckBox isHover={isHover} id={marker.id} order={order} />
             <CourseControlBox
-                id={course.id}
-                name={course.name}
-                address={course.address}
+                id={marker.id}
+                name={marker.name}
+                address={marker.address}
             />
             <ListIcon
                 onPointerDown={handlePointerDownListIcon}

@@ -3,33 +3,40 @@ import { useState } from 'react';
 import { Reorder } from 'framer-motion';
 
 import CourseItem from '@/features/course/course-item';
+import { useEventListeners } from '@/hooks/useEventListeners';
+import type { MarkersType } from '@/types/map';
 
 import * as styles from './CourseView.css';
 import CourseViewContextProvider from './CourseViewContextProvider';
-import { MarkersType } from '@/types/map';
 
-interface PropsType {
-    markers: MarkersType[]
-}
+const CourseView = () => {
+    const [markers, setMarkers] = useState<MarkersType[]>([]);
 
-const CourseView = ({markers}: PropsType) => {
-    // FIXME : 추후 백엔드 API 연동 시, 코스 API 로부터 받은 값을 활용할 예정
-    const [courseList, setCourseList] = useState(markers);
+    useEventListeners('modifyMarkers', (event) => {
+        setMarkers([...event.detail]);
+    });
+
+    const handleReorderMarker = (newOrder: MarkersType[]) => {
+        window.dispatchEvent(
+            new CustomEvent('reorderMarkers', { detail: newOrder }),
+        );
+        setMarkers(newOrder);
+    };
 
     return (
         <CourseViewContextProvider>
             <Reorder.Group
                 as="section"
                 dragListener={false}
-                values={courseList}
-                onReorder={setCourseList}
+                values={markers}
+                onReorder={handleReorderMarker}
                 axis="y"
                 className={styles.wrapper}
             >
-                {courseList.map((course, index) => (
+                {markers.map((marker, index) => (
                     <CourseItem
-                        key={course.id}
-                        course={course}
+                        key={marker.id}
+                        marker={marker}
                         order={index + 1}
                     />
                 ))}

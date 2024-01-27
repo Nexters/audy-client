@@ -10,6 +10,7 @@ declare global {
 
     interface CustomEventMap {
         modifyMarkers: CustomEvent<MarkersType[]>;
+        reorderMarkers: CustomEvent<MarkersType[]>;
     }
 
     interface WindowEventMap extends CustomEventMap {}
