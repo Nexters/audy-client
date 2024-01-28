@@ -37,13 +37,13 @@ const CourseControlBox = ({ id, name, address }: PropsType) => {
         setModifiedCourseName(event.target.value);
     };
 
-    const handleClickInputOutside = () => {
+    const handleInputOutsideClick = () => {
         if (!isModifyCourseName) return;
         toggleModifyCourseName();
         setSelectedId(null);
     };
 
-    const handleClickModifyIcon = () => {
+    const handleModifyIconClick = () => {
         if (!courseInputRef.current) return;
         if (!isModifyCourseName) courseInputRef.current.focus();
         toggleModifyCourseName();
@@ -51,7 +51,7 @@ const CourseControlBox = ({ id, name, address }: PropsType) => {
 
     useOnClickOutside({
         ref: courseInputRef,
-        handler: handleClickInputOutside,
+        handler: handleInputOutsideClick,
     });
 
     return (
@@ -81,7 +81,7 @@ const CourseControlBox = ({ id, name, address }: PropsType) => {
                         height={32}
                     />
                     <ModifyIcon
-                        onClick={handleClickModifyIcon}
+                        onClick={handleModifyIconClick}
                         className={S.controlIcon}
                         width={32}
                         height={32}

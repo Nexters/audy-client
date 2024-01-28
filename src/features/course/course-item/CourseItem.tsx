@@ -41,7 +41,7 @@ const CourseItem = ({ marker, order }: PropsType) => {
         if (selectedId === null) setIsHover(updatedStatus);
     };
 
-    const handleClickOutside = () => {
+    const handleOutsideClick = () => {
         if (!isSelected) return;
         setSelectedId(null);
         setIsHover(false);
@@ -53,7 +53,7 @@ const CourseItem = ({ marker, order }: PropsType) => {
         controls.start(event);
     };
 
-    useOnClickOutside({ ref: containerRef, handler: handleClickOutside });
+    useOnClickOutside({ ref: containerRef, handler: handleOutsideClick });
 
     return (
         <Reorder.Item

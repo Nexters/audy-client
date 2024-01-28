@@ -19,7 +19,7 @@ const CourseCheckBox = ({ id, order, isHover }: PropsType) => {
 
     const isChecked = selectedId === id;
 
-    const handleClickCheckBox = () => {
+    const handleCheckBoxClick = () => {
         if (isHover) setSelectedId(isChecked ? null : id);
     };
 
@@ -30,7 +30,7 @@ const CourseCheckBox = ({ id, order, isHover }: PropsType) => {
             width={26}
             height={26}
             className={S.orderBox}
-            onClick={handleClickCheckBox}
+            onClick={handleCheckBoxClick}
         >
             <rect x={1} y={1} className={S.orderRect} rx={4} />
             {isShowOrder && (
