@@ -17,7 +17,7 @@ import { MarkersType } from '@/types/map';
 
 import CourseCheckBox from './CourseCheckBox';
 import CourseControlBox from './CourseControlBox';
-import * as styles from './CourseItem.css';
+import * as S from './CourseItem.css';
 
 interface PropsType {
     marker: MarkersType;
@@ -66,7 +66,7 @@ const CourseItem = ({ marker, order }: PropsType) => {
             onPointerOver={() => handleToggleHover(true)}
             onPointerOut={() => handleToggleHover(false)}
             style={{ y }}
-            className={styles.wrapper({
+            className={S.wrapper({
                 status: isHover || isSelected ? 'selected' : 'none',
             })}
         >
@@ -78,7 +78,7 @@ const CourseItem = ({ marker, order }: PropsType) => {
             />
             <ListIcon
                 onPointerDown={handlePointerDownListIcon}
-                className={styles.listIcon}
+                className={S.listIcon}
             />
         </Reorder.Item>
     );

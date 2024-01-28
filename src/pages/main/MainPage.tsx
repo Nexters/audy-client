@@ -5,7 +5,7 @@ import GlobalNavigationBar from '@/components/global-navigation-bar';
 import CourseView from '@/features/course/course-view';
 import { useTmap } from '@/hooks/useTmap';
 
-import * as styles from './MainPage.css';
+import * as S from './MainPage.css';
 
 function MainPage() {
     const { mapContainerRef } = useTmap({
@@ -19,33 +19,33 @@ function MainPage() {
     return (
         <>
             <GlobalNavigationBar />
-            <div className={styles.wrapper}>
-                <div className={styles.sidePanel}>
-                    <div className={styles.header}>
+            <div className={S.wrapper}>
+                <div className={S.sidePanel}>
+                    <div className={S.header}>
                         <LeftArrowIcon
                             width={24}
                             height={24}
-                            className={styles.backArrowIcon}
+                            className={S.backArrowIcon}
                         />
-                        <p className={styles.courseName}>테스트 코스</p>
+                        <p className={S.courseName}>테스트 코스</p>
                         <ModifyFilledIcon
                             width={24}
                             height={24}
-                            className={styles.modifyIcon}
+                            className={S.modifyIcon}
                         />
                     </div>
-                    <div className={styles.searchBox}>
-                        <div className={styles.searchInner}>
+                    <div className={S.searchBox}>
+                        <div className={S.searchInner}>
                             <SearchIcon width={20} height={20} />
                             <input
-                                className={styles.searchInput}
+                                className={S.searchInput}
                                 placeholder="장소를 입력해주세요."
                             />
                         </div>
                     </div>
                     <CourseView />
                 </div>
-                <div className={styles.map} ref={mapContainerRef} />
+                <div className={S.map} ref={mapContainerRef} />
             </div>
         </>
     );
