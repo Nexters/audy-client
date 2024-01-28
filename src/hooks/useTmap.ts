@@ -2,6 +2,10 @@ import { useEffect, useRef } from 'react';
 
 import { TMapModule, type TmapConstructorType } from '@/utils/tmap';
 
+/**
+ * React Component 의 LifeCycle 에 맞게 Tmap SDK 를 Mount 하는 Hook useTmap
+ * @author RookieAND
+ */
 export const useTmap = ({
     mapId = 'tmap',
     width = 640,
