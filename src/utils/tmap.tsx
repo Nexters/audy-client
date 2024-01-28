@@ -82,7 +82,6 @@ export class TMapModule {
         window.addEventListener(
             'reorderMarkers',
             (event: WindowEventMap['reorderMarkers']) => {
-                console.log(event.detail);
                 this.modifyMarker(event.detail);
             },
         );
