@@ -63,7 +63,6 @@ export class TMapModule {
 
         const handleMapClick = async (e: typeof Tmapv3.maps.MouseEvent) => {
             const { _lat: lat, _lng: lng } = e._data.lngLat;
-
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
                 lat,
                 lng,

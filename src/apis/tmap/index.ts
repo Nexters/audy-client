@@ -1,15 +1,12 @@
 import { getAsync, postAsync } from '@/apis/api';
 
-import {
-    GetReverseGeoCodingType,
-    type TmapRequestParamsType,
-    type TmapResponseType,
-} from './type';
+import { type TmapRequestParamsType, type TmapResponseType } from './type';
+
+const baseURL = `https://apis.openapi.sk.com/tmap`;
+const appKey = import.meta.env.VITE_TMAP_APP_KEY;
 
 export const TmapRepository = {
-    baseUrl: `https://apis.openapi.sk.com/tmap`,
-    appKey: import.meta.env.VITE_TMAP_APP_KEY,
-
+    // 시작, 종료, 경유지 좌표를 기반으로 경로 데이터를 반환하는 getRoutePathAsync
     async getRoutePathAsync({
         startX,
         startY,
@@ -34,9 +31,9 @@ export const TmapRepository = {
                 resCoordType,
             },
             {
-                baseURL: this.baseUrl,
+                baseURL,
                 headers: {
-                    appKey: this.appKey,
+                    appKey,
                 },
                 params: {
                     version: 1,
@@ -46,18 +43,16 @@ export const TmapRepository = {
         );
     },
 
-    getAddressFromLatLng: async function ({
+    // 위경도 좌표를 기반으로 건물 명과 실제 주소를 찾는 getAddressFromLatLng
+    async getAddressFromLatLng({
         lat,
         lng,
-    }: {
-        lat: number;
-        lng: number;
-    }) {
-        const response = await getAsync<GetReverseGeoCodingType>(
+    }: TmapRequestParamsType['getAddressFromLatLng']) {
+        const response =  await getAsync<TmapResponseType['getAddressFromLatLng']>(
             '/geo/reversegeocoding',
             {
-                baseURL: this.baseUrl,
-                headers: { appKey: this.appKey },
+                baseURL,
+                headers: { appKey },
                 params: {
                     version: 1,
                     lat,
@@ -68,7 +63,33 @@ export const TmapRepository = {
                 },
             },
         );
-
         return response.addressInfo;
+    },
+
+    // 특정 키워드를 기반으로 POI 검색을 통해 나온 정보를 제공하는 getPoiSearch
+    async getPoiSearch({
+        keyword,
+        radius = 0,
+    }: TmapRequestParamsType['getPoiSearch']) {
+        const response = await getAsync<TmapResponseType['getPoiSearch']>(
+            '/pois',
+            {
+                baseURL,
+                headers: { appKey },
+                params: {
+                    version: 1,
+                    format: 'json',
+                    callback: 'result',
+                    searchKeyword: keyword,
+                    resCoordType: 'WGS84GEO',
+                    reqCoordType: 'WGS84GEO',
+                    radius,
+                    count: 10,
+                    searchType: 'all',
+                },
+            },
+        );
+
+        return response.searchPoiInfo.pois.poi;
     },
 };
