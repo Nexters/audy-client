@@ -13,9 +13,10 @@ export const wrapper = style({
     alignItems: 'center',
     columnGap: '10px',
 
-    position: 'relative',
+    position: 'absolute',
     right: '16px',
     top: '16px',
+    zIndex: 1,
 
     backgroundColor: COLOR.MonoWhite,
     borderRadius: '6px',
@@ -80,7 +81,7 @@ export const toggleButton = recipe({
         status: {
             on: {
                 backgroundColor: COLOR.MonoWhite,
-                border: `1px solid ${COLOR.Gray300}`,
+                border: `1px solid ${COLOR.Gray400}`,
             },
         
             off: {
