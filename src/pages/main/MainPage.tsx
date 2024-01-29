@@ -3,6 +3,7 @@ import ModifyFilledIcon from '@/assets/icons/modifyFilled.svg?react';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import CourseView from '@/features/course/course-view';
+import FloatMenu from '@/features/map/float-menu';
 import { useTmap } from '@/hooks/useTmap';
 
 import * as S from './MainPage.css';
@@ -45,7 +46,9 @@ function MainPage() {
                     </div>
                     <CourseView />
                 </div>
-                <div className={S.map} ref={mapContainerRef} />
+                <div className={S.map} ref={mapContainerRef}>
+                    <FloatMenu />
+                </div>
             </div>
         </>
     );
