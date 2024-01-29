@@ -58,8 +58,6 @@ export interface TmapResponseType {
                     noorLon: number;
                     newAddressList: {
                         newAddress: {
-                            centerLat: number;
-                            centerLon: number;
                             fullAddressRoad: string;
                         }[];
                     };
