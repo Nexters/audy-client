@@ -29,7 +29,7 @@ export class TMapModule {
 
     #isPathVisible: boolean = true;
 
-    #infoWindows: (typeof window.Tmapv3.InfoWindow)[] = [];
+    #infoWindow: typeof window.Tmapv3.InfoWindow = null;
 
     #zoomInLevel: number = 17; // TODO: 임시
     #maxMarkerCount: number = 15;
@@ -62,6 +62,11 @@ export class TMapModule {
         });
 
         const handleMapClick = async (e: typeof Tmapv3.maps.MouseEvent) => {
+            if (this.#infoWindow) {
+                this.removeInfoWindow();
+                return;
+            }
+
             const { _lat: lat, _lng: lng } = e._data.lngLat;
 
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
@@ -305,7 +310,7 @@ export class TMapModule {
         address: string;
         isPinned: boolean;
     }) {
-        this.removeInfoWindow();
+        if (this.#infoWindow) this.removeInfoWindow();
 
         const infoWindowLatLng = new Tmapv3.LatLng(lat, lng);
         const content = renderToString(
@@ -322,7 +327,7 @@ export class TMapModule {
         });
 
         infoWindow.setMap(this.#mapInstance);
-        this.#infoWindows.push(infoWindow);
+        this.#infoWindow = infoWindow;
 
         this.#mapInstance.setCenter(infoWindowLatLng);
         this.#mapInstance.setZoom(this.#zoomInLevel);
@@ -372,6 +377,7 @@ export class TMapModule {
 
     // 인포창 전체 삭제
     removeInfoWindow() {
-        this.#infoWindows.forEach((infoWindow) => infoWindow.setMap(null));
+        this.#infoWindow.setMap(null);
+        this.#infoWindow = null;
     }
 }
