@@ -10,7 +10,7 @@ import {
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 
-import * as styles from './CourseControlBox.css';
+import * as S from './CourseControlBox.css';
 
 interface PropsType {
     id: string;
@@ -37,13 +37,13 @@ const CourseControlBox = ({ id, name, address }: PropsType) => {
         setModifiedCourseName(event.target.value);
     };
 
-    const handleClickInputOutside = () => {
+    const handleInputOutsideClick = () => {
         if (!isModifyCourseName) return;
         toggleModifyCourseName();
         setSelectedId(null);
     };
 
-    const handleClickModifyIcon = () => {
+    const handleModifyIconClick = () => {
         if (!courseInputRef.current) return;
         if (!isModifyCourseName) courseInputRef.current.focus();
         toggleModifyCourseName();
@@ -51,38 +51,38 @@ const CourseControlBox = ({ id, name, address }: PropsType) => {
 
     useOnClickOutside({
         ref: courseInputRef,
-        handler: handleClickInputOutside,
+        handler: handleInputOutsideClick,
     });
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.courseBox}>
+        <div className={S.wrapper}>
+            <div className={S.courseBox}>
                 <input
                     ref={courseInputRef}
-                    className={styles.courseName}
+                    className={S.courseName}
                     value={modifiedCourseName}
                     onChange={handleModifyCourseName}
                     disabled={isDisabledCourseInput}
                 />
-                <div className={styles.addressBox}>
+                <div className={S.addressBox}>
                     <LocationIcon
                         width={14}
                         height={14}
-                        className={styles.addressIcon}
+                        className={S.addressIcon}
                     />
-                    <p className={styles.address}>{address}</p>
+                    <p className={S.address}>{address}</p>
                 </div>
             </div>
             {isSelected && (
-                <div className={styles.controlBox}>
+                <div className={S.controlBox}>
                     <TrashCanIcon
-                        className={styles.controlIcon}
+                        className={S.controlIcon}
                         width={32}
                         height={32}
                     />
                     <ModifyIcon
-                        onClick={handleClickModifyIcon}
-                        className={styles.controlIcon}
+                        onClick={handleModifyIconClick}
+                        className={S.controlIcon}
                         width={32}
                         height={32}
                     />

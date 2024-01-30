@@ -6,7 +6,7 @@ import CourseItem from '@/features/course/course-item';
 import { useEventListeners } from '@/hooks/useEventListeners';
 import type { MarkersType } from '@/types/map';
 
-import * as styles from './CourseView.css';
+import * as S from './CourseView.css';
 import CourseViewContextProvider from './CourseViewContextProvider';
 
 const CourseView = () => {
@@ -31,7 +31,7 @@ const CourseView = () => {
                 values={markers}
                 onReorder={handleReorderMarker}
                 axis="y"
-                className={styles.wrapper}
+                className={S.wrapper}
             >
                 {markers.map((marker, index) => (
                     <CourseItem
