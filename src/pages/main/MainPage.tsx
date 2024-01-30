@@ -9,13 +9,7 @@ import { useTmap } from '@/hooks/useTmap';
 import * as S from './MainPage.css';
 
 function MainPage() {
-    const { mapContainerRef } = useTmap({
-        mapId: 'tmap',
-        width: '100%',
-        height: 'calc(100vh - 64px)',
-        lat: 37.5652045,
-        lng: 126.98702028,
-    });
+    const { mapContainerRef } = useTmap();
 
     return (
         <>
