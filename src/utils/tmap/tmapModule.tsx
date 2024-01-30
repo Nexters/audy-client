@@ -62,13 +62,13 @@ export class TMapModule {
             zoom,
         });
 
-        const handleMapClick = async (e: typeof Tmapv3.maps.MouseEvent) => {
+        const handleMapClick = async (event: typeof Tmapv3.maps.MouseEvent) => {
             if (this.#infoWindow) {
                 this.removeInfoWindow();
                 return;
             }
 
-            const { _lat: lat, _lng: lng } = e._data.lngLat;
+            const { _lat: lat, _lng: lng } = event._data.lngLat;
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
                 lat,
                 lng,
