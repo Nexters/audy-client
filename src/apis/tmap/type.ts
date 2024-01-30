@@ -8,6 +8,14 @@ export interface TmapRequestParamsType {
         reqCoordType?: string;
         resCoordType?: string;
     };
+    getAddressFromLatLng: {
+        lat: number;
+        lng: number;
+    };
+    getPoiSearch: {
+        keyword: string;
+        radius?: number;
+    };
 }
 
 export interface TmapResponseType {
@@ -30,11 +38,31 @@ export interface TmapResponseType {
             };
         }[];
     };
-}
-
-export interface GetReverseGeoCodingType {
-    addressInfo: {
-        buildingName: string;
-        fullAddress: string;
+    getAddressFromLatLng: {
+        addressInfo: {
+            buildingName: string;
+            fullAddress: string;
+        };
+    };
+    getPoiSearch: {
+        searchPoiInfo: {
+            totalCount: number;
+            count: number;
+            page: number;
+            pois: {
+                poi: {
+                    id: number;
+                    pKey: number,
+                    name: number;
+                    noorLat: number;
+                    noorLon: number;
+                    newAddressList: {
+                        newAddress: {
+                            fullAddressRoad: string;
+                        }[];
+                    };
+                }[];
+            };
+        };
     };
 }

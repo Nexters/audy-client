@@ -5,6 +5,9 @@ interface PropsType {
     handler: (event: PointerEvent) => void;
 }
 
+/**
+ * 특정 Element 외부를 클릭할 경우에 대한 로직을 리스너에 추가하는 Hook useOnClickOutside
+ */
 export const useOnClickOutside = ({ ref, handler }: PropsType) => {
     useEffect(() => {
         const eventListener = (event: PointerEvent) => {

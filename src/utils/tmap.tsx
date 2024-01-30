@@ -68,7 +68,6 @@ export class TMapModule {
             }
 
             const { _lat: lat, _lng: lng } = event._data.lngLat;
-
             const { fullAddress } = await TmapRepository.getAddressFromLatLng({
                 lat,
                 lng,
@@ -88,7 +87,6 @@ export class TMapModule {
         window.addEventListener(
             'reorderMarkers',
             (event: WindowEventMap['reorderMarkers']) => {
-                console.log(event.detail);
                 this.modifyMarker(event.detail);
             },
         );
