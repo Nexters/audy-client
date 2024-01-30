@@ -84,13 +84,6 @@ export class TMapModule {
         };
 
         this.#mapInstance.on('Click', handleMapClick);
-
-        window.addEventListener(
-            'reorderMarkers',
-            (event: WindowEventMap['reorderMarkers']) => {
-                this.modifyMarker(event.detail);
-            },
-        );
     }
 
     // 마커 생성
