@@ -9,17 +9,15 @@ import type { RouteModeType } from '@/types/map';
 import * as S from './FloatMenu.css';
 
 const FloatMenu = () => {
-    const { value: isShowPath, toggle: toggleShowPath } = useDisclosure(false);
-    const [routeType, setRouteType] = useState<RouteModeType>('Pedestrian');
-
     const { tmapModuleRef } = useTmap();
 
-    const handleChangeRouteMode = (updatedMode: RouteModeType) => {
+    const { value: isShowPath, toggle: toggleShowPath } = useDisclosure(false);
+    const [routeType, setRouteType] = useState<RouteModeType>('Vehicle');
+
+    const handleChangeRouteMode = async (updatedMode: RouteModeType) => {
         if (!tmapModuleRef.current) return;
         setRouteType(updatedMode);
-        tmapModuleRef.current.drawPathBetweenMarkers({
-            routeType: updatedMode,
-        });
+        await tmapModuleRef.current.togglePathMode(updatedMode);
     };
 
     const handleToggleShowPath = () => {

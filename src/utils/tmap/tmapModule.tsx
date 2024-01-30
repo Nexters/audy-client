@@ -28,6 +28,7 @@ export class TMapModule {
     #polylines: (typeof Tmapv3.Polyline)[] = [];
 
     #isPathVisible = true;
+    #routePathMode: RouteModeType = 'Vehicle';
 
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
@@ -186,15 +187,13 @@ export class TMapModule {
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
 
-    // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 함수 drawPathBetweenMarkers
+    // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 메서드 drawPathBetweenMarkers
     async drawPathBetweenMarkers({
         startIndex = 0,
         endIndex = this.#markers.length - 1,
-        routeType = 'Vehicle',
     }: {
         startIndex?: number;
         endIndex?: number;
-        routeType?: RouteModeType;
     }) {
         if (startIndex < 0 || endIndex >= this.#markers.length) return;
         if (this.#markers.length < 2) return;
@@ -229,7 +228,7 @@ export class TMapModule {
                 : undefined;
 
             const getRoutePathAsync =
-                routeType === 'Vehicle'
+                this.#routePathMode === 'Vehicle'
                     ? TmapRepository.getVehiclePathAsync
                     : TmapRepository.getPedestrianPathAsync;
 
@@ -281,13 +280,19 @@ export class TMapModule {
         this.#polylines = polylines;
     }
 
-    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 togglePathVisibility
+    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
     togglePathVisibility() {
         const updatedVisible = !this.#isPathVisible;
         this.#polylines.forEach((polyline) =>
             polyline.setMap(updatedVisible ? this.#mapInstance : null),
         );
         this.#isPathVisible = updatedVisible;
+    }
+
+    // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
+    async togglePathMode(routeType: RouteModeType) {
+        this.#routePathMode = routeType;
+        await this.drawPathBetweenMarkers({});
     }
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
