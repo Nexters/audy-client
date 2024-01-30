@@ -3,14 +3,14 @@ import MarkerImage from '@/assets/icons/marker.svg?react';
 import * as S from './Marker.css';
 
 interface PropsType {
-    number: number;
+    order: number;
 }
 
-const Marker = ({ number }: PropsType) => {
+const Marker = ({ order }: PropsType) => {
     return (
         <div>
             <MarkerImage className={S.marker} />
-            <p className={S.numberWrapper}>{number}</p>
+            <p className={S.numberWrapper}>{order}</p>
         </div>
     );
 };
