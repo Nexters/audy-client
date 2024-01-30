@@ -166,7 +166,7 @@ export class TMapModule {
             ({ marker, lat, lng, ...rest }, index) => {
                 marker.setMap(null);
                 const updatedIconHTML = renderToString(
-                    <Marker number={index + 1} />,
+                    <Marker order={index + 1} />,
                 );
                 const updatedMarker = new Tmapv3.Marker({
                     position: new Tmapv3.LatLng(lat, lng),
@@ -336,7 +336,7 @@ export class TMapModule {
             if (this.#markers.length >= this.#maxMarkerCount) return;
 
             const iconHTML = renderToString(
-                <Marker number={this.#markers.length + 1} />,
+                <Marker order={this.#markers.length + 1} />,
             );
 
             this.createMarker({
