@@ -27,12 +27,12 @@ export class TMapModule {
     #markers: MarkersType[] = [];
     #polylines: (typeof Tmapv3.Polyline)[] = [];
 
-    #isPathVisible: boolean = true;
+    #isPathVisible = true;
 
     #infoWindow: typeof window.Tmapv3.InfoWindow = null;
 
-    #zoomInLevel: number = 17; // TODO: 임시
-    #maxMarkerCount: number = 15;
+    #zoomInLevel = 17; // TODO: 임시
+    #maxMarkerCount = 15;
 
     constructor({
         mapId = 'tmap',
