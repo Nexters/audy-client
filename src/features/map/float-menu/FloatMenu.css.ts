@@ -31,16 +31,29 @@ export const pathNotice = style([
     }
 ]);
 
-export const switchBox = style({
-    width: '56px',
-    height: '28px',
-    padding: '4px',
-
-    display: 'flex',
-    justifyContent: 'flex-start',
-    borderRadius: '80px',
-
-    backgroundColor: COLOR.IndigoPrimary,
+export const switchBox = recipe({
+    base: {
+        width: '56px',
+        height: '28px',
+        padding: '4px',
+    
+        display: 'flex',
+        borderRadius: '80px',
+    
+        backgroundColor: COLOR.IndigoPrimary,
+    },
+    variants: {
+        status: {
+            true: {
+                backgroundColor: COLOR.IndigoPrimary,
+                justifyContent: 'flex-end',
+            },
+            false: {
+                backgroundColor: COLOR.Gray700,
+                justifyContent: 'flex-start',
+            }
+        }
+    }
 })
 
 export const switchHandle = style({
@@ -79,12 +92,13 @@ export const toggleButton = recipe({
     },
     variants: {
         status: {
-            on: {
+            true: {
+                color: '#0F1828',
                 backgroundColor: COLOR.MonoWhite,
                 border: `1px solid ${COLOR.Gray400}`,
             },
-        
-            off: {
+            false: {
+                color: '#697281',
                 backgroundColor: 'transparent',
             }
         }
