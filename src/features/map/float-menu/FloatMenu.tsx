@@ -11,7 +11,7 @@ import * as S from './FloatMenu.css';
 const FloatMenu = () => {
     const { tmapModuleRef } = useTmap();
 
-    const { value: isShowPath, toggle: toggleShowPath } = useDisclosure(false);
+    const { value: isShowPath, toggle: toggleShowPath } = useDisclosure(true);
     const [routeType, setRouteType] = useState<RouteModeType>('Vehicle');
 
     const handleChangeRouteMode = async (updatedMode: RouteModeType) => {
