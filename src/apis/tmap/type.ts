@@ -1,5 +1,3 @@
-import type { RouteModeType } from "@/types/map";
-
 export interface TmapRequestParamsType {
     getVehiclePath: {
         startX: number;
