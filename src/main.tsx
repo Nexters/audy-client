@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import { router } from '@/routes/index.tsx';
 import '@/styles/global.css';
+import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -16,7 +17,14 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />,
+        <TmapProvider
+            width="100%"
+            height="calc(100vh - 64px)"
+            lat={37.5652045}
+            lng={126.98702028}
+        >
+            <RouterProvider router={router} />,
+        </TmapProvider>
         <ReactQueryDevtools />
     </QueryClientProvider>,
 );
