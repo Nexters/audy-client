@@ -1,9 +1,22 @@
+import type { RouteModeType } from "@/types/map";
+
 export interface TmapRequestParamsType {
-    getRoutePath: {
+    getVehiclePath: {
         startX: number;
         startY: number;
         endX: number;
         endY: number;
+        passList?: string;
+        reqCoordType?: string;
+        resCoordType?: string;
+    };
+    getPedestrianPath: {
+        startX: number;
+        startY: number;
+        endX: number;
+        endY: number;
+        startName?: string;
+        endName?: string;
         passList?: string;
         reqCoordType?: string;
         resCoordType?: string;
@@ -19,7 +32,26 @@ export interface TmapRequestParamsType {
 }
 
 export interface TmapResponseType {
-    getRoutePath: {
+    getVehiclePath: {
+        features: {
+            type: 'Feature';
+            geometry:
+                | {
+                      coordinates: [number, number];
+                      type: 'Point';
+                  }
+                | {
+                      coordinates: [number, number][];
+                      type: 'LineString';
+                  };
+            properties: {
+                index: number;
+                totalDistance: number;
+                totalTime: number;
+            };
+        }[];
+    };
+    getPedestrianPath: {
         features: {
             type: 'Feature';
             geometry:
