@@ -47,34 +47,6 @@ export const modifyIcon = style({
     color: COLOR.Gray400,
 });
 
-export const searchBox = style({
-    width: '100%',
-
-    borderRadius: '6px',
-    border: '1px solid transparent',
-
-    backgroundImage: COLOR.GradientLinear,
-    backgroundOrigin: 'border-box',
-    backgroundClip: 'border-box'
-})
-
-export const searchInner = style({
-    width: '100%',
-    padding: '12px 16px',
-    
-    display: 'flex',
-    columnGap: '8px',
-
-    borderRadius: '5px',
-    backgroundColor: COLOR.MonoWhite,
-})
-
-export const searchInput = style({
-    '::placeholder' : {
-        color: COLOR.Gray400,
-    }
-})
-
 export const map = style({
     width: '100%',
     height: `calc(100vh - 64px)`,

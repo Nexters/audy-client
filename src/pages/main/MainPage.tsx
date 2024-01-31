@@ -1,9 +1,9 @@
 import LeftArrowIcon from '@/assets/icons/leftArrow.svg?react';
 import ModifyFilledIcon from '@/assets/icons/modifyFilled.svg?react';
-import SearchIcon from '@/assets/icons/search.svg?react';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import CourseView from '@/features/course/course-view';
 import FloatMenu from '@/features/map/float-menu';
+import SearchBar from '@/features/search/search-bar';
 import { useTmap } from '@/hooks/useTmap';
 
 import * as S from './MainPage.css';
@@ -29,15 +29,7 @@ function MainPage() {
                             className={S.modifyIcon}
                         />
                     </div>
-                    <div className={S.searchBox}>
-                        <div className={S.searchInner}>
-                            <SearchIcon width={20} height={20} />
-                            <input
-                                className={S.searchInput}
-                                placeholder="장소를 입력해주세요."
-                            />
-                        </div>
-                    </div>
+                    <SearchBar />
                     <CourseView />
                 </div>
                 <div className={S.map} ref={mapContainerRef}>
