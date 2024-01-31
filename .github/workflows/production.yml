@@ -6,9 +6,8 @@ on:
       - main
 
 env:
-  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
-  CODE_DEPLOYMENT_APPLICATION_NAME: ${{ secrets.CODE_DEPLOYMENT_APPLICATION_NAME }}
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: ${{ secrets.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }}
+  S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }},
+  AWS_REGION: ${{ secrets.AWS_REGION }}
 
 jobs:
   build-project:
@@ -57,7 +56,7 @@ jobs:
       - name: Build vite app
         run: yarn build
 
-      - name: Compress Build file
+      - name: Compress build file
         run: zip -qq -r ./$GITHUB_SHA.zip . -x "node_modules/*"
         shell: bash
 
@@ -69,4 +68,4 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Upload Build File to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/client/$GITHUB_SHA.zip
+        run: aws s3 cp --region $AWS_REGION ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/client/$GITHUB_SHA.zip
