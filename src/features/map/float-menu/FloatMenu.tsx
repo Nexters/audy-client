@@ -11,8 +11,8 @@ import * as S from './FloatMenu.css';
 const FloatMenu = () => {
     const { tmapModuleRef } = useTmap();
 
-    const { value: isShowPath, toggle: toggleShowPath } = useDisclosure(true);
     const [routeType, setRouteType] = useState<RouteModeType>('Vehicle');
+    const { value: isShowRoute, toggle: toggleShowRoute } = useDisclosure(true);
 
     const handleChangeRouteMode = async (updatedMode: RouteModeType) => {
         if (!tmapModuleRef.current) return;
@@ -22,15 +22,15 @@ const FloatMenu = () => {
 
     const handleToggleShowPath = () => {
         if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.togglePathVisibility();
-        toggleShowPath();
+        toggleShowRoute();
+        tmapModuleRef.current.toggleRouteVisibility();
     }
 
     return (
         <div className={S.wrapper}>
             <p className={S.pathNotice}>경로 표시</p>
             <div
-                className={S.switchBox({ status: isShowPath })}
+                className={S.switchBox({ status: isShowRoute })}
                 onClick={handleToggleShowPath}
             >
                 <motion.div

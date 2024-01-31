@@ -1,5 +1,5 @@
 export interface TmapRequestParamsType {
-    getVehiclePath: {
+    getVehicleRoute: {
         startX: number;
         startY: number;
         endX: number;
@@ -8,7 +8,7 @@ export interface TmapRequestParamsType {
         reqCoordType?: string;
         resCoordType?: string;
     };
-    getPedestrianPath: {
+    getPedestrianRoute: {
         startX: number;
         startY: number;
         endX: number;
@@ -30,7 +30,7 @@ export interface TmapRequestParamsType {
 }
 
 export interface TmapResponseType {
-    getVehiclePath: {
+    getVehicleRoute: {
         features: {
             type: 'Feature';
             geometry:
@@ -49,7 +49,7 @@ export interface TmapResponseType {
             };
         }[];
     };
-    getPedestrianPath: {
+    getPedestrianRoute: {
         features: {
             type: 'Feature';
             geometry:

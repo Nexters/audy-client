@@ -23,12 +23,12 @@ export interface TmapConstructorType {
 const { Tmapv3 } = window;
 
 export class TMapModule {
-    #mapInstance: typeof Tmapv3;
+    #mapInstance: typeof Tmapv3.Map;
     #markers: MarkersType[] = [];
     #polylines: (typeof Tmapv3.Polyline)[] = [];
 
-    #isPathVisible = true;
-    #routePathMode: RouteModeType = 'Vehicle';
+    #isRouteVisible = true;
+    #routeMode: RouteModeType = 'Vehicle';
 
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
@@ -141,7 +141,7 @@ export class TMapModule {
 
     // 마커 삭제
     removeMarker(markerIndex: number) {
-        const targetMarker = this.#markers.splice(markerIndex, 1)[0].marker;
+        const [{ marker: targetMarker }] = this.#markers.splice(markerIndex, 1);
         targetMarker.setMap(null);
 
         window.dispatchEvent(
@@ -220,12 +220,12 @@ export class TMapModule {
                       .join('_')
                 : undefined;
 
-            const getRoutePathAsync =
-                this.#routePathMode === 'Vehicle'
-                    ? TmapRepository.getVehiclePathAsync
-                    : TmapRepository.getPedestrianPathAsync;
+            const getRouteAsync =
+                this.#routeMode === 'Vehicle'
+                    ? TmapRepository.getVehicleRouteAsync
+                    : TmapRepository.getPedestrianRouteAsync;
 
-            const { features } = await getRoutePathAsync({
+            const { features } = await getRouteAsync({
                 startX,
                 startY,
                 endX,
@@ -273,18 +273,18 @@ export class TMapModule {
         this.#polylines = polylines;
     }
 
-    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
-    togglePathVisibility() {
-        const updatedVisible = !this.#isPathVisible;
+    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 toggleRouteVisibility
+    toggleRouteVisibility() {
+        const updatedVisible = !this.#isRouteVisible;
         this.#polylines.forEach((polyline) =>
             polyline.setMap(updatedVisible ? this.#mapInstance : null),
         );
-        this.#isPathVisible = updatedVisible;
+        this.#isRouteVisible = updatedVisible;
     }
 
     // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
     async togglePathMode(routeType: RouteModeType) {
-        this.#routePathMode = routeType;
+        this.#routeMode = routeType;
         await this.drawPathBetweenMarkers({});
     }
 
