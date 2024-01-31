@@ -49,7 +49,6 @@ jobs:
 
       - name: Environment Variable Setting
         run: |
-          echo "VITE_CLOUDFRONT_URL=${{ secrets.CLOUDFRONT_URL }}" >> .env
           echo "VITE_SERVER_URL=${{ secrets.SERVER_URL }}" >> .env
           echo "VITE_CLOUDFRONT_URL=${{ secrets.CLOUDFRONT_URL }}" >> .env
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
@@ -58,7 +57,7 @@ jobs:
       - name: Build vite app
         run: yarn build
 
-      - name: Make zip file
+      - name: Compress Build file
         run: zip -qq -r ./$GITHUB_SHA.zip . -x "node_modules/*"
         shell: bash
 
@@ -71,11 +70,3 @@ jobs:
 
       - name: Upload Build File to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/client/$GITHUB_SHA.zip
-
-      - name: Trigger Code Deploy
-        run: |
-          aws deploy create-deployment \
-          --deployment-config-name CodeDeployDefault.AllAtOnce \
-          --application-name ${{ env.CODE_DEPLOYMENT_APPLICATION_NAME }} \
-          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=client/$GITHUB_SHA.zip
