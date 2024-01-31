@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
 import Marker from '@/features/map/marker/Marker';
-import { MarkersType } from '@/types/map';
+import { MarkersType, RouteModeType } from '@/types/map';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -23,13 +23,14 @@ export interface TmapConstructorType {
 const { Tmapv3 } = window;
 
 export class TMapModule {
-    #mapInstance: typeof Tmapv3;
+    #mapInstance: typeof Tmapv3.Map;
     #markers: MarkersType[] = [];
     #polylines: (typeof Tmapv3.Polyline)[] = [];
 
-    #isPathVisible = true;
+    #isRouteVisible = true;
+    #routeMode: RouteModeType = 'Vehicle';
 
-    #infoWindow: typeof window.Tmapv3.InfoWindow = null;
+    #infoWindow: typeof Tmapv3.InfoWindow = null;
 
     #zoomInLevel = 17; // TODO: 임시
     #maxMarkerCount = 15;
@@ -83,13 +84,6 @@ export class TMapModule {
         };
 
         this.#mapInstance.on('Click', handleMapClick);
-
-        window.addEventListener(
-            'reorderMarkers',
-            (event: WindowEventMap['reorderMarkers']) => {
-                this.modifyMarker(event.detail);
-            },
-        );
     }
 
     // 마커 생성
@@ -147,7 +141,7 @@ export class TMapModule {
 
     // 마커 삭제
     removeMarker(markerIndex: number) {
-        const targetMarker = this.#markers.splice(markerIndex, 1)[0].marker;
+        const [{ marker: targetMarker }] = this.#markers.splice(markerIndex, 1);
         targetMarker.setMap(null);
 
         window.dispatchEvent(
@@ -158,7 +152,7 @@ export class TMapModule {
     // 마커 수정
     modifyMarker(modifiedMarkers: MarkersType[]) {
         // 기존의 경로와 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
-        this.removePath();
+        this.#removePath();
         this.#markers.forEach(({ marker }) => marker.setMap(null));
         this.#markers = modifiedMarkers.map(
             ({ marker, lat, lng, ...rest }, index) => {
@@ -186,22 +180,18 @@ export class TMapModule {
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
 
-    // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 함수 drawPathBetweenMarkers
+    // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 메서드 drawPathBetweenMarkers
     async drawPathBetweenMarkers({
-        startIndex,
-        endIndex,
+        startIndex = 0,
+        endIndex = this.#markers.length - 1,
     }: {
-        startIndex: number;
-        endIndex: number;
+        startIndex?: number;
+        endIndex?: number;
     }) {
-        if (startIndex < 0 || endIndex >= this.#markers.length) {
-            return;
-        }
+        if (startIndex < 0 || endIndex >= this.#markers.length) return;
+        if (this.#markers.length < 2) return;
 
-        if (startIndex === endIndex) {
-            this.removePath();
-            return;
-        }
+        this.#removePath();
 
         const paths: (typeof window.Tmapv3.LatLng)[] = [];
         const MAX_POINTS = 6;
@@ -230,7 +220,12 @@ export class TMapModule {
                       .join('_')
                 : undefined;
 
-            const { features } = await TmapRepository.getRoutePathAsync({
+            const getRouteAsync =
+                this.#routeMode === 'Vehicle'
+                    ? TmapRepository.getVehicleRouteAsync
+                    : TmapRepository.getPedestrianRouteAsync;
+
+            const { features } = await getRouteAsync({
                 startX,
                 startY,
                 endX,
@@ -278,17 +273,23 @@ export class TMapModule {
         this.#polylines = polylines;
     }
 
-    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 함수 togglePathVisibility
-    togglePathVisibility() {
-        const updatedVisible = !this.#isPathVisible;
+    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 toggleRouteVisibility
+    toggleRouteVisibility() {
+        const updatedVisible = !this.#isRouteVisible;
         this.#polylines.forEach((polyline) =>
             polyline.setMap(updatedVisible ? this.#mapInstance : null),
         );
-        this.#isPathVisible = updatedVisible;
+        this.#isRouteVisible = updatedVisible;
+    }
+
+    // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
+    async togglePathMode(routeType: RouteModeType) {
+        this.#routeMode = routeType;
+        await this.drawPathBetweenMarkers({});
     }
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
-    removePath() {
+    #removePath() {
         if (!this.#polylines.length) return;
         this.#polylines.forEach((polyline) => polyline.setMap(null));
         this.#polylines = [];
@@ -357,7 +358,7 @@ export class TMapModule {
                 isPinned: true,
             });
 
-            this.removePath();
+            this.#removePath();
             this.drawPathBetweenMarkers({
                 startIndex: 0,
                 endIndex: this.#markers.length - 1,

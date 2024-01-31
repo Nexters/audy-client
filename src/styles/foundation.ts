@@ -1,5 +1,6 @@
 export const ZIndex = {
     globalNavigation: 999,
+    mapFloatMenu: 9,
 }
 
 export const FONT = {

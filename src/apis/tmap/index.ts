@@ -6,8 +6,8 @@ const baseURL = `https://apis.openapi.sk.com/tmap`;
 const appKey = import.meta.env.VITE_TMAP_APP_KEY;
 
 export const TmapRepository = {
-    // 시작, 종료, 경유지 좌표를 기반으로 경로 데이터를 반환하는 getRoutePathAsync
-    async getRoutePathAsync({
+    // 시작, 종료, 경유지 좌표를 기반으로 자동차 경로 데이터를 반환하는 getVehicleRouteAsync
+    async getVehicleRouteAsync({
         startX,
         startY,
         endX,
@@ -15,12 +15,12 @@ export const TmapRepository = {
         passList,
         reqCoordType = 'WGS84GEO',
         resCoordType = 'WGS84GEO',
-    }: TmapRequestParamsType['getRoutePath']) {
+    }: TmapRequestParamsType['getVehicleRoute']) {
         return postAsync<
-            TmapResponseType['getRoutePath'],
-            TmapRequestParamsType['getRoutePath']
+            TmapResponseType['getVehicleRoute'],
+            TmapRequestParamsType['getVehicleRoute']
         >(
-            `/routes`,
+            '/routes',
             {
                 startX,
                 startY,
@@ -43,26 +43,64 @@ export const TmapRepository = {
         );
     },
 
+    // 시작, 종료, 경유지 좌표를 기반으로 보행가 경로 데이터를 반환하는 getPedestrianPathAsync
+    async getPedestrianRouteAsync({
+        startX,
+        startY,
+        endX,
+        endY,
+        passList,
+        reqCoordType = 'WGS84GEO',
+        resCoordType = 'WGS84GEO',
+    }: TmapRequestParamsType['getPedestrianRoute']) {
+        return postAsync<
+            TmapResponseType['getPedestrianRoute'],
+            TmapRequestParamsType['getPedestrianRoute']
+        >(
+            '/routes/pedestrian',
+            {
+                startX,
+                startY,
+                endX,
+                endY,
+                ...(passList && { passList }),
+                reqCoordType,
+                resCoordType,
+                startName: '출발지',
+                endName: '종착지',
+            },
+            {
+                baseURL,
+                headers: {
+                    appKey,
+                },
+                params: {
+                    version: 1,
+                    format: 'json',
+                },
+            },
+        );
+    },
+
     // 위경도 좌표를 기반으로 건물 명과 실제 주소를 찾는 getAddressFromLatLng
     async getAddressFromLatLng({
         lat,
         lng,
     }: TmapRequestParamsType['getAddressFromLatLng']) {
-        const response =  await getAsync<TmapResponseType['getAddressFromLatLng']>(
-            '/geo/reversegeocoding',
-            {
-                baseURL,
-                headers: { appKey },
-                params: {
-                    version: 1,
-                    lat,
-                    lon: lng,
-                    coordType: 'WGS84GEO',
-                    addressType: 'A04', // TODO: 논의 후 수정 예정
-                    callback: 'result',
-                },
+        const response = await getAsync<
+            TmapResponseType['getAddressFromLatLng']
+        >('/geo/reversegeocoding', {
+            baseURL,
+            headers: { appKey },
+            params: {
+                version: 1,
+                lat,
+                lon: lng,
+                coordType: 'WGS84GEO',
+                addressType: 'A04', // TODO: 논의 후 수정 예정
+                callback: 'result',
             },
-        );
+        });
         return response.addressInfo;
     },
 

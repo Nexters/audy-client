@@ -4,6 +4,7 @@ import { Reorder } from 'framer-motion';
 
 import CourseItem from '@/features/course/course-item';
 import { useEventListeners } from '@/hooks/useEventListeners';
+import { useTmap } from '@/hooks/useTmap';
 import type { MarkersType } from '@/types/map';
 
 import * as S from './CourseView.css';
@@ -11,15 +12,15 @@ import CourseViewContextProvider from './CourseViewContextProvider';
 
 const CourseView = () => {
     const [markers, setMarkers] = useState<MarkersType[]>([]);
+    const { tmapModuleRef } = useTmap();
 
     useEventListeners('modifyMarkers', (event) => {
         setMarkers([...event.detail]);
     });
 
     const handleReorderMarker = (newOrder: MarkersType[]) => {
-        window.dispatchEvent(
-            new CustomEvent('reorderMarkers', { detail: newOrder }),
-        );
+        if (!tmapModuleRef.current) return;
+        tmapModuleRef.current.modifyMarker(newOrder);
         setMarkers(newOrder);
     };
 
