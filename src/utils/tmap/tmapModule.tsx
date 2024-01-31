@@ -332,6 +332,10 @@ export class TMapModule {
             }
         };
 
+        const handleUnPinButtonClick = () => {
+            // TODO: 핀 삭제하기
+        };
+
         document
             .querySelector('#infoWindow')
             ?.addEventListener('click', (event) => event.stopPropagation());
@@ -339,6 +343,10 @@ export class TMapModule {
         document
             .querySelector('#pinButton')
             ?.addEventListener('click', handlePinButtonClick);
+
+        document
+            .querySelector('#unPinButton')
+            ?.addEventListener('click', handleUnPinButtonClick);
     }
 
     // 인포창 전체 삭제
