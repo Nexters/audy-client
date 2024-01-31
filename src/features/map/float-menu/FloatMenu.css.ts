@@ -1,34 +1,37 @@
 import { style } from '@vanilla-extract/css';
-import { sprinkles } from '@/styles/sprinkle.css';
 import { recipe } from '@vanilla-extract/recipes';
 
 import { COLOR } from '@/styles/foundation';
+import { sprinkles } from '@/styles/sprinkle.css';
 
-export const wrapper = style({
-    width: 'max-content',
-    padding: '8px 20px',
+export const wrapper = style([
+    sprinkles({ zIndex: 'mapFloatMenu' }),
 
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    columnGap: '10px',
+    {
+        width: 'max-content',
+        padding: '8px 20px',
 
-    position: 'absolute',
-    right: '16px',
-    top: '16px',
-    zIndex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        columnGap: '10px',
 
-    backgroundColor: COLOR.MonoWhite,
-    borderRadius: '6px',
-    border: `1px solid ${COLOR.Gray300}`,
-    boxShadow: '2px 2px 4px 0px rgba(0, 0, 0, 0.12)'
-});
+        position: 'absolute',
+        right: '16px',
+        top: '16px',
+
+        backgroundColor: COLOR.MonoWhite,
+        borderRadius: '6px',
+        border: `1px solid ${COLOR.Gray300}`,
+        boxShadow: '2px 2px 4px 0px rgba(0, 0, 0, 0.12)',
+    },
+]);
 
 export const pathNotice = style([
-    sprinkles({typography: 'SemiBold15'}),
+    sprinkles({ typography: 'SemiBold15' }),
     {
-        color: COLOR.Gray900,   
-    }
+        color: COLOR.Gray900,
+    },
 ]);
 
 export const switchBox = recipe({
@@ -36,10 +39,10 @@ export const switchBox = recipe({
         width: '56px',
         height: '28px',
         padding: '4px',
-    
+
         display: 'flex',
         borderRadius: '80px',
-    
+
         backgroundColor: COLOR.IndigoPrimary,
     },
     variants: {
@@ -51,10 +54,10 @@ export const switchBox = recipe({
             false: {
                 backgroundColor: COLOR.Gray700,
                 justifyContent: 'flex-start',
-            }
-        }
-    }
-})
+            },
+        },
+    },
+});
 
 export const switchHandle = style({
     width: '20px',
@@ -63,13 +66,13 @@ export const switchHandle = style({
 
     borderRadius: '40px',
     backgroundColor: COLOR.MonoWhite,
-})
+});
 
 export const divider = style({
     width: '1px',
     height: '12px',
     flexShrink: 0,
-})
+});
 
 export const toggleBox = style({
     padding: '6px 8px',
@@ -80,7 +83,7 @@ export const toggleBox = style({
 
     backgroundColor: COLOR.Gray50,
     borderRadius: '4px',
-})
+});
 
 export const toggleButton = recipe({
     base: {
@@ -100,7 +103,7 @@ export const toggleButton = recipe({
             false: {
                 color: '#697281',
                 backgroundColor: 'transparent',
-            }
-        }
-    }
-})
+            },
+        },
+    },
+});
