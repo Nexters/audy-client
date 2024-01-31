@@ -30,15 +30,12 @@ const InfoWindow = ({ name, address, isPinned }: PropsType) => {
                     </div>
                 </div>
 
-                {isPinned ? (
-                    <button className={S.disabledButton} disabled>
-                        <CheckIcon />
-                    </button>
-                ) : (
-                    <button className={S.pinButton} id="pinButton">
-                        <AddIcon />
-                    </button>
-                )}
+                <button
+                    className={S.pinButton}
+                    id={isPinned ? 'unPinButton' : 'pinButton'}
+                >
+                    {isPinned ? <CheckIcon /> : <AddIcon />}
+                </button>
             </div>
         </div>
     );

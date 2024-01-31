@@ -54,22 +54,14 @@ export const address = style([
     },
 ]);
 
-export const disabledButton = style({
+export const pinButton = style({
     backgroundColor: 'white',
     border: '1px solid #E5E7EB',
     borderRadius: '10px',
     padding: '6px',
     margin: '0 0 0 12px',
-    cursor: 'grab',
-});
 
-export const pinButton = style([
-    disabledButton,
-    {
-        cursor: 'pointer',
-
-        ':hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.03);',
-        },
+    ':hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.03);',
     },
-]);
+});
