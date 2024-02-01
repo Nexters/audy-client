@@ -7,8 +7,12 @@ export const layout = style({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: COLOR.MonoWhite,
-    padding: '18px 24px 16px 32px',
+    padding: '15px 16px 13px 24px',
     borderRadius: '6px',
+
+    ':hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    },
 });
 
 const text = style({
