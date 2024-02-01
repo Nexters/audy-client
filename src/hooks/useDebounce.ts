@@ -9,10 +9,12 @@ export const useDebounce = () => {
 
     const debounce = useCallback(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        <T extends (...args: any[]) => void>(callback: T, delay: number) =>
+        <T extends (...args: any[]) => any>(callback: T, delay: number) =>
             (...args: Parameters<T>) => {
                 clearTimeout(timer.current);
-                timer.current = setTimeout(() => callback(...args), delay);
+                timer.current = setTimeout(() => {
+                    callback(...args)
+                }, delay);
             },
         [],
     );
