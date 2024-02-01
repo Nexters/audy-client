@@ -81,11 +81,11 @@ export interface TmapResponseType {
             page: number;
             pois: {
                 poi: {
-                    id: number;
-                    pKey: number,
-                    name: number;
-                    noorLat: number;
-                    noorLon: number;
+                    id: string;
+                    pKey: string;
+                    name: string;
+                    noorLat: string;
+                    noorLon: string;
                     newAddressList: {
                         newAddress: {
                             fullAddressRoad: string;
