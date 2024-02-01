@@ -5,11 +5,13 @@ import ModifyFilledIcon from '@/assets/icons/modifyFilled.svg?react';
 import CourseView from '@/features/course/course-view';
 import SearchBar from '@/features/search/search-bar';
 import SearchResultsContainer from '@/features/search/search-results-container';
+import { SearchResultsType } from '@/types/search';
 
 import * as S from './SidePanel.css';
 
 const SidePanel = () => {
     const [isSearchMode, setIsSearchMode] = useState(false);
+    const [searchResults, setSearchResults] = useState<SearchResultsType>([]);
 
     return (
         <div className={S.sidePanel}>
@@ -27,8 +29,15 @@ const SidePanel = () => {
                 />
             </div>
 
-            <SearchBar setIsSearchMode={setIsSearchMode} />
-            {isSearchMode ? <SearchResultsContainer /> : <CourseView />}
+            <SearchBar
+                setIsSearchMode={setIsSearchMode}
+                setSearchResults={setSearchResults}
+            />
+            {isSearchMode ? (
+                <SearchResultsContainer searchResults={searchResults} />
+            ) : (
+                <CourseView />
+            )}
         </div>
     );
 };
