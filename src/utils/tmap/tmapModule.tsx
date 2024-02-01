@@ -135,7 +135,15 @@ export class TMapModule {
         });
 
         window.dispatchEvent(
-            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+            new CustomEvent('createMarker', { detail: {
+            marker,
+            name,
+            originName,
+            address,
+            id,
+            lat,
+            lng,
+        } }),
         );
     }
 
@@ -145,14 +153,13 @@ export class TMapModule {
         targetMarker.setMap(null);
 
         window.dispatchEvent(
-            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+            new CustomEvent('removeMarker', { detail: markerIndex }),
         );
     }
 
     // 마커 수정
     modifyMarker(modifiedMarkers: MarkersType[]) {
-        // 기존의 경로와 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
-        this.#removePath();
+        // 기존의 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
         this.#markers.forEach(({ marker }) => marker.setMap(null));
         this.#markers = modifiedMarkers.map(
             ({ marker, lat, lng, ...rest }, index) => {
@@ -171,6 +178,8 @@ export class TMapModule {
 
         const startIndex = 0;
         const endIndex = modifiedMarkers.length - 1;
+
+        // NOTE : 경로를 그리는 과정이 오래 걸리므로 기다리지 않고 함수가 끝나도록 처리
         this.drawPathBetweenMarkers({ startIndex, endIndex });
     }
 

@@ -9,7 +9,8 @@ declare global {
     }
 
     interface CustomEventMap {
-        modifyMarkers: CustomEvent<MarkersType[]>;
+        createMarker: CustomEvent<MarkersType>;
+        removeMarker: CustomEvent<number>;
     }
 
     interface WindowEventMap extends CustomEventMap {}
