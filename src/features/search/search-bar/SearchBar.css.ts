@@ -25,6 +25,7 @@ export const searchInner = style({
 });
 
 export const searchInput = style({
+    width: '100%',
     '::placeholder': {
         color: COLOR.Gray400,
     },
