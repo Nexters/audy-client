@@ -13,11 +13,13 @@ export const searchBox = style({
     backgroundClip: 'border-box',
 });
 
-export const searchInner = style({
+export const searchInnerBox = style({
     width: '100%',
     padding: '12px 16px',
 
     display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     columnGap: '8px',
 
     borderRadius: '5px',
@@ -26,7 +28,28 @@ export const searchInner = style({
 
 export const searchInput = style({
     width: '100%',
+    flex: '1',
+
     '::placeholder': {
         color: COLOR.Gray400,
     },
+});
+
+export const cancelContainer = style({
+    display: 'flex',
+});
+
+export const initializeButton = style({
+    padding: '0px',
+});
+
+export const divider = style({
+    borderRight: `1px solid ${COLOR.Gray300}`,
+    height: '16px',
+    margin: '0 16px 0 12px',
+});
+
+export const cancelButton = style({
+    whiteSpace: 'nowrap',
+    padding: '0px',
 });
