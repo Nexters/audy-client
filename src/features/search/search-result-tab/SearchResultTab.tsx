@@ -10,13 +10,34 @@ interface PropsType {
     address: string;
     lat: string;
     lng: string;
+    id: string;
     isPinned: boolean;
 }
 
-const SearchResultTab = ({ name, address, lat, lng, isPinned }: PropsType) => {
+const SearchResultTab = ({
+    name,
+    address,
+    lat,
+    lng,
+    id,
+    isPinned,
+}: PropsType) => {
     const { tmapModuleRef } = useTmap();
 
-    const handlePinButtonClick = () => {};
+    const handlePinButtonClick = () => {
+        if (!tmapModuleRef.current) return;
+
+        tmapModuleRef.current.createMarker({
+            name,
+            originName: name,
+            address,
+            id,
+            lat,
+            lng,
+        });
+
+        tmapModuleRef.current.drawPathBetweenMarkers({});
+    };
 
     const handleTabClick = () => {
         if (!tmapModuleRef.current) return;
@@ -33,7 +54,7 @@ const SearchResultTab = ({ name, address, lat, lng, isPinned }: PropsType) => {
                 </div>
             </div>
 
-            <button className={S.pinButton}>
+            <button className={S.pinButton} onClick={handlePinButtonClick}>
                 {isPinned ? <CheckIcon /> : <AddIcon />}
             </button>
         </div>

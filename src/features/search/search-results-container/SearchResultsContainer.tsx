@@ -17,6 +17,7 @@ const SearchResultsContainer = ({ searchResults }: PropsType) => {
                 return (
                     <SearchResultTab
                         key={pKey}
+                        id={pKey}
                         name={name}
                         address={newAddressList.newAddress[0].fullAddressRoad}
                         lat={noorLat}
