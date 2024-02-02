@@ -40,3 +40,11 @@ export const backArrowIcon = style({
 export const modifyIcon = style({
     color: COLOR.Gray400,
 });
+
+export const courseViewWrapper = style({
+    height: '100%',
+});
+
+export const hidden = style({
+    display: 'none',
+});

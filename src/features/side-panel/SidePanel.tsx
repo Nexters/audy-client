@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import clsx from 'clsx';
+
 import LeftArrowIcon from '@/assets/icons/leftArrow.svg?react';
 import ModifyFilledIcon from '@/assets/icons/modifyFilled.svg?react';
 import CourseView from '@/features/course/course-view';
@@ -30,13 +32,19 @@ const SidePanel = () => {
             </div>
 
             <SearchBar
+                isSearchMode={isSearchMode}
                 setIsSearchMode={setIsSearchMode}
                 setSearchResults={setSearchResults}
             />
-            {isSearchMode ? (
-                <SearchResultsContainer searchResults={searchResults} />
-            ) : (
+
+            <div
+                className={clsx(S.courseViewWrapper, isSearchMode && S.hidden)}
+            >
                 <CourseView />
+            </div>
+
+            {isSearchMode && (
+                <SearchResultsContainer searchResults={searchResults} />
             )}
         </div>
     );
