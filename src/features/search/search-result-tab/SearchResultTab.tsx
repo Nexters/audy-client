@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import AddIcon from '@/assets/icons/add.svg?react';
 import CheckIcon from '@/assets/icons/check.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
@@ -11,18 +13,23 @@ interface PropsType {
     lat: string;
     lng: string;
     id: string;
-    isPinned: boolean;
 }
 
-const SearchResultTab = ({
-    name,
-    address,
-    lat,
-    lng,
-    id,
-    isPinned,
-}: PropsType) => {
+const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
     const { tmapModuleRef } = useTmap();
+
+    const [isPinned, setIsPinned] = useState(false);
+
+    useEffect(() => {
+        if (!tmapModuleRef.current) return;
+
+        const pinState = tmapModuleRef.current.checkIsAlreadyPinned({
+            address,
+            originName: name,
+        });
+
+        setIsPinned(pinState);
+    }, [address, name]);
 
     const handlePinButtonClick = () => {
         if (!tmapModuleRef.current) return;
@@ -37,12 +44,16 @@ const SearchResultTab = ({
         });
 
         tmapModuleRef.current.drawPathBetweenMarkers({});
+
+        const pinState = tmapModuleRef.current.checkIsAlreadyPinned({
+            address,
+            originName: name,
+        });
+
+        setIsPinned(pinState);
     };
 
-    const handleTabClick = () => {
-        if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.zoomIn({ lat, lng });
-    };
+    const handleTabClick = () => tmapModuleRef.current?.zoomIn({ lat, lng });
 
     return (
         <div className={S.layout} onClick={handleTabClick}>

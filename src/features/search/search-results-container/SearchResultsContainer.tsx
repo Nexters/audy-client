@@ -22,7 +22,6 @@ const SearchResultsContainer = ({ searchResults }: PropsType) => {
                         address={newAddressList.newAddress[0].fullAddressRoad}
                         lat={noorLat}
                         lng={noorLon}
-                        isPinned={false}
                     />
                 );
             })}
