@@ -32,7 +32,6 @@ export class TMapModule {
 
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
-    #zoomInLevel = 17; // TODO: 임시
     #maxMarkerCount = 15;
 
     constructor({
@@ -302,7 +301,7 @@ export class TMapModule {
         this.#infoWindow = infoWindow;
 
         this.#mapInstance.setCenter(infoWindowLatLng);
-        this.#mapInstance.setZoom(this.#zoomInLevel);
+        this.#mapInstance.setZoom(17);
 
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
@@ -349,5 +348,11 @@ export class TMapModule {
     removeInfoWindow() {
         this.#infoWindow.setMap(null);
         this.#infoWindow = null;
+    }
+
+    // 특정 위경도로 줌인
+    zoomIn({ lat, lng }: { lat: string; lng: string }) {
+        this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
+        this.#mapInstance.setZoom(19);
     }
 }
