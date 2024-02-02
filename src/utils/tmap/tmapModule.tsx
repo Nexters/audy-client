@@ -350,4 +350,19 @@ export class TMapModule {
         this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
         this.#mapInstance.setZoom(19);
     }
+
+    // 이미 존재하는 핀인지 확인
+    checkIsAlreadyPinned({
+        address,
+        originName,
+    }: {
+        address: string;
+        originName: string;
+    }) {
+        // TODO: 임시 기준
+        return this.#markers.some(
+            (marker) =>
+                marker.address === address && marker.originName === originName,
+        );
+    }
 }
