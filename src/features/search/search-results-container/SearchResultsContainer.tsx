@@ -12,13 +12,15 @@ const SearchResultsContainer = ({ searchResults }: PropsType) => {
     return (
         <div className={S.layout}>
             {searchResults.map((result) => {
-                const { pKey, name, newAddressList } = result;
+                const { pKey, name, newAddressList, noorLat, noorLon } = result;
 
                 return (
                     <SearchResultTab
                         key={pKey}
                         name={name}
                         address={newAddressList.newAddress[0].fullAddressRoad}
+                        lat={noorLat}
+                        lng={noorLon}
                         isPinned={false}
                     />
                 );

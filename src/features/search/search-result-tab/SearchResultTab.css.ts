@@ -9,6 +9,7 @@ export const layout = style({
     backgroundColor: COLOR.MonoWhite,
     padding: '15px 16px 13px 24px',
     borderRadius: '6px',
+    cursor: 'pointer',
 
     ':hover': {
         backgroundColor: 'rgba(0, 0, 0, 0.03)',
