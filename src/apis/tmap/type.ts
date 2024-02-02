@@ -74,6 +74,7 @@ export interface TmapResponseType {
         addressInfo: {
             buildingName: string;
             fullAddress: string;
+            roadAddressKey: string;
         };
     };
     getPoiSearch: {

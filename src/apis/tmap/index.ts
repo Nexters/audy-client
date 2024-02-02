@@ -99,8 +99,10 @@ export const TmapRepository = {
                 coordType: 'WGS84GEO',
                 addressType: 'A04', // TODO: 논의 후 수정 예정
                 callback: 'result',
+                keyInfo: 'Y',
             },
         });
+
         return response.addressInfo;
     },
 

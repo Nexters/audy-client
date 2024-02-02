@@ -68,16 +68,18 @@ export class TMapModule {
             }
 
             const { _lat: lat, _lng: lng } = event._data.lngLat;
-            const { fullAddress } = await TmapRepository.getAddressFromLatLng({
-                lat,
-                lng,
-            });
+            const { fullAddress, roadAddressKey } =
+                await TmapRepository.getAddressFromLatLng({
+                    lat,
+                    lng,
+                });
 
             this.createInfoWindow({
                 lat,
                 lng,
                 name: `장소${this.#markers.length + 1}`,
                 address: fullAddress,
+                id: roadAddressKey,
                 isPinned: false,
             });
         };
@@ -125,6 +127,7 @@ export class TMapModule {
                 lng,
                 name,
                 address,
+                id,
                 isPinned: true,
             });
         };
@@ -275,12 +278,14 @@ export class TMapModule {
         lng,
         name,
         address,
+        id,
         isPinned,
     }: {
         lat: string;
         lng: string;
         name: string;
         address: string;
+        id: string;
         isPinned: boolean;
     }) {
         if (this.#infoWindow) this.removeInfoWindow();
@@ -312,7 +317,7 @@ export class TMapModule {
                 name,
                 originName: name,
                 address,
-                id: String(Math.random()), // FIXME : 임시
+                id,
                 lat,
                 lng,
             });
@@ -324,16 +329,22 @@ export class TMapModule {
                 lng,
                 name,
                 address,
+                id,
                 isPinned: true,
             });
 
-            if (this.#markers.length > 1) {
-                this.drawPathBetweenMarkers();
-            }
+            if (this.#markers.length > 1) this.drawPathBetweenMarkers();
         };
 
         const handleUnPinButtonClick = () => {
-            // TODO: 핀 삭제하기
+            const markerIndex = this.#markers.findIndex(
+                (marker) => marker.id === id,
+            );
+
+            this.removeMarker(markerIndex);
+            this.removeInfoWindow();
+
+            this.modifyMarker(this.#markers);
         };
 
         document
