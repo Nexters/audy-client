@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 
+import clsx from 'clsx';
+
 import AddIcon from '@/assets/icons/add.svg?react';
 import CheckIcon from '@/assets/icons/check.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
@@ -65,9 +67,15 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
                 </div>
             </div>
 
-            <button className={S.pinButton} onClick={handlePinButtonClick}>
-                {isPinned ? <CheckIcon /> : <AddIcon />}
-            </button>
+            {isPinned ? (
+                <button className={clsx(S.pinButton, S.alreadyPinned)} disabled>
+                    <CheckIcon fill="#1E1BFF" />
+                </button>
+            ) : (
+                <button className={S.pinButton} onClick={handlePinButtonClick}>
+                    <AddIcon />
+                </button>
+            )}
         </div>
     );
 };

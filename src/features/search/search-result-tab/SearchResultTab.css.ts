@@ -58,3 +58,9 @@ export const pinButton = style({
         backgroundColor: 'rgba(0, 0, 0, 0.03);',
     },
 });
+
+export const alreadyPinned = style({
+    ':hover': {
+        backgroundColor: COLOR.MonoWhite,
+    },
+});
