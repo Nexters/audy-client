@@ -7,6 +7,6 @@ export interface MarkerType {
     originName: string;
     address: string;
     id: string;
-    lat: number;
-    lng: number;
+    lat: string;
+    lng: string;
 }
