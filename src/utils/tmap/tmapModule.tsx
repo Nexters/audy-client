@@ -93,14 +93,14 @@ export class TMapModule {
         id,
         lat,
         lng,
-        iconHTML,
+        iconHTML = renderToString(<Marker order={this.#markers.length + 1} />),
     }: {
         name: string;
         originName: string;
         address: string;
         id: string;
-        lat: number;
-        lng: number;
+        lat: string;
+        lng: string;
         iconHTML?: string;
     }) {
         if (this.#markers.length >= this.#maxMarkerCount) return;
@@ -275,8 +275,8 @@ export class TMapModule {
         address,
         isPinned,
     }: {
-        lat: number;
-        lng: number;
+        lat: string;
+        lng: string;
         name: string;
         address: string;
         isPinned: boolean;
@@ -306,10 +306,6 @@ export class TMapModule {
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
 
-            const iconHTML = renderToString(
-                <Marker order={this.#markers.length + 1} />,
-            );
-
             this.createMarker({
                 name,
                 originName: name,
@@ -317,7 +313,6 @@ export class TMapModule {
                 id: String(Math.random()), // FIXME : 임시
                 lat,
                 lng,
-                iconHTML,
             });
 
             this.removeInfoWindow();
