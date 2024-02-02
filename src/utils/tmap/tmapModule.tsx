@@ -68,7 +68,7 @@ export class TMapModule {
             }
 
             const { _lat: lat, _lng: lng } = event._data.lngLat;
-            const { fullAddress, roadAddressKey } =
+            const { fullAddress, buildingName, roadAddressKey } =
                 await TmapRepository.getAddressFromLatLng({
                     lat,
                     lng,
@@ -77,7 +77,7 @@ export class TMapModule {
             this.createInfoWindow({
                 lat,
                 lng,
-                name: `장소${this.#markers.length + 1}`,
+                name: buildingName || '정보 미등록 장소',
                 address: fullAddress,
                 id: roadAddressKey,
                 isPinned: false,
