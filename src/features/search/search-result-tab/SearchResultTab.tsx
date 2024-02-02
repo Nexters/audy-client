@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import clsx from 'clsx';
 
+import clsx from 'clsx';
+
 import AddIcon from '@/assets/icons/add.svg?react';
 import CheckIcon from '@/assets/icons/check.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
