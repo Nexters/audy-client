@@ -1,4 +1,4 @@
-export const socialLoginProvider = {
+export const SOCIAL_LOGIN_METADATA = {
     apple: {
         url: 'https://appleid.apple.com/auth/authorize',
         config: {
