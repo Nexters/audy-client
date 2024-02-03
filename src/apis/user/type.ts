@@ -1,5 +1,6 @@
 export interface UserRequestParamsType {
     getInformation: {
+        accessToken: string;
         userId: string;
     };
 }
