@@ -170,11 +170,7 @@ export class TMapModule {
             },
         );
 
-        const startIndex = 0;
-        const endIndex = modifiedMarkers.length - 1;
-
-        // NOTE : 경로를 그리는 과정이 오래 걸리므로 기다리지 않고 함수가 끝나도록 처리
-        this.drawPathBetweenMarkers({ startIndex, endIndex });
+        this.drawPathBetweenMarkers();
     }
 
     // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 getMarkerPosition
@@ -183,20 +179,12 @@ export class TMapModule {
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
 
-    // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 메서드 drawPathBetweenMarkers
-    async drawPathBetweenMarkers({
-        startIndex = 0,
-        endIndex = this.#markers.length - 1,
-    }: {
-        startIndex?: number;
-        endIndex?: number;
-    }) {
-        if (startIndex < 0 || endIndex >= this.#markers.length) return;
-        if (this.#markers.length < 2) return;
-
+    // 맵에 찍힌 마커들을 잇는 경로를 그리는 메서드 drawPathBetweenMarkers
+    async drawPathBetweenMarkers() {
         this.#removePath();
 
         const path: (typeof window.Tmapv3.LatLng)[] = [];
+        const endIndex = this.#markers.length - 1;
         const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
@@ -236,20 +224,16 @@ export class TMapModule {
                 passList,
             });
 
-            features.forEach((feature, index) => {
+            features.forEach((feature) => {
                 if (feature.geometry.type === 'LineString') {
-                    // NOTE : 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
-                    const previousFeature =
-                        index > 0 ? features[index - 1] : undefined;
-                    if (previousFeature?.geometry.type === 'Point') {
-                        const [previousLng, previousLat] =
-                            previousFeature.geometry.coordinates;
-                        path.push(new Tmapv3.LatLng(previousLat, previousLng));
-                    }
-
                     feature.geometry.coordinates.forEach(([lng, lat]) =>
                         path.push(new Tmapv3.LatLng(lat, lng)),
                     );
+                }
+
+                if (feature.geometry.type === 'Point') {
+                    const [lng, lat] = feature.geometry.coordinates;
+                    path.push(new Tmapv3.LatLng(lat, lng));
                 }
             });
         }
@@ -274,7 +258,7 @@ export class TMapModule {
     // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
     async togglePathMode(routeType: RouteModeType) {
         this.#routeMode = routeType;
-        await this.drawPathBetweenMarkers({});
+        await this.drawPathBetweenMarkers();
     }
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
@@ -347,11 +331,9 @@ export class TMapModule {
                 isPinned: true,
             });
 
-            this.#removePath();
-            this.drawPathBetweenMarkers({
-                startIndex: 0,
-                endIndex: this.#markers.length - 1,
-            });
+            if (this.#markers.length > 1) {
+                this.drawPathBetweenMarkers();
+            }
         };
 
         document
