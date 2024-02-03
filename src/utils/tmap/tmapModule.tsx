@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
 import Marker from '@/features/map/marker/Marker';
-import { MarkersType, RouteModeType } from '@/types/map';
+import { MarkerType, RouteModeType } from '@/types/map';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -24,7 +24,7 @@ const { Tmapv3 } = window;
 
 export class TMapModule {
     #mapInstance: typeof Tmapv3.Map;
-    #markers: MarkersType[] = [];
+    #markers: MarkerType[] = [];
     #polyline: typeof Tmapv3.Polyline;
 
     #isRouteVisible = true;
@@ -106,11 +106,19 @@ export class TMapModule {
     }) {
         if (this.#markers.length >= this.#maxMarkerCount) return;
 
-        const marker = new Tmapv3.Marker({
-            position: new Tmapv3.LatLng(lat, lng),
-            iconHTML,
-            map: this.#mapInstance,
-        });
+        const createdMarker: MarkerType = {
+            marker: new Tmapv3.Marker({
+                position: new Tmapv3.LatLng(lat, lng),
+                iconHTML,
+                map: this.#mapInstance,
+            }),
+            name,
+            originName,
+            address,
+            id,
+            lat,
+            lng,
+        };
 
         const handleMarkerClick = () => {
             this.createInfoWindow({
@@ -122,29 +130,13 @@ export class TMapModule {
             });
         };
 
-        marker.on('Click', handleMarkerClick);
+        createdMarker.marker.on('Click', handleMarkerClick);
 
-        this.#markers.push({
-            marker,
-            name,
-            originName,
-            address,
-            id,
-            lat,
-            lng,
-        });
+        this.#markers.push(createdMarker);
 
         window.dispatchEvent(
-            new CustomEvent('createMarker', {
-                detail: {
-                    marker,
-                    name,
-                    originName,
-                    address,
-                    id,
-                    lat,
-                    lng,
-                },
+            new CustomEvent('marker:create', {
+                detail: createdMarker,
             }),
         );
     }
@@ -160,7 +152,7 @@ export class TMapModule {
     }
 
     // 마커 수정
-    modifyMarker(modifiedMarkers: MarkersType[]) {
+    modifyMarker(modifiedMarkers: MarkerType[]) {
         // 기존의 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
         this.#markers.forEach(({ marker }) => marker.setMap(null));
         this.#markers = modifiedMarkers.map(
