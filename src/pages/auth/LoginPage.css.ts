@@ -66,7 +66,7 @@ export const loginButton = recipe({
         sprinkles({ typography: 'ExtraBold16' }),
         {
             width: '100%',
-            padding: '16px 0',
+            padding: '12px 0',
 
             display: 'flex',
             justifyContent: 'center',
