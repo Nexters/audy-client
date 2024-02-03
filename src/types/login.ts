@@ -1,1 +1,1 @@
-export type SocialLoginProviderType = 'apple' | 'kakao';
+export type SocialPlatformType = 'apple' | 'kakao';
