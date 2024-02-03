@@ -1,6 +1,6 @@
-import AppleLogoIcon from '@/assets/icons/appleLogo.svg.svg?react';
+import AppleLogoIcon from '@/assets/icons/appleLogo.svg?react';
 import AudyLogoIcon from '@/assets/icons/audyLogo.svg?react';
-import KakaoLogoIcon from '@/assets/icons/kakaoLogo.svg.svg?react';
+import KakaoLogoIcon from '@/assets/icons/kakaoLogo.svg?react';
 import { SOCIAL_LOGIN_METADATA } from '@/constants';
 import { SocialPlatformType } from '@/types';
 

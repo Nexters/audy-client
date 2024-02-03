@@ -16,19 +16,27 @@ export const wrapper = style({
 });
 
 export const loginContainer = style({
-    padding: '60px 40px',
+    height: 'max-content',
+    padding: '60px 40px 40px 40px',
+    margin: 'auto',
 
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
+    alignContent: 'center',
     rowGap: '80px',
+
+    backgroundColor: COLOR.MonoWhite,
+    borderRadius: '20px',
 });
 
 export const introduceBox = style({
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignContent: 'center',
     rowGap: '12px',
+
+    textAlign: 'center',
 });
 
 export const introduceText = style([
@@ -42,7 +50,7 @@ export const loginNoticeText = style([
 ]);
 
 export const audyLogo = style({
-    marginBottom: '20px',
+    margin: '0 auto 20px auto',
 });
 
 export const buttonBox = style({
@@ -58,6 +66,7 @@ export const loginButton = recipe({
         sprinkles({ typography: 'ExtraBold16' }),
         {
             width: '100%',
+            padding: '16px 0',
 
             display: 'flex',
             justifyContent: 'center',
