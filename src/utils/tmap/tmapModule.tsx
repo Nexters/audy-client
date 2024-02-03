@@ -25,7 +25,7 @@ const { Tmapv3 } = window;
 export class TMapModule {
     #mapInstance: typeof Tmapv3.Map;
     #markers: MarkersType[] = [];
-    #polylines: (typeof Tmapv3.Polyline)[] = [];
+    #polyline: typeof Tmapv3.Polyline;
 
     #isRouteVisible = true;
     #routeMode: RouteModeType = 'Vehicle';
@@ -135,15 +135,17 @@ export class TMapModule {
         });
 
         window.dispatchEvent(
-            new CustomEvent('createMarker', { detail: {
-            marker,
-            name,
-            originName,
-            address,
-            id,
-            lat,
-            lng,
-        } }),
+            new CustomEvent('createMarker', {
+                detail: {
+                    marker,
+                    name,
+                    originName,
+                    address,
+                    id,
+                    lat,
+                    lng,
+                },
+            }),
         );
     }
 
@@ -202,7 +204,7 @@ export class TMapModule {
 
         this.#removePath();
 
-        const paths: (typeof window.Tmapv3.LatLng)[] = [];
+        const path: (typeof window.Tmapv3.LatLng)[] = [];
         const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
@@ -244,50 +246,36 @@ export class TMapModule {
 
             features.forEach((feature, index) => {
                 if (feature.geometry.type === 'LineString') {
-                    const path = feature.geometry.coordinates.map(
-                        ([lng, lat]) => new Tmapv3.LatLng(lat, lng),
-                    );
-
                     // NOTE : 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
                     const previousFeature =
                         index > 0 ? features[index - 1] : undefined;
-                    if (
-                        previousFeature &&
-                        previousFeature.geometry.type === 'Point'
-                    ) {
+                    if (previousFeature?.geometry.type === 'Point') {
                         const [previousLng, previousLat] =
                             previousFeature.geometry.coordinates;
-                        path.unshift(
-                            new Tmapv3.LatLng(previousLat, previousLng),
-                        );
+                        path.push(new Tmapv3.LatLng(previousLat, previousLng));
                     }
 
-                    paths.push(path);
+                    feature.geometry.coordinates.forEach(([lng, lat]) =>
+                        path.push(new Tmapv3.LatLng(lat, lng)),
+                    );
                 }
             });
         }
 
-        const polylines = paths.map(
-            (path) =>
-                new Tmapv3.Polyline({
-                    path,
-                    fillColor: '#FF0000',
-                    fillOpacity: 1,
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 5,
-                    map: this.#mapInstance,
-                }),
-        );
-
-        this.#polylines = polylines;
+        this.#polyline = new Tmapv3.Polyline({
+            path,
+            fillColor: '#FF0000',
+            fillOpacity: 1,
+            strokeColor: '#FF0000',
+            strokeOpacity: 5,
+            map: this.#mapInstance,
+        });
     }
 
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 toggleRouteVisibility
     toggleRouteVisibility() {
         const updatedVisible = !this.#isRouteVisible;
-        this.#polylines.forEach((polyline) =>
-            polyline.setMap(updatedVisible ? this.#mapInstance : null),
-        );
+        this.#polyline.setMap(updatedVisible ? this.#mapInstance : null);
         this.#isRouteVisible = updatedVisible;
     }
 
@@ -299,9 +287,9 @@ export class TMapModule {
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
     #removePath() {
-        if (!this.#polylines.length) return;
-        this.#polylines.forEach((polyline) => polyline.setMap(null));
-        this.#polylines = [];
+        if (!this.#polyline) return;
+        this.#polyline.setMap(null);
+        this.#polyline = null;
     }
 
     // 인포창 생성

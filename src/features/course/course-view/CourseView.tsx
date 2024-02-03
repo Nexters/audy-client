@@ -11,7 +11,7 @@ import type { MarkersType } from '@/types/map';
 import * as S from './CourseView.css';
 import CourseViewContextProvider from './CourseViewContextProvider';
 
-const REORDER_DELAY = 660;
+const REORDER_DELAY = 330;
 
 const CourseView = () => {
     const [markers, setMarkers] = useState<MarkersType[]>([]);
