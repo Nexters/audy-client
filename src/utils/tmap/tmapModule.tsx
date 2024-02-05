@@ -106,7 +106,7 @@ export class TMapModule {
     }) {
         if (this.#markers.length >= this.#maxMarkerCount) return;
 
-        const createdMarker: MarkerType = {
+        const newMarker: MarkerType = {
             marker: new Tmapv3.Marker({
                 position: new Tmapv3.LatLng(lat, lng),
                 iconHTML,
@@ -130,13 +130,13 @@ export class TMapModule {
             });
         };
 
-        createdMarker.marker.on('Click', handleMarkerClick);
+        newMarker.marker.on('Click', handleMarkerClick);
 
-        this.#markers.push(createdMarker);
+        this.#markers.push(newMarker);
 
         window.dispatchEvent(
             new CustomEvent('marker:create', {
-                detail: createdMarker,
+                detail: newMarker,
             }),
         );
     }
