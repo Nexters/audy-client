@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
 import Marker from '@/features/map/marker/Marker';
-import { MarkersType, RouteModeType } from '@/types/map';
+import { MarkerType, RouteModeType } from '@/types/map';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -24,8 +24,8 @@ const { Tmapv3 } = window;
 
 export class TMapModule {
     #mapInstance: typeof Tmapv3.Map;
-    #markers: MarkersType[] = [];
-    #polylines: (typeof Tmapv3.Polyline)[] = [];
+    #markers: MarkerType[] = [];
+    #polyline: typeof Tmapv3.Polyline;
 
     #isRouteVisible = true;
     #routeMode: RouteModeType = 'Vehicle';
@@ -106,11 +106,19 @@ export class TMapModule {
     }) {
         if (this.#markers.length >= this.#maxMarkerCount) return;
 
-        const marker = new Tmapv3.Marker({
-            position: new Tmapv3.LatLng(lat, lng),
-            iconHTML,
-            map: this.#mapInstance,
-        });
+        const newMarker: MarkerType = {
+            marker: new Tmapv3.Marker({
+                position: new Tmapv3.LatLng(lat, lng),
+                iconHTML,
+                map: this.#mapInstance,
+            }),
+            name,
+            originName,
+            address,
+            id,
+            lat,
+            lng,
+        };
 
         const handleMarkerClick = () => {
             this.createInfoWindow({
@@ -122,20 +130,14 @@ export class TMapModule {
             });
         };
 
-        marker.on('Click', handleMarkerClick);
+        newMarker.marker.on('Click', handleMarkerClick);
 
-        this.#markers.push({
-            marker,
-            name,
-            originName,
-            address,
-            id,
-            lat,
-            lng,
-        });
+        this.#markers.push(newMarker);
 
         window.dispatchEvent(
-            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+            new CustomEvent('marker:create', {
+                detail: newMarker,
+            }),
         );
     }
 
@@ -145,14 +147,13 @@ export class TMapModule {
         targetMarker.setMap(null);
 
         window.dispatchEvent(
-            new CustomEvent('modifyMarkers', { detail: this.#markers }),
+            new CustomEvent('removeMarker', { detail: markerIndex }),
         );
     }
 
     // 마커 수정
-    modifyMarker(modifiedMarkers: MarkersType[]) {
-        // 기존의 경로와 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
-        this.#removePath();
+    modifyMarker(modifiedMarkers: MarkerType[]) {
+        // 기존의 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
         this.#markers.forEach(({ marker }) => marker.setMap(null));
         this.#markers = modifiedMarkers.map(
             ({ marker, lat, lng, ...rest }, index) => {
@@ -169,9 +170,7 @@ export class TMapModule {
             },
         );
 
-        const startIndex = 0;
-        const endIndex = modifiedMarkers.length - 1;
-        this.drawPathBetweenMarkers({ startIndex, endIndex });
+        this.drawPathBetweenMarkers();
     }
 
     // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 getMarkerPosition
@@ -180,20 +179,12 @@ export class TMapModule {
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
 
-    // 시작과 끝 마커의 index 를 인자로 받아 경로를 그리는 메서드 drawPathBetweenMarkers
-    async drawPathBetweenMarkers({
-        startIndex = 0,
-        endIndex = this.#markers.length - 1,
-    }: {
-        startIndex?: number;
-        endIndex?: number;
-    }) {
-        if (startIndex < 0 || endIndex >= this.#markers.length) return;
-        if (this.#markers.length < 2) return;
-
+    // 맵에 찍힌 마커들을 잇는 경로를 그리는 메서드 drawPathBetweenMarkers
+    async drawPathBetweenMarkers() {
         this.#removePath();
 
-        const paths: (typeof window.Tmapv3.LatLng)[] = [];
+        const path: (typeof window.Tmapv3.LatLng)[] = [];
+        const endIndex = this.#markers.length - 1;
         const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
@@ -233,66 +224,48 @@ export class TMapModule {
                 passList,
             });
 
-            features.forEach((feature, index) => {
+            features.forEach((feature) => {
                 if (feature.geometry.type === 'LineString') {
-                    const path = feature.geometry.coordinates.map(
-                        ([lng, lat]) => new Tmapv3.LatLng(lat, lng),
+                    feature.geometry.coordinates.forEach(([lng, lat]) =>
+                        path.push(new Tmapv3.LatLng(lat, lng)),
                     );
+                }
 
-                    // NOTE : 바로 직전의 feature type 이 Point 라면, 해당 지점의 값도 추가해야 한다.
-                    const previousFeature =
-                        index > 0 ? features[index - 1] : undefined;
-                    if (
-                        previousFeature &&
-                        previousFeature.geometry.type === 'Point'
-                    ) {
-                        const [previousLng, previousLat] =
-                            previousFeature.geometry.coordinates;
-                        path.unshift(
-                            new Tmapv3.LatLng(previousLat, previousLng),
-                        );
-                    }
-
-                    paths.push(path);
+                if (feature.geometry.type === 'Point') {
+                    const [lng, lat] = feature.geometry.coordinates;
+                    path.push(new Tmapv3.LatLng(lat, lng));
                 }
             });
         }
 
-        const polylines = paths.map(
-            (path) =>
-                new Tmapv3.Polyline({
-                    path,
-                    fillColor: '#FF0000',
-                    fillOpacity: 1,
-                    strokeColor: '#FF0000',
-                    strokeOpacity: 5,
-                    map: this.#mapInstance,
-                }),
-        );
-
-        this.#polylines = polylines;
+        this.#polyline = new Tmapv3.Polyline({
+            path,
+            fillColor: '#FF0000',
+            fillOpacity: 1,
+            strokeColor: '#FF0000',
+            strokeOpacity: 5,
+            map: this.#mapInstance,
+        });
     }
 
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 toggleRouteVisibility
     toggleRouteVisibility() {
         const updatedVisible = !this.#isRouteVisible;
-        this.#polylines.forEach((polyline) =>
-            polyline.setMap(updatedVisible ? this.#mapInstance : null),
-        );
+        this.#polyline.setMap(updatedVisible ? this.#mapInstance : null);
         this.#isRouteVisible = updatedVisible;
     }
 
     // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
     async togglePathMode(routeType: RouteModeType) {
         this.#routeMode = routeType;
-        await this.drawPathBetweenMarkers({});
+        await this.drawPathBetweenMarkers();
     }
 
     // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
     #removePath() {
-        if (!this.#polylines.length) return;
-        this.#polylines.forEach((polyline) => polyline.setMap(null));
-        this.#polylines = [];
+        if (!this.#polyline) return;
+        this.#polyline.setMap(null);
+        this.#polyline = null;
     }
 
     // 인포창 생성
@@ -358,11 +331,9 @@ export class TMapModule {
                 isPinned: true,
             });
 
-            this.#removePath();
-            this.drawPathBetweenMarkers({
-                startIndex: 0,
-                endIndex: this.#markers.length - 1,
-            });
+            if (this.#markers.length > 1) {
+                this.drawPathBetweenMarkers();
+            }
         };
 
         document

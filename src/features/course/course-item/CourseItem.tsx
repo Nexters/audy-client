@@ -13,14 +13,14 @@ import {
     CourseViewContextValue,
 } from '@/features/course/course-view/CourseViewContextProvider';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
-import { MarkersType } from '@/types/map';
+import { MarkerType } from '@/types/map';
 
 import CourseCheckBox from './CourseCheckBox';
 import CourseControlBox from './CourseControlBox';
 import * as S from './CourseItem.css';
 
 interface PropsType {
-    marker: MarkersType;
+    marker: MarkerType;
     order: number;
 }
 
