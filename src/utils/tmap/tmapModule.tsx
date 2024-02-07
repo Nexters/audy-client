@@ -182,6 +182,8 @@ export class TMapModule {
     async drawPathBetweenMarkers() {
         this.#removePath();
 
+        if (this.#markers.length < 2) return;
+
         const path: (typeof window.Tmapv3.LatLng)[] = [];
         const endIndex = this.#markers.length - 1;
         const MAX_POINTS = 6;
