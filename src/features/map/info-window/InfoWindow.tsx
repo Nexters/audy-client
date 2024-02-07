@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
 import AddIcon from '@/assets/icons/add.svg?react';
-import CheckIcon from '@/assets/icons/check.svg?react';
-import InfoWindowLayout from '@/assets/images/infoWindowLayout.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
+import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
+import InfoWindowLayout from '@/assets/images/infoWindowLayout.svg?react';
 
 import * as S from './InfoWindow.css';
 
@@ -25,20 +25,21 @@ const InfoWindow = ({ name, address, isPinned }: PropsType) => {
                 <div>
                     <p className={S.name}>{name}</p>
                     <div className={S.addressContainer}>
-                        <LocationIcon />
+                        <LocationIcon fill="#9CA3AF" width={14} height={14} />
                         <p className={S.address}>{address}</p>
                     </div>
                 </div>
 
-                {isPinned ? (
-                    <button className={S.disabledButton} disabled>
-                        <CheckIcon />
-                    </button>
-                ) : (
-                    <button className={S.pinButton} id="pinButton">
-                        <AddIcon />
-                    </button>
-                )}
+                <button
+                    className={S.pinButton}
+                    id={isPinned ? 'unPinButton' : 'pinButton'}
+                >
+                    {isPinned ? (
+                        <TrashCanIcon fill="#9CA3AF" />
+                    ) : (
+                        <AddIcon fill="#9CA3AF" />
+                    )}
+                </button>
             </div>
         </div>
     );

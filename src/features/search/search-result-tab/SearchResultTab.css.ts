@@ -1,26 +1,19 @@
 import { style } from '@vanilla-extract/css';
 
+import { COLOR } from '@/styles/foundation';
+
 export const layout = style({
-    backgroundColor: 'transparent',
-    width: '338px',
-});
-
-export const layoutMargin = style({
-    margin: '0 0 60px 0',
-});
-
-export const window = style({
-    width: '500px',
-    position: 'relative',
-});
-
-export const contentsContainer = style({
-    position: 'absolute',
-    alignItems: 'center',
     display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    top: '24px',
-    left: '32px',
+    backgroundColor: COLOR.MonoWhite,
+    padding: '15px 16px 13px 24px',
+    borderRadius: '6px',
+    cursor: 'pointer',
+
+    ':hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    },
 });
 
 const text = style({
@@ -63,5 +56,11 @@ export const pinButton = style({
 
     ':hover': {
         backgroundColor: 'rgba(0, 0, 0, 0.03);',
+    },
+});
+
+export const alreadyPinned = style({
+    ':hover': {
+        backgroundColor: COLOR.MonoWhite,
     },
 });

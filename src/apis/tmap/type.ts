@@ -1,3 +1,5 @@
+import { SearchResultType } from '@/types/search';
+
 export interface TmapRequestParamsType {
     getVehicleRoute: {
         startX: number;
@@ -72,6 +74,7 @@ export interface TmapResponseType {
         addressInfo: {
             buildingName: string;
             fullAddress: string;
+            roadAddressKey: string;
         };
     };
     getPoiSearch: {
@@ -80,18 +83,7 @@ export interface TmapResponseType {
             count: number;
             page: number;
             pois: {
-                poi: {
-                    id: number;
-                    pKey: number,
-                    name: number;
-                    noorLat: number;
-                    noorLon: number;
-                    newAddressList: {
-                        newAddress: {
-                            fullAddressRoad: string;
-                        }[];
-                    };
-                }[];
+                poi: SearchResultType[];
             };
         };
     };

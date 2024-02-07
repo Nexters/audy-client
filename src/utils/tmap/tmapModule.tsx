@@ -32,7 +32,6 @@ export class TMapModule {
 
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
-    #zoomInLevel = 17; // TODO: 임시
     #maxMarkerCount = 15;
 
     constructor({
@@ -69,16 +68,18 @@ export class TMapModule {
             }
 
             const { _lat: lat, _lng: lng } = event._data.lngLat;
-            const { fullAddress } = await TmapRepository.getAddressFromLatLng({
-                lat,
-                lng,
-            });
+            const { fullAddress, buildingName, roadAddressKey } =
+                await TmapRepository.getAddressFromLatLng({
+                    lat,
+                    lng,
+                });
 
             this.createInfoWindow({
                 lat,
                 lng,
-                name: `장소${this.#markers.length + 1}`,
+                name: buildingName || '정보 미등록 장소',
                 address: fullAddress,
+                id: roadAddressKey,
                 isPinned: false,
             });
         };
@@ -94,14 +95,14 @@ export class TMapModule {
         id,
         lat,
         lng,
-        iconHTML,
+        iconHTML = renderToString(<Marker order={this.#markers.length + 1} />),
     }: {
         name: string;
         originName: string;
         address: string;
         id: string;
-        lat: number;
-        lng: number;
+        lat: string;
+        lng: string;
         iconHTML?: string;
     }) {
         if (this.#markers.length >= this.#maxMarkerCount) return;
@@ -126,6 +127,7 @@ export class TMapModule {
                 lng,
                 name,
                 address,
+                id,
                 isPinned: true,
             });
         };
@@ -182,6 +184,8 @@ export class TMapModule {
     // 맵에 찍힌 마커들을 잇는 경로를 그리는 메서드 drawPathBetweenMarkers
     async drawPathBetweenMarkers() {
         this.#removePath();
+
+        if (this.#markers.length < 2) return;
 
         const path: (typeof window.Tmapv3.LatLng)[] = [];
         const endIndex = this.#markers.length - 1;
@@ -274,12 +278,14 @@ export class TMapModule {
         lng,
         name,
         address,
+        id,
         isPinned,
     }: {
-        lat: number;
-        lng: number;
+        lat: string;
+        lng: string;
         name: string;
         address: string;
+        id: string;
         isPinned: boolean;
     }) {
         if (this.#infoWindow) this.removeInfoWindow();
@@ -302,23 +308,18 @@ export class TMapModule {
         this.#infoWindow = infoWindow;
 
         this.#mapInstance.setCenter(infoWindowLatLng);
-        this.#mapInstance.setZoom(this.#zoomInLevel);
+        this.#mapInstance.setZoom(17);
 
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
-
-            const iconHTML = renderToString(
-                <Marker order={this.#markers.length + 1} />,
-            );
 
             this.createMarker({
                 name,
                 originName: name,
                 address,
-                id: String(Math.random()), // FIXME : 임시
+                id,
                 lat,
                 lng,
-                iconHTML,
             });
 
             this.removeInfoWindow();
@@ -328,12 +329,22 @@ export class TMapModule {
                 lng,
                 name,
                 address,
+                id,
                 isPinned: true,
             });
 
-            if (this.#markers.length > 1) {
-                this.drawPathBetweenMarkers();
-            }
+            if (this.#markers.length > 1) this.drawPathBetweenMarkers();
+        };
+
+        const handleUnPinButtonClick = () => {
+            const markerIndex = this.#markers.findIndex(
+                (marker) => marker.id === id,
+            );
+
+            this.removeMarker(markerIndex);
+            this.removeInfoWindow();
+
+            this.modifyMarker(this.#markers);
         };
 
         document
@@ -343,11 +354,26 @@ export class TMapModule {
         document
             .querySelector('#pinButton')
             ?.addEventListener('click', handlePinButtonClick);
+
+        document
+            .querySelector('#unPinButton')
+            ?.addEventListener('click', handleUnPinButtonClick);
     }
 
     // 인포창 전체 삭제
     removeInfoWindow() {
         this.#infoWindow.setMap(null);
         this.#infoWindow = null;
+    }
+
+    // 특정 위경도로 줌인
+    zoomIn({ lat, lng }: { lat: string; lng: string }) {
+        this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
+        this.#mapInstance.setZoom(19);
+    }
+
+    // 이미 존재하는 핀인지 확인
+    checkIsAlreadyPinned(id: string) {
+        return this.#markers.some((marker) => marker.id === id);
     }
 }
