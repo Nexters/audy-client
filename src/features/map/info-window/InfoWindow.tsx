@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
 import AddIcon from '@/assets/icons/add.svg?react';
-import InfoWindowLayout from '@/assets/icons/infoWindowLayout.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
+import InfoWindowLayout from '@/assets/images/infoWindowLayout.svg?react';
 
 import * as S from './InfoWindow.css';
 
