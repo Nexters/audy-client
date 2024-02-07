@@ -15,7 +15,7 @@ import { SearchResultType } from '@/types/search';
 
 import * as S from './CoursePage.css';
 
-function MainPage() {
+function CoursePage() {
     const { mapContainerRef } = useTmap();
 
     const [isSearchMode, setIsSearchMode] = useState(false);
@@ -69,4 +69,4 @@ function MainPage() {
     );
 }
 
-export default MainPage;
+export default CoursePage;
