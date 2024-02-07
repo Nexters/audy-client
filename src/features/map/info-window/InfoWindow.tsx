@@ -25,7 +25,7 @@ const InfoWindow = ({ name, address, isPinned }: PropsType) => {
                 <div>
                     <p className={S.name}>{name}</p>
                     <div className={S.addressContainer}>
-                        <LocationIcon fill="#9CA3AF" />
+                        <LocationIcon fill="#9CA3AF" width={14} height={14} />
                         <p className={S.address}>{address}</p>
                     </div>
                 </div>
