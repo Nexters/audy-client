@@ -60,6 +60,7 @@ function MainPage() {
                         <SearchResultsContainer searchResults={searchResults} />
                     )}
                 </SidePanel>
+
                 <div className={S.map} ref={mapContainerRef}>
                     <FloatMenu />
                 </div>

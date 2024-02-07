@@ -6,8 +6,8 @@ const baseURL = `https://apis.openapi.sk.com/tmap`;
 const appKey = import.meta.env.VITE_TMAP_APP_KEY;
 
 export const TmapRepository = {
-    // 시작, 종료, 경유지 좌표를 기반으로 자동차 경로 데이터를 반환하는 getVehicleRouteAsync
-    async getVehicleRouteAsync({
+    // 시작, 종료, 경유지 좌표를 기반으로 자동차 경로 데이터를 반환하는 getVehiclePathAsync
+    async getVehiclePathAsync({
         startX,
         startY,
         endX,
@@ -15,12 +15,12 @@ export const TmapRepository = {
         passList,
         reqCoordType = 'WGS84GEO',
         resCoordType = 'WGS84GEO',
-    }: TmapRequestParamsType['getVehicleRoute']) {
+    }: TmapRequestParamsType['getVehiclePath']) {
         return postAsync<
-            TmapResponseType['getVehicleRoute'],
-            TmapRequestParamsType['getVehicleRoute']
+            TmapResponseType['getVehiclePath'],
+            TmapRequestParamsType['getVehiclePath']
         >(
-            '/routes',
+            '/paths',
             {
                 startX,
                 startY,
@@ -44,7 +44,7 @@ export const TmapRepository = {
     },
 
     // 시작, 종료, 경유지 좌표를 기반으로 보행가 경로 데이터를 반환하는 getPedestrianPathAsync
-    async getPedestrianRouteAsync({
+    async getPedestrianPathAsync({
         startX,
         startY,
         endX,
@@ -52,12 +52,12 @@ export const TmapRepository = {
         passList,
         reqCoordType = 'WGS84GEO',
         resCoordType = 'WGS84GEO',
-    }: TmapRequestParamsType['getPedestrianRoute']) {
+    }: TmapRequestParamsType['getPedestrianPath']) {
         return postAsync<
-            TmapResponseType['getPedestrianRoute'],
-            TmapRequestParamsType['getPedestrianRoute']
+            TmapResponseType['getPedestrianPath'],
+            TmapRequestParamsType['getPedestrianPath']
         >(
-            '/routes/pedestrian',
+            '/paths/pedestrian',
             {
                 startX,
                 startY,
