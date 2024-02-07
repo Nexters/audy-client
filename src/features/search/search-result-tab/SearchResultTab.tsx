@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import clsx from 'clsx';
 
@@ -20,20 +20,15 @@ interface PropsType {
 const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
     const { tmapModuleRef } = useTmap();
 
-    const [isPinned, setIsPinned] = useState(false);
+    const tmapModule = tmapModuleRef.current;
+    const pinState = tmapModule?.checkIsAlreadyPinned(id);
 
-    useEffect(() => {
-        if (!tmapModuleRef.current) return;
-
-        const pinState = tmapModuleRef.current.checkIsAlreadyPinned(id);
-
-        setIsPinned(pinState);
-    }, [address, name]);
+    const [isPinned, setIsPinned] = useState(pinState);
 
     const handlePinButtonClick = () => {
-        if (!tmapModuleRef.current) return;
+        if (!tmapModule) return;
 
-        tmapModuleRef.current.createMarker({
+        tmapModule.createMarker({
             name,
             originName: name,
             address,
@@ -42,14 +37,11 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
             lng,
         });
 
-        tmapModuleRef.current.drawPathBetweenMarkers();
-
-        const pinState = tmapModuleRef.current.checkIsAlreadyPinned(id);
-
-        setIsPinned(pinState);
+        tmapModule.drawPathBetweenMarkers();
+        setIsPinned(true);
     };
 
-    const handleTabClick = () => tmapModuleRef.current?.zoomIn({ lat, lng });
+    const handleTabClick = () => tmapModule?.zoomIn({ lat, lng });
 
     return (
         <div className={S.layout} onClick={handleTabClick}>

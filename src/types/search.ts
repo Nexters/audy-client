@@ -1,5 +1,5 @@
 export interface SearchResultType {
-    pKey: string;
+    pkey: string;
     name: string;
     noorLat: string;
     noorLon: string;

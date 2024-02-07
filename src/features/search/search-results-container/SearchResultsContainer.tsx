@@ -12,10 +12,10 @@ const SearchResultsContainer = ({ searchResults }: PropsType) => {
     return (
         <div className={S.layout}>
             {searchResults.map(
-                ({ pKey, name, newAddressList, noorLat, noorLon }) => (
+                ({ pkey, name, newAddressList, noorLat, noorLon }) => (
                     <SearchResultTab
-                        key={pKey}
-                        id={pKey}
+                        key={pkey}
+                        id={pkey}
                         name={name}
                         address={newAddressList.newAddress[0].fullAddressRoad}
                         lat={noorLat}
