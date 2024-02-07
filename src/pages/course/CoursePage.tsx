@@ -13,7 +13,7 @@ import SearchResultsContainer from '@/features/search/search-results-container';
 import { useTmap } from '@/hooks/useTmap';
 import { SearchResultType } from '@/types/search';
 
-import * as S from './MainPage.css';
+import * as S from './CoursePage.css';
 
 function MainPage() {
     const { mapContainerRef } = useTmap();
