@@ -25,10 +25,7 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
     useEffect(() => {
         if (!tmapModuleRef.current) return;
 
-        const pinState = tmapModuleRef.current.checkIsAlreadyPinned({
-            address,
-            originName: name,
-        });
+        const pinState = tmapModuleRef.current.checkIsAlreadyPinned(id);
 
         setIsPinned(pinState);
     }, [address, name]);
@@ -45,12 +42,9 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
             lng,
         });
 
-        tmapModuleRef.current.drawPathBetweenMarkers({});
+        tmapModuleRef.current.drawPathBetweenMarkers();
 
-        const pinState = tmapModuleRef.current.checkIsAlreadyPinned({
-            address,
-            originName: name,
-        });
+        const pinState = tmapModuleRef.current.checkIsAlreadyPinned(id);
 
         setIsPinned(pinState);
     };

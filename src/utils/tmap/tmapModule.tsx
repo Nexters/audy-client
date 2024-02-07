@@ -352,17 +352,7 @@ export class TMapModule {
     }
 
     // 이미 존재하는 핀인지 확인
-    checkIsAlreadyPinned({
-        address,
-        originName,
-    }: {
-        address: string;
-        originName: string;
-    }) {
-        // TODO: 임시 기준
-        return this.#markers.some(
-            (marker) =>
-                marker.address === address && marker.originName === originName,
-        );
+    checkIsAlreadyPinned(id: string) {
+        return this.#markers.some((marker) => marker.id === id);
     }
 }
