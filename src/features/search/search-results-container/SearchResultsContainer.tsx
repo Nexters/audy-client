@@ -11,10 +11,8 @@ interface PropsType {
 const SearchResultsContainer = ({ searchResults }: PropsType) => {
     return (
         <div className={S.layout}>
-            {searchResults.map((result) => {
-                const { pKey, name, newAddressList, noorLat, noorLon } = result;
-
-                return (
+            {searchResults.map(
+                ({ pKey, name, newAddressList, noorLat, noorLon }) => (
                     <SearchResultTab
                         key={pKey}
                         id={pKey}
@@ -23,8 +21,8 @@ const SearchResultsContainer = ({ searchResults }: PropsType) => {
                         lat={noorLat}
                         lng={noorLon}
                     />
-                );
-            })}
+                ),
+            )}
         </div>
     );
 };
