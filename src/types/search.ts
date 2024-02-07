@@ -1,4 +1,11 @@
-import { TmapResponseType } from '@/apis/tmap/type';
-
-export type SearchResultsType =
-    TmapResponseType['getPoiSearch']['searchPoiInfo']['pois']['poi'];
+export interface SearchResultType {
+    pKey: string;
+    name: string;
+    noorLat: string;
+    noorLon: string;
+    newAddressList: {
+        newAddress: {
+            fullAddressRoad: string;
+        }[];
+    };
+}

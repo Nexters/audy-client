@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { TmapRepository } from '@/apis/tmap';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import XCircle from '@/assets/icons/xCircle.svg?react';
-import { SearchResultsType } from '@/types/search';
+import { SearchResultType } from '@/types/search';
 
 import * as S from './SearchBar.css';
 
 interface PropsType {
     isSearchMode: boolean;
     setIsSearchMode: React.Dispatch<React.SetStateAction<boolean>>;
-    setSearchResults: React.Dispatch<React.SetStateAction<SearchResultsType>>;
+    setSearchResults: React.Dispatch<React.SetStateAction<SearchResultType[]>>;
 }
 
 const SearchBar = ({

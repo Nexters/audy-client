@@ -1,11 +1,11 @@
-import { SearchResultsType } from '@/types/search';
+import { SearchResultType } from '@/types/search';
 
 import SearchResultTab from '../search-result-tab/SearchResultTab';
 
 import * as S from './SearchResultsContainer.css';
 
 interface PropsType {
-    searchResults: SearchResultsType;
+    searchResults: SearchResultType[];
 }
 
 const SearchResultsContainer = ({ searchResults }: PropsType) => {
