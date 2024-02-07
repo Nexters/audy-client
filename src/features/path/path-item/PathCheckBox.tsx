@@ -1,11 +1,11 @@
 import { useContext } from 'react';
 
 import {
-    CourseViewContextAction,
-    CourseViewContextValue,
-} from '@/features/course/course-view/CourseViewContextProvider';
+    PathViewContextAction,
+    PathViewContextValue,
+} from '@/features/path/path-view/PathViewContextProvider';
 
-import * as S from './CourseCheckBox.css';
+import * as S from './PathCheckBox.css';
 
 interface PropsType {
     id: string;
@@ -13,9 +13,9 @@ interface PropsType {
     isHover: boolean;
 }
 
-const CourseCheckBox = ({ id, order, isHover }: PropsType) => {
-    const { selectedId } = useContext(CourseViewContextValue);
-    const { setSelectedId } = useContext(CourseViewContextAction);
+const PathCheckBox = ({ id, order, isHover }: PropsType) => {
+    const { selectedId } = useContext(PathViewContextValue);
+    const { setSelectedId } = useContext(PathViewContextAction);
 
     const isChecked = selectedId === id;
 
@@ -51,4 +51,4 @@ const CourseCheckBox = ({ id, order, isHover }: PropsType) => {
     );
 };
 
-export default CourseCheckBox;
+export default PathCheckBox;

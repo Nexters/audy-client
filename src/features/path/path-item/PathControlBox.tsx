@@ -4,13 +4,13 @@ import LocationIcon from '@/assets/icons/location.svg?react';
 import ModifyIcon from '@/assets/icons/modify.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import {
-    CourseViewContextAction,
-    CourseViewContextValue,
-} from '@/features/course/course-view/CourseViewContextProvider';
+    PathViewContextAction,
+    PathViewContextValue,
+} from '@/features/path/path-view/PathViewContextProvider';
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 
-import * as S from './CourseControlBox.css';
+import * as S from './PathControlBox.css';
 
 interface PropsType {
     id: string;
@@ -18,51 +18,51 @@ interface PropsType {
     address: string;
 }
 
-const CourseControlBox = ({ id, name, address }: PropsType) => {
-    const { selectedId } = useContext(CourseViewContextValue);
-    const { setSelectedId } = useContext(CourseViewContextAction);
+const PathControlBox = ({ id, name, address }: PropsType) => {
+    const { selectedId } = useContext(PathViewContextValue);
+    const { setSelectedId } = useContext(PathViewContextAction);
 
-    const courseInputRef = useRef<HTMLInputElement | null>(null);
-    const [modifiedCourseName, setModifiedCourseName] = useState(name);
+    const pathInputRef = useRef<HTMLInputElement | null>(null);
+    const [modifiedPathName, setModifiedPathName] = useState(name);
 
-    const { value: isModifyCourseName, toggle: toggleModifyCourseName } =
+    const { value: isModifyPathName, toggle: toggleModifyPathName } =
         useDisclosure(false);
 
     const isSelected = selectedId === id;
-    const isDisabledCourseInput = !isSelected || !isModifyCourseName;
+    const isDisabledPathInput = !isSelected || !isModifyPathName;
 
-    const handleModifyCourseName = (
+    const handleModifyPathName = (
         event: React.ChangeEvent<HTMLInputElement>,
     ) => {
-        setModifiedCourseName(event.target.value);
+        setModifiedPathName(event.target.value);
     };
 
     const handleInputOutsideClick = () => {
-        if (!isModifyCourseName) return;
-        toggleModifyCourseName();
+        if (!isModifyPathName) return;
+        toggleModifyPathName();
         setSelectedId(null);
     };
 
     const handleModifyIconClick = () => {
-        if (!courseInputRef.current) return;
-        if (!isModifyCourseName) courseInputRef.current.focus();
-        toggleModifyCourseName();
+        if (!pathInputRef.current) return;
+        if (!isModifyPathName) pathInputRef.current.focus();
+        toggleModifyPathName();
     };
 
     useOnClickOutside({
-        ref: courseInputRef,
+        ref: pathInputRef,
         handler: handleInputOutsideClick,
     });
 
     return (
         <div className={S.wrapper}>
-            <div className={S.courseBox}>
+            <div className={S.pathBox}>
                 <input
-                    ref={courseInputRef}
-                    className={S.courseName}
-                    value={modifiedCourseName}
-                    onChange={handleModifyCourseName}
-                    disabled={isDisabledCourseInput}
+                    ref={pathInputRef}
+                    className={S.pathName}
+                    value={modifiedPathName}
+                    onChange={handleModifyPathName}
+                    disabled={isDisabledPathInput}
                 />
                 <div className={S.addressBox}>
                     <LocationIcon
@@ -92,4 +92,4 @@ const CourseControlBox = ({ id, name, address }: PropsType) => {
     );
 };
 
-export default CourseControlBox;
+export default PathControlBox;

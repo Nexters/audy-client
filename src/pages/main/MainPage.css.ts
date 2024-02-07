@@ -40,7 +40,7 @@ export const modifyIcon = style({
     color: COLOR.Gray400,
 });
 
-export const courseViewWrapper = style({
+export const pathViewWrapper = style({
     height: '100%',
 });
 

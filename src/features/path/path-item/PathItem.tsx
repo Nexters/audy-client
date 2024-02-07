@@ -9,26 +9,26 @@ import {
 
 import ListIcon from '@/assets/icons/list.svg?react';
 import {
-    CourseViewContextAction,
-    CourseViewContextValue,
-} from '@/features/course/course-view/CourseViewContextProvider';
+    PathViewContextAction,
+    PathViewContextValue,
+} from '@/features/path/path-view/PathViewContextProvider';
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 import { MarkerType } from '@/types/map';
 
-import CourseCheckBox from './CourseCheckBox';
-import CourseControlBox from './CourseControlBox';
-import * as S from './CourseItem.css';
+import PathCheckBox from './PathCheckBox';
+import PathControlBox from './PathControlBox';
+import * as S from './PathItem.css';
 
 interface PropsType {
     marker: MarkerType;
     order: number;
 }
 
-const CourseItem = ({ marker, order }: PropsType) => {
+const PathItem = ({ marker, order }: PropsType) => {
     const [isHover, setIsHover] = useState(false);
 
-    const { selectedId } = useContext(CourseViewContextValue);
-    const { setSelectedId } = useContext(CourseViewContextAction);
+    const { selectedId } = useContext(PathViewContextValue);
+    const { setSelectedId } = useContext(PathViewContextAction);
 
     const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -70,8 +70,8 @@ const CourseItem = ({ marker, order }: PropsType) => {
                 status: isHover || isSelected ? 'selected' : 'none',
             })}
         >
-            <CourseCheckBox isHover={isHover} id={marker.id} order={order} />
-            <CourseControlBox
+            <PathCheckBox isHover={isHover} id={marker.id} order={order} />
+            <PathControlBox
                 id={marker.id}
                 name={marker.name}
                 address={marker.address}
@@ -84,4 +84,4 @@ const CourseItem = ({ marker, order }: PropsType) => {
     );
 };
 
-export default CourseItem;
+export default PathItem;
