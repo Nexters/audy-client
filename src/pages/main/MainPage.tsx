@@ -7,6 +7,7 @@ import ModifyFilledIcon from '@/assets/icons/modifyFilled.svg?react';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import SidePanel from '@/components/side-panel';
 import FloatMenu from '@/features/map/float-menu';
+import PathView from '@/features/path/path-view';
 import SearchBar from '@/features/search/search-bar';
 import SearchResultsContainer from '@/features/search/search-results-container';
 import { useTmap } from '@/hooks/useTmap';
@@ -48,11 +49,11 @@ function MainPage() {
 
                     <div
                         className={clsx(
-                            S.courseViewWrapper,
+                            S.pathViewWrapper,
                             isSearchMode && S.hidden,
                         )}
                     >
-                        <CourseView />
+                        <PathView />
                     </div>
 
                     {isSearchMode && (
