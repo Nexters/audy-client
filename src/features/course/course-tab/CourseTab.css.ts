@@ -52,3 +52,20 @@ export const courseDetail = style([
     sprinkles({ typography: 'Regular15' }),
     { color: COLOR.Gray400 },
 ]);
+
+export const courseActionsContainer = style({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+});
+
+export const removeButton = style({
+    borderRadius: '12px',
+    backgroundColor: COLOR.MonoWhite,
+    border: `1px solid ${COLOR.Gray300}`,
+    padding: '6px',
+});
+
+export const hidden = style({
+    display: 'none',
+});
