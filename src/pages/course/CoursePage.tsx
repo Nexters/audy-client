@@ -20,12 +20,17 @@ function CoursePage() {
 
     const [isSearchMode, setIsSearchMode] = useState(false);
     const [searchResults, setSearchResults] = useState<SearchResultType[]>([]);
+
     const [isCourseNameEditing, setIsCourseNameEditing] = useState(false);
     const [courseName, setCourseName] = useState('테스트 코스');
 
-    const handleCourseNameChange = (
-        event: React.ChangeEvent<HTMLInputElement>,
-    ) => {};
+    const handleCourseNameChange = ({
+        target,
+    }: React.ChangeEvent<HTMLInputElement>) => setCourseName(target.value);
+
+    const handleCourseNameSave = () => {
+        setIsCourseNameEditing(false);
+    };
 
     return (
         <>
@@ -50,9 +55,11 @@ function CoursePage() {
                                     autoFocus
                                     value={courseName}
                                     onChange={handleCourseNameChange}
-                                    // onBlur={() => setIsCourseNameEditing(false)}
                                 />
-                                <button className={S.courseNameSaveButton}>
+                                <button
+                                    className={S.courseNameSaveButton}
+                                    onClick={handleCourseNameSave}
+                                >
                                     저장
                                 </button>
                             </>

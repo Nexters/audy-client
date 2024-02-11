@@ -22,7 +22,7 @@ export const header = style({
     display: 'flex',
     columnGap: '8px',
     alignItems: 'center',
-    marginBottom: '8px',
+    height: '48px',
 });
 
 export const courseName = style([
