@@ -1,28 +1,24 @@
 import { useState } from 'react';
 
-import clsx from 'clsx';
-
 import AddIcon from '@/assets/icons/add.svg?react';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import SidePanel from '@/components/side-panel';
+import CourseFilteringTab from '@/features/course/course-filtering-tab/CourseFilteringTab';
 import CoursesContainer from '@/features/course/courses-container';
 import { useTmap } from '@/hooks/useTmap';
+import { CourseTabType } from '@/types';
 
 import * as S from './MainPage.css';
-
-type CourseTabType = 'allCourse' | 'myCourse' | 'invitedCourse';
 
 const MainPage = () => {
     const { mapContainerRef } = useTmap();
 
-    const [selectedCourseTab, setSelectedCourseTab] = useState('allCourse');
+    const [selectedCourseTab, setSelectedCourseTab] =
+        useState<CourseTabType>('allCourse');
 
     const handleCourseTabClick = (tab: CourseTabType) => {
         setSelectedCourseTab(tab);
     };
-
-    const courseTabTypes = ['allCourse', 'myCourse', 'invitedCourse'];
-    const courseTabNames = ['모든 코스', '내가 만든 코스', '초대받은 코스'];
 
     const tempCourses = [
         {
@@ -47,23 +43,10 @@ const MainPage = () => {
 
             <div className={S.layout}>
                 <SidePanel>
-                    <div className={S.courseTypeTabsContainer}>
-                        {courseTabTypes.map((tab, index) => (
-                            <button
-                                key={tab}
-                                className={clsx(
-                                    S.courseTypeTab,
-                                    selectedCourseTab === tab &&
-                                        S.selectedCourseTypeTab,
-                                )}
-                                onClick={() =>
-                                    handleCourseTabClick(tab as CourseTabType)
-                                }
-                            >
-                                {courseTabNames[index]}
-                            </button>
-                        ))}
-                    </div>
+                    <CourseFilteringTab
+                        selectedCourseTab={selectedCourseTab}
+                        handleCourseTabClick={handleCourseTabClick}
+                    />
 
                     <button className={S.addNewCourseButton}>
                         <AddIcon fill="#000000" width={20} height={20} />
@@ -75,7 +58,7 @@ const MainPage = () => {
                     <CoursesContainer courses={tempCourses} />
                 </SidePanel>
 
-                <div className={S.map} ref={mapContainerRef}></div>
+                <div className={S.map} ref={mapContainerRef} />
             </div>
         </>
     );
