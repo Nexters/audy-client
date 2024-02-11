@@ -20,6 +20,12 @@ function CoursePage() {
 
     const [isSearchMode, setIsSearchMode] = useState(false);
     const [searchResults, setSearchResults] = useState<SearchResultType[]>([]);
+    const [isCourseNameEditing, setIsCourseNameEditing] = useState(false);
+    const [courseName, setCourseName] = useState('테스트 코스');
+
+    const handleCourseNameChange = (
+        event: React.ChangeEvent<HTMLInputElement>,
+    ) => {};
 
     return (
         <>
@@ -28,17 +34,39 @@ function CoursePage() {
             <div className={S.wrapper}>
                 <SidePanel>
                     <div className={S.header}>
-                        <LeftArrowIcon
-                            width={24}
-                            height={24}
-                            className={S.backArrowIcon}
-                        />
-                        <p className={S.courseName}>테스트 코스</p>
-                        <ModifyFilledIcon
-                            width={24}
-                            height={24}
-                            className={S.modifyIcon}
-                        />
+                        {isCourseNameEditing || (
+                            <LeftArrowIcon
+                                width={24}
+                                height={24}
+                                className={S.backArrowIcon}
+                            />
+                        )}
+
+                        {isCourseNameEditing ? (
+                            <>
+                                <input
+                                    type="text"
+                                    className={S.courseNameInput}
+                                    autoFocus
+                                    value={courseName}
+                                    onChange={handleCourseNameChange}
+                                    // onBlur={() => setIsCourseNameEditing(false)}
+                                />
+                                <button className={S.courseNameSaveButton}>
+                                    저장
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <p className={S.courseName}>{courseName}</p>
+                                <button
+                                    className={S.courseNameEditButton}
+                                    onClick={() => setIsCourseNameEditing(true)}
+                                >
+                                    <ModifyFilledIcon width={24} height={24} />
+                                </button>
+                            </>
+                        )}
                     </div>
 
                     <SearchBar
