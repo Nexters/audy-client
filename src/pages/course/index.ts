@@ -1,3 +1,3 @@
-import MainPage from './CoursePage';
+import CoursePage from './CoursePage';
 
-export default MainPage;
+export default CoursePage;
