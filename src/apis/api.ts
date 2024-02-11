@@ -98,7 +98,7 @@ export async function putAsync<T, D>(
  * @param config Api 요청과 관련된 config (AxiosRequestConfig)
  * @returns API 요청 성공 시 받을 객체 (T)
  */
-export async function deleteAsync<T>(
+export async function deleteAsync<T, D>(
   url: string,
   config?: AxiosRequestConfig,
 ) {
