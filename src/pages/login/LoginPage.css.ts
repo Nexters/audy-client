@@ -1,7 +1,7 @@
 import { style } from '@vanilla-extract/css';
 import { recipe } from '@vanilla-extract/recipes';
 
-import { COLOR } from '@/styles/foundation';
+import { COLOR, MEDIA_QUERY } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
 
 export const wrapper = style({
@@ -28,6 +28,13 @@ export const loginContainer = style({
 
     backgroundColor: COLOR.MonoWhite,
     borderRadius: '20px',
+
+    '@media': {
+        [MEDIA_QUERY.mobile]: {
+            width: 'calc(100% - 40px)',
+            padding: '40px 20px 20px 20px',
+        }
+    }
 });
 
 export const introduceBox = style({
@@ -44,14 +51,19 @@ export const introduceText = style([
     { color: COLOR.Gray950 },
 ]);
 
-export const loginNoticeText = style([
-    sprinkles({ typography: 'SemiBold16' }),
-    { color: COLOR.Gray400 },
+export const sloganText = style([
+    sprinkles({ typography: 'Medium14' }),
+    { color: COLOR.Gray700 },
 ]);
 
 export const audyLogo = style({
     margin: '0 auto 20px auto',
 });
+
+export const loginNoticeText = style([
+    sprinkles({ typography: 'SemiBold16' }),
+    { color: COLOR.Gray400 },
+]);
 
 export const buttonBox = style({
     width: '100%',
@@ -59,6 +71,8 @@ export const buttonBox = style({
     display: 'flex',
     flexDirection: 'column',
     rowGap: '16px',
+
+    textAlign: 'center',
 });
 
 export const loginButton = recipe({
@@ -84,7 +98,7 @@ export const loginButton = recipe({
             },
             apple: {
                 color: COLOR.MonoWhite,
-                backgroundColor: COLOR.MonoBlack,
+                backgroundColor: COLOR.Gray950,
             },
         },
     },
