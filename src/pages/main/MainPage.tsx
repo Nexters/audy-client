@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import AddIcon from '@/assets/icons/add.svg?react';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import SidePanel from '@/components/side-panel';
+import CoursesContainer from '@/features/course/courses-container';
 import { useTmap } from '@/hooks/useTmap';
 
 import * as S from './MainPage.css';
@@ -13,6 +14,7 @@ type CourseTabType = 'allCourse' | 'myCourse' | 'invitedCourse';
 
 const MainPage = () => {
     const { mapContainerRef } = useTmap();
+
     const [selectedCourseTab, setSelectedCourseTab] = useState('allCourse');
 
     const handleCourseTabClick = (tab: CourseTabType) => {
@@ -21,6 +23,23 @@ const MainPage = () => {
 
     const courseTabTypes = ['allCourse', 'myCourse', 'invitedCourse'];
     const courseTabNames = ['모든 코스', '내가 만든 코스', '초대받은 코스'];
+
+    const tempCourses = [
+        {
+            id: '1',
+            name: '테스트 코스',
+            memberCount: 3,
+            pinCount: 5,
+            isMyCourse: true,
+        },
+        {
+            id: '2',
+            name: '테스트 코스2',
+            memberCount: 3,
+            pinCount: 5,
+            isMyCourse: false,
+        },
+    ];
 
     return (
         <>
@@ -53,7 +72,7 @@ const MainPage = () => {
                         </p>
                     </button>
 
-                    <div></div>
+                    <CoursesContainer courses={tempCourses} />
                 </SidePanel>
 
                 <div className={S.map} ref={mapContainerRef}></div>
