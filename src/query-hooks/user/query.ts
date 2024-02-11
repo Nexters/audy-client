@@ -11,7 +11,7 @@ import { QUERY_KEY } from './key';
 
 export const useGetUserInformation = ({
     userId,
-    options,
+    ...options
 }: {
     userId?: string;
     options: UseSuspenseQueryOptions<
