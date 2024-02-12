@@ -1,4 +1,9 @@
+import { PaginationType } from "@/types";
+
 export interface CourseRequestParamType {
+    getAllCourses: PaginationType;
+    getOwnedCourses: PaginationType;
+    getMemberCourses: PaginationType;
     postInviteCourse: {
         userId: number;
         courseId: number;

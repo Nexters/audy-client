@@ -9,21 +9,48 @@ export const CourseRepository = {
         );
     },
 
-    async getAllCourses(courseId: number) {
+    async getAllCourses({
+        page = 1,
+        limit = 10,
+    }: CourseRequestParamType['getAllCourses']) {
         return getAsync<CourseResponseType['getAllCourses']>(
-            `/v1/courses/${courseId}`,
+            `/v1/courses/all`,
+            {
+                params: {
+                    page,
+                    limit,
+                },
+            },
         );
     },
 
-    async getOwnedCourses() {
+    async getOwnedCourses({
+        page = 1,
+        limit = 10,
+    }: CourseRequestParamType['getOwnedCourses']) {
         return getAsync<CourseResponseType['getOwnedCourses']>(
             `/v1/courses/owner`,
+            {
+                params: {
+                    page,
+                    limit,
+                },
+            },
         );
     },
 
-    async getMemberCourses() {
+    async getMemberCourses({
+        page = 1,
+        limit = 10,
+    }: CourseRequestParamType['getOwnedCourses']) {
         return getAsync<CourseResponseType['getMemberCourses']>(
             `/v1/courses/member`,
+            {
+                params: {
+                    page,
+                    limit,
+                },
+            },
         );
     },
 
