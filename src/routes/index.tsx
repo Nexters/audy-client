@@ -1,16 +1,25 @@
-import { createBrowserRouter } from "react-router-dom";
+import { QueryClient } from '@tanstack/react-query';
+import { createBrowserRouter } from 'react-router-dom';
 
-import MainPage from "@/pages/main";
-import LoginPage from "@/pages/auth";
+import LoginPage from '@/pages/login';
+import MainPage from '@/pages/main';
+
+export const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+        },
+    },
+});
 
 export const router = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
         errorElement: <div>에러</div>,
         element: <MainPage />,
     },
     {
-        path: "auth",
-        element: <LoginPage />
-    }
-])
+        path: 'login',
+        element: <LoginPage />,
+    },
+]);

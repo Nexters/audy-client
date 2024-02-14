@@ -24,9 +24,10 @@ const LoginPage = () => {
                 <div className={S.introduceBox}>
                     <AudyLogoIcon className={S.audyLogo} />
                     <h5 className={S.introduceText}>함께 만드는 여행 지도</h5>
-                    <p className={S.loginNoticeText}>로그인 혹은 회원가입</p>
+                    <p className={S.sloganText}>어디갈지 고민하는 당신들을 위한 서비스</p>
                 </div>
                 <div className={S.buttonBox}>
+                    <p className={S.loginNoticeText}>소셜 로그인으로 빠른 시작</p>
                     <button
                         className={S.loginButton({ socialType: 'kakao' })}
                         onClick={() => handleLoginButtonClick('kakao')}

@@ -1,6 +1,6 @@
 import { createSprinkles, defineProperties } from '@vanilla-extract/sprinkles';
 
-import { TYPOGRAPHY, ZIndex } from '@/styles/foundation';
+import { TYPOGRAPHY, Z_INDEX } from '@/styles/foundation';
 
 const typoProperties = defineProperties({
     properties: {
@@ -10,7 +10,7 @@ const typoProperties = defineProperties({
 
 const zIndexProperties = defineProperties({
     properties: {
-        zIndex: ZIndex,
+        zIndex: Z_INDEX,
     },
 });
 

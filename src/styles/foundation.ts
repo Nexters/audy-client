@@ -1,4 +1,4 @@
-export const ZIndex = {
+export const Z_INDEX = {
     globalNavigation: 999,
     mapFloatMenu: 9,
 }
@@ -839,4 +839,9 @@ export const COLOR = {
     SurfaceLevel3: '#E5E7EB',
     SurfaceLevel4: '#C5CBD3',
     GradientLinear: 'linear-gradient(90deg, #FF35F7 0%, #B600FF 46.5%, #1F1BFF 100%)'
+} as const;
+
+export const MEDIA_QUERY = {
+    tablet: "screen and (min-width: 768px) and (max-width: 1199px)",
+    mobile: "screen and (max-width: 767px)",
 } as const;
