@@ -33,6 +33,7 @@ export class TMapModule {
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
     #maxMarkerCount = 15;
+    #zoomLevel = 17;
 
     constructor({
         mapId = 'tmap',
@@ -308,7 +309,7 @@ export class TMapModule {
         this.#infoWindow = infoWindow;
 
         this.#mapInstance.setCenter(infoWindowLatLng);
-        this.#mapInstance.setZoom(17);
+        this.#mapInstance.setZoom(this.#zoomLevel);
 
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
@@ -369,7 +370,7 @@ export class TMapModule {
     // 특정 위경도로 줌인
     zoomIn({ lat, lng }: { lat: string; lng: string }) {
         this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
-        this.#mapInstance.setZoom(19);
+        this.#mapInstance.setZoom(this.#zoomLevel);
     }
 
     // 이미 존재하는 핀인지 확인
