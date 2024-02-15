@@ -59,7 +59,7 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
             <div>
                 <p className={S.name}>{name}</p>
                 <div className={S.addressContainer}>
-                    <LocationIcon />
+                    <LocationIcon fill={COLOR.Gray400} width={14} height={14} />
                     <p className={S.address}>{address}</p>
                 </div>
             </div>
@@ -70,7 +70,7 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
                 </button>
             ) : (
                 <button className={S.pinButton} onClick={handlePinButtonClick}>
-                    <AddIcon />
+                    <AddIcon fill={COLOR.Gray400} />
                 </button>
             )}
         </div>
