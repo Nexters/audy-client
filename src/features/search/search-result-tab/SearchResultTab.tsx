@@ -6,6 +6,7 @@ import AddIcon from '@/assets/icons/add.svg?react';
 import CheckIcon from '@/assets/icons/check.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
 import { useTmap } from '@/hooks/useTmap';
+import { COLOR } from '@/styles/foundation';
 
 import * as S from './SearchResultTab.css';
 
@@ -55,7 +56,7 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
 
             {isPinned ? (
                 <button className={clsx(S.pinButton, S.alreadyPinned)} disabled>
-                    <CheckIcon fill="#1E1BFF" />
+                    <CheckIcon fill={COLOR.IndigoPrimary} />
                 </button>
             ) : (
                 <button className={S.pinButton} onClick={handlePinButtonClick}>

@@ -4,6 +4,7 @@ import AddIcon from '@/assets/icons/add.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import InfoWindowLayout from '@/assets/images/infoWindowLayout.svg?react';
+import { COLOR } from '@/styles/foundation';
 
 import * as S from './InfoWindow.css';
 
@@ -25,7 +26,11 @@ const InfoWindow = ({ name, address, isPinned }: PropsType) => {
                 <div>
                     <p className={S.name}>{name}</p>
                     <div className={S.addressContainer}>
-                        <LocationIcon fill="#9CA3AF" width={14} height={14} />
+                        <LocationIcon
+                            fill={COLOR.Gray400}
+                            width={14}
+                            height={14}
+                        />
                         <p className={S.address}>{address}</p>
                     </div>
                 </div>
@@ -35,9 +40,9 @@ const InfoWindow = ({ name, address, isPinned }: PropsType) => {
                     id={isPinned ? 'unPinButton' : 'pinButton'}
                 >
                     {isPinned ? (
-                        <TrashCanIcon fill="#9CA3AF" />
+                        <TrashCanIcon fill={COLOR.Gray400} />
                     ) : (
-                        <AddIcon fill="#9CA3AF" />
+                        <AddIcon fill={COLOR.Gray400} />
                     )}
                 </button>
             </div>

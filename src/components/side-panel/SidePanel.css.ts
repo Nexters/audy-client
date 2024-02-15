@@ -14,6 +14,6 @@ export const sidePanel = style({
 
     flexGrow: 1,
     borderRadius: '6px',
-    backgroundColor: COLOR.SurfaceLevel1,
+    backgroundColor: COLOR.Gray100,
     overflowY: 'hidden',
 });
