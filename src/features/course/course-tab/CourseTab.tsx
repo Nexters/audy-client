@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import clsx from 'clsx';
-
 import LeftArrowIcon from '@/assets/icons/leftArrow.svg?react';
 import MyCourseIcon from '@/assets/icons/myCourse.svg?react';
 import PersonIcon from '@/assets/icons/person.svg?react';
