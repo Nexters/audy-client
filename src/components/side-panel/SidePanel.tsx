@@ -1,10 +1,8 @@
+import { PropsWithChildren } from 'react';
+
 import * as S from './SidePanel.css';
 
-interface PropsType {
-    children: React.ReactNode;
-}
-
-const SidePanel = ({ children }: PropsType) => {
+const SidePanel = ({ children }: PropsWithChildren) => {
     return <div className={S.sidePanel}>{children}</div>;
 };
 
