@@ -1,4 +1,4 @@
-import type { PaginationType, CourseType, CourseDetailType } from "@/types";
+import type { CourseDetailType, CourseType, PaginationType } from '@/types';
 
 export interface CourseRequestParamType {
     getAllCourses: PaginationType;
@@ -7,25 +7,25 @@ export interface CourseRequestParamType {
     postInviteCourse: {
         userId: number;
         courseId: number;
-    },
+    };
     patchUpdateCourse: {
         userId: number;
         courseId: number;
         courseName: string;
-    },
+    };
     postSaveCourse: {
         userId: number;
         courseName: number;
-    }
+    };
     deleteCourse: {
         userId: number;
-        courseId: number; 
-    }
+        courseId: number;
+    };
 }
 
 export interface CourseResponseType {
     getCourse: CourseDetailType;
-    getAllCourses: {
+    getAllCourses:{
         courseGetResList: CourseType[];
         isLast: boolean;
     };
@@ -42,5 +42,5 @@ export interface CourseResponseType {
     };
     postSaveCourse: {
         courseId: number;
-    }
+    };
 }
