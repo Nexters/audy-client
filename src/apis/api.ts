@@ -1,6 +1,16 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 /**
+ * 백엔드로부터 인계 받은 응답의 기본 Interface ApiResponseType
+ * @param T 응답으로 받을 데이터의 타입
+ */
+interface ApiResponseType<T> {
+    code: number;
+    message: string;
+    data: T;
+}
+
+/**
  * API 요청에서 범용적으로 사용할 Axios Instance 생성
  * baseURL, responseType 같은 공용 속성을 일괄적으로 적용
  */
@@ -17,7 +27,11 @@ const API = axios.create({
  * @returns API 요청 성공 시 받을 객체 (T)
  */
 export async function getAsync<T>(url: string, config?: AxiosRequestConfig) {
-    const response = await API.get<T, AxiosResponse<T, unknown>, unknown>(url, {
+    const response = await API.get<
+        ApiResponseType<T>,
+        AxiosResponse<ApiResponseType<T>, unknown>,
+        unknown
+    >(url, {
         ...config,
     });
     return response.data;
@@ -38,7 +52,11 @@ export async function postAsync<T, D>(
     data: D,
     config?: AxiosRequestConfig,
 ) {
-    const response = await API.post<T, AxiosResponse<T, D>, D>(url, data, {
+    const response = await API.post<
+        ApiResponseType<T>,
+        AxiosResponse<ApiResponseType<T>, D>,
+        D
+    >(url, data, {
         ...config,
     });
     return response.data;
@@ -59,7 +77,11 @@ export async function patchAsync<T, D>(
     data: D,
     config?: AxiosRequestConfig,
 ) {
-    const response = await API.patch<T, AxiosResponse<T, D>, D>(url, data, {
+    const response = await API.patch<
+        ApiResponseType<T>,
+        AxiosResponse<ApiResponseType<T>, D>,
+        D
+    >(url, data, {
         ...config,
     });
     return response.data;
@@ -80,7 +102,11 @@ export async function putAsync<T, D>(
     data: D,
     config?: AxiosRequestConfig,
 ) {
-    const response = await API.patch<T, AxiosResponse<T, D>, D>(url, data, {
+    const response = await API.patch<
+        ApiResponseType<T>,
+        AxiosResponse<ApiResponseType<T>, D>,
+        D
+    >(url, data, {
         ...config,
     });
     return response.data;
@@ -100,12 +126,13 @@ export async function deleteAsync<T, D>(
     data?: D,
     config?: AxiosRequestConfig,
 ) {
-    const response = await API.delete<T, AxiosResponse<T, unknown>, unknown>(
-        url,
-        {
-            ...config,
-            data,
-        },
-    );
+    const response = await API.delete<
+        ApiResponseType<T>,
+        AxiosResponse<ApiResponseType<T>, unknown>,
+        unknown
+    >(url, {
+        ...config,
+        data,
+    });
     return response.data;
 }
