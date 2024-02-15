@@ -57,7 +57,7 @@ const CourseTab = ({ name, memberCount, pinCount, isMyCourse }: PropsType) => {
             </div>
 
             <div className={S.courseActionsContainer}>
-                <button className={clsx(S.removeButton, isHovered || S.hidden)}>
+                <button className={S.removeButton({ isHovered })}>
                     <TrashCanIcon fill={COLOR.Gray400} />
                 </button>
                 <LeftArrowIcon

@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css';
+import { recipe } from '@vanilla-extract/recipes';
 
 import { COLOR } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
@@ -59,13 +60,21 @@ export const courseActionsContainer = style({
     gap: '12px',
 });
 
-export const removeButton = style({
-    borderRadius: '12px',
-    backgroundColor: COLOR.MonoWhite,
-    border: `1px solid ${COLOR.Gray300}`,
-    padding: '6px',
-});
-
-export const hidden = style({
-    display: 'none',
+export const removeButton = recipe({
+    base: {
+        borderRadius: '12px',
+        backgroundColor: COLOR.MonoWhite,
+        border: `1px solid ${COLOR.Gray300}`,
+        padding: '6px',
+    },
+    variants: {
+        isHovered: {
+            true: {
+                display: 'flex',
+            },
+            false: {
+                display: 'none',
+            },
+        },
+    },
 });
