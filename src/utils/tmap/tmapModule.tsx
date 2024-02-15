@@ -142,6 +142,8 @@ export class TMapModule {
                 detail: newMarker,
             }),
         );
+
+        this.drawPathBetweenMarkers();
     }
 
     // 마커 삭제
@@ -323,8 +325,6 @@ export class TMapModule {
                 lng,
             });
 
-            this.removeInfoWindow();
-
             this.createInfoWindow({
                 lat,
                 lng,
@@ -333,8 +333,6 @@ export class TMapModule {
                 id,
                 isPinned: true,
             });
-
-            if (this.#markers.length > 1) this.drawPathBetweenMarkers();
         };
 
         const handleUnPinButtonClick = () => {

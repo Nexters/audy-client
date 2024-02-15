@@ -49,7 +49,6 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
             isPinned: true,
         });
 
-        tmapModule.drawPathBetweenMarkers();
         setIsPinned(true);
     };
 
