@@ -26,8 +26,10 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
 
     const [isPinned, setIsPinned] = useState(pinState);
 
-    const handlePinButtonClick = () => {
+    const handlePinButtonClick = (event: React.MouseEvent) => {
         if (!tmapModule) return;
+
+        event.stopPropagation();
 
         tmapModule.createMarker({
             name,
@@ -36,6 +38,15 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
             id,
             lat,
             lng,
+        });
+
+        tmapModule.createInfoWindow({
+            lat,
+            lng,
+            name,
+            address,
+            id,
+            isPinned: true,
         });
 
         tmapModule.drawPathBetweenMarkers();
