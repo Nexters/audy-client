@@ -42,7 +42,17 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
         setIsPinned(true);
     };
 
-    const handleTabClick = () => tmapModule?.zoomIn({ lat, lng });
+    const handleTabClick = () => {
+        tmapModule?.createInfoWindow({
+            lat,
+            lng,
+            name,
+            address,
+            id,
+            isPinned: false,
+        });
+        tmapModule?.zoomIn({ lat, lng });
+    };
 
     return (
         <div className={S.layout} onClick={handleTabClick}>
