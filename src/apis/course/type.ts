@@ -1,4 +1,4 @@
-import { PaginationType } from "@/types";
+import type { PaginationType, CourseType, CourseDetailType } from "@/types";
 
 export interface CourseRequestParamType {
     getAllCourses: PaginationType;
@@ -24,45 +24,18 @@ export interface CourseRequestParamType {
 }
 
 export interface CourseResponseType {
-    getCourse: {
-        courseId: number;
-        courseName: string;
-        pinList: {
-            pinId: string;
-            pinName: string;
-            originName: string;
-            latitude: number;
-            longitude: number;
-            address: string;
-            sequence: number;
-        }[];
-    };
+    getCourse: CourseDetailType;
     getAllCourses: {
-        courseGetResList: {
-            courseId: number;
-            courseName: string;
-            pinCnt: number;
-            editorCnt: number;
-            owner: boolean;
-        }[];
+        courseGetResList: CourseType[];
+        isLast: boolean;
     };
     getOwnedCourses: {
-        courseGetResList: {
-            courseId: number;
-            courseName: string;
-            pinCnt: number;
-            editorCnt: number;
-            owner: true;
-        }[];
+        courseGetResList: CourseType[];
+        isLast: boolean;
     };
     getMemberCourses: {
-        courseGetResList: {
-            courseId: number;
-            courseName: string;
-            pinCnt: number;
-            editorCnt: number;
-            owner: boolean;
-        }[];
+        courseGetResList: CourseType[];
+        isLast: boolean;
     };
     postInviteCourse: {
         url: string;
