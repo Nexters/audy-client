@@ -4,16 +4,17 @@ import type { CourseRequestParamType, CourseResponseType } from './type';
 
 export const CourseRepository = {
     async getCourse(courseId: number) {
-        return getAsync<CourseResponseType['getCourse']>(
+        const response = await getAsync<CourseResponseType['getCourse']>(
             `/v1/courses/${courseId}`,
         );
+        return response.data;
     },
 
     async getAllCourses({
         page = 1,
         limit = 10,
     }: CourseRequestParamType['getAllCourses']) {
-        return getAsync<CourseResponseType['getAllCourses']>(
+        const response = await getAsync<CourseResponseType['getAllCourses']>(
             `/v1/courses/all`,
             {
                 params: {
@@ -22,13 +23,15 @@ export const CourseRepository = {
                 },
             },
         );
+
+        return response.data;
     },
 
     async getOwnedCourses({
         page = 1,
         limit = 10,
     }: CourseRequestParamType['getOwnedCourses']) {
-        return getAsync<CourseResponseType['getOwnedCourses']>(
+        const response = await getAsync<CourseResponseType['getOwnedCourses']>(
             `/v1/courses/owner`,
             {
                 params: {
@@ -37,13 +40,15 @@ export const CourseRepository = {
                 },
             },
         );
+
+        return response.data;
     },
 
     async getMemberCourses({
         page = 1,
         limit = 10,
     }: CourseRequestParamType['getOwnedCourses']) {
-        return getAsync<CourseResponseType['getMemberCourses']>(
+        const response = await getAsync<CourseResponseType['getMemberCourses']>(
             `/v1/courses/member`,
             {
                 params: {
@@ -52,6 +57,7 @@ export const CourseRepository = {
                 },
             },
         );
+        return response.data;
     },
 
     async postInviteCourse({
@@ -106,5 +112,5 @@ export const CourseRepository = {
                 courseId,
             },
         );
-    }
+    },
 };
