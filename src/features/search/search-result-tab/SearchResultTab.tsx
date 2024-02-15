@@ -53,7 +53,9 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
     };
 
     const handleTabClick = () => {
-        tmapModule?.createInfoWindow({
+        if (!tmapModule) return;
+
+        tmapModule.createInfoWindow({
             lat,
             lng,
             name,
@@ -61,7 +63,8 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
             id,
             isPinned: false,
         });
-        tmapModule?.zoomIn({ lat, lng });
+
+        tmapModule.zoomIn({ lat, lng });
     };
 
     return (

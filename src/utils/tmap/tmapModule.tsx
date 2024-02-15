@@ -147,13 +147,15 @@ export class TMapModule {
     }
 
     // 마커 삭제
-    removeMarker(markerIndex: number) {
+    removeMarker(id: string) {
+        const markerIndex = this.#markers.findIndex(
+            (marker) => marker.id === id,
+        );
+
         const [{ marker: targetMarker }] = this.#markers.splice(markerIndex, 1);
         targetMarker.setMap(null);
 
-        window.dispatchEvent(
-            new CustomEvent('removeMarker', { detail: markerIndex }),
-        );
+        window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
     }
 
     // 마커 수정
@@ -336,11 +338,7 @@ export class TMapModule {
         };
 
         const handleUnPinButtonClick = () => {
-            const markerIndex = this.#markers.findIndex(
-                (marker) => marker.id === id,
-            );
-
-            this.removeMarker(markerIndex);
+            this.removeMarker(id);
             this.removeInfoWindow();
 
             this.modifyMarker(this.#markers);

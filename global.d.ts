@@ -1,4 +1,4 @@
-import type { MarkerType } from "@/types/map";
+import type { MarkerType } from '@/types/map';
 
 // T-MAP API NameSpace
 declare global {
@@ -10,7 +10,7 @@ declare global {
 
     interface CustomEventMap {
         'marker:create': CustomEvent<MarkerType>;
-        'marker:remove': CustomEvent<number>;
+        'marker:remove': CustomEvent<string>;
     }
 
     interface WindowEventMap extends CustomEventMap {}
