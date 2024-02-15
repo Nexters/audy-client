@@ -7,6 +7,7 @@ import MyCourseIcon from '@/assets/icons/myCourse.svg?react';
 import PersonIcon from '@/assets/icons/person.svg?react';
 import PinIcon from '@/assets/icons/pin.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
+import { COLOR } from '@/styles/foundation';
 
 import * as S from './CourseTab.css';
 
@@ -28,13 +29,17 @@ const CourseTab = ({ name, memberCount, pinCount, isMyCourse }: PropsType) => {
         >
             <div>
                 <div className={S.courseNameContainer}>
-                    {isMyCourse && <MyCourseIcon fill="#FF4D86" />}
+                    {isMyCourse && <MyCourseIcon fill={COLOR.PinkPrimary} />}
                     <p className={S.courseName}>{name}</p>
                 </div>
 
                 <div className={S.courseDetailsContainer}>
                     <div className={S.courseDetailWrapper}>
-                        <PersonIcon fill="#9CA3AF" height={14} width={14} />
+                        <PersonIcon
+                            fill={COLOR.Gray400}
+                            height={14}
+                            width={14}
+                        />
                         <p className={S.courseDetail}>
                             {memberCount}명 참여 중
                         </p>
@@ -43,7 +48,7 @@ const CourseTab = ({ name, memberCount, pinCount, isMyCourse }: PropsType) => {
                     <div className={S.divider} />
 
                     <div className={S.courseDetailWrapper}>
-                        <PinIcon fill="#9CA3AF" height={14} width={14} />
+                        <PinIcon fill={COLOR.Gray400} height={14} width={14} />
                         <p className={S.courseDetail}>
                             {pinCount}개의 핀 저장됨
                         </p>
@@ -53,11 +58,11 @@ const CourseTab = ({ name, memberCount, pinCount, isMyCourse }: PropsType) => {
 
             <div className={S.courseActionsContainer}>
                 <button className={clsx(S.removeButton, isHovered || S.hidden)}>
-                    <TrashCanIcon fill="#9CA3AF" />
+                    <TrashCanIcon fill={COLOR.Gray400} />
                 </button>
                 <LeftArrowIcon
                     transform="scale(-1, 1)"
-                    fill="#6B7280"
+                    fill={COLOR.Gray500}
                     height={24}
                     width={24}
                 />

@@ -6,6 +6,7 @@ import SidePanel from '@/components/side-panel';
 import CourseFilteringTab from '@/features/course/course-filtering-tab/CourseFilteringTab';
 import CoursesContainer from '@/features/course/courses-container';
 import { useTmap } from '@/hooks/useTmap';
+import { COLOR } from '@/styles/foundation';
 import { CourseTabType } from '@/types';
 
 import * as S from './MainPage.css';
@@ -49,7 +50,11 @@ const MainPage = () => {
                     />
 
                     <button className={S.addNewCourseButton}>
-                        <AddIcon fill="#000000" width={20} height={20} />
+                        <AddIcon
+                            fill={COLOR.MonoBlack}
+                            width={20}
+                            height={20}
+                        />
                         <p className={S.addNewCourseButtonText}>
                             새로운 코스 만들기
                         </p>
