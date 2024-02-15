@@ -5,9 +5,9 @@ import {
 import type { AxiosError } from 'axios';
 
 import { UserRepository } from '@/apis/user';
-import { UserResponseType } from '@/apis/user/type';
+import { UserType } from '@/types';
 
-import { QUERY_KEY } from './key';
+import { USER_QUERY_KEY } from './key';
 
 export const useGetUserInformation = ({
     userId,
@@ -15,18 +15,18 @@ export const useGetUserInformation = ({
 }: {
     userId?: string;
     options: UseSuspenseQueryOptions<
-        UserResponseType['getInformation'],
+        UserType,
         AxiosError,
-        UserResponseType['getInformation']
+        UserType
     >;
 }) => {
     return useSuspenseQuery<
-        UserResponseType['getInformation'],
+        UserType,
         AxiosError,
-        UserResponseType['getInformation']
+        UserType
     >({
         ...options,
         queryFn: () => UserRepository.getInformationAsync(userId),
-        queryKey: QUERY_KEY.info(userId),
+        queryKey: USER_QUERY_KEY.info(userId),
     });
 };
