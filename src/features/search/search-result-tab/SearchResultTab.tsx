@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import AddIcon from '@/assets/icons/add.svg?react';
 import CheckIcon from '@/assets/icons/check.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
+import { useEventListeners } from '@/hooks/useEventListeners';
 import { useTmap } from '@/hooks/useTmap';
 import { COLOR } from '@/styles/foundation';
 
@@ -25,6 +26,10 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
     const pinState = tmapModule?.checkIsAlreadyPinned(id);
 
     const [isPinned, setIsPinned] = useState(pinState);
+
+    useEventListeners('marker:remove', (event) => {
+        if (event.detail === id) setIsPinned(false);
+    });
 
     const handlePinButtonClick = (event: React.MouseEvent) => {
         if (!tmapModule) return;
