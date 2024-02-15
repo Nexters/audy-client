@@ -9,13 +9,13 @@ interface PropsType {
     handleCourseTabClick: (tab: CourseTabType) => void;
 }
 
+const courseTabTypes = ['allCourse', 'myCourse', 'invitedCourse'];
+const courseTabNames = ['모든 코스', '내가 만든 코스', '초대받은 코스'];
+
 const CourseFilteringTab = ({
     selectedCourseTab,
     handleCourseTabClick,
 }: PropsType) => {
-    const courseTabTypes = ['allCourse', 'myCourse', 'invitedCourse'];
-    const courseTabNames = ['모든 코스', '내가 만든 코스', '초대받은 코스'];
-
     return (
         <div className={S.layout}>
             {courseTabTypes.map((tab, index) => (
