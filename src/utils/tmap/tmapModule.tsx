@@ -3,7 +3,7 @@ import { renderToString } from 'react-dom/server';
 import { TmapRepository } from '@/apis/tmap';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
 import Marker from '@/features/map/marker/Marker';
-import { MarkerType, RouteModeType } from '@/types/map';
+import { MarkerType, PathModeType } from '@/types/map';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -27,8 +27,8 @@ export class TMapModule {
     #markers: MarkerType[] = [];
     #polyline: typeof Tmapv3.Polyline;
 
-    #isRouteVisible = true;
-    #routeMode: RouteModeType = 'Vehicle';
+    #isPathVisible = true;
+    #pathMode: PathModeType = 'Vehicle';
 
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
@@ -215,12 +215,12 @@ export class TMapModule {
                       .join('_')
                 : undefined;
 
-            const getRouteAsync =
-                this.#routeMode === 'Vehicle'
-                    ? TmapRepository.getVehicleRouteAsync
-                    : TmapRepository.getPedestrianRouteAsync;
+            const getPathAsync =
+                this.#pathMode === 'Vehicle'
+                    ? TmapRepository.getVehiclePathAsync
+                    : TmapRepository.getPedestrianPathAsync;
 
-            const { features } = await getRouteAsync({
+            const { features } = await getPathAsync({
                 startX,
                 startY,
                 endX,
@@ -252,16 +252,16 @@ export class TMapModule {
         });
     }
 
-    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 toggleRouteVisibility
-    toggleRouteVisibility() {
-        const updatedVisible = !this.#isRouteVisible;
+    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
+    togglePathVisibility() {
+        const updatedVisible = !this.#isPathVisible;
         this.#polyline.setMap(updatedVisible ? this.#mapInstance : null);
-        this.#isRouteVisible = updatedVisible;
+        this.#isPathVisible = updatedVisible;
     }
 
     // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
-    async togglePathMode(routeType: RouteModeType) {
-        this.#routeMode = routeType;
+    async togglePathMode(pathType: PathModeType) {
+        this.#pathMode = pathType;
         await this.drawPathBetweenMarkers();
     }
 

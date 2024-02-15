@@ -1,8 +1,8 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createBrowserRouter } from 'react-router-dom';
 
+import MainPage from '@/pages/course';
 import LoginPage from '@/pages/login';
-import MainPage from '@/pages/main';
 
 export const queryClient = new QueryClient({
     defaultOptions: {

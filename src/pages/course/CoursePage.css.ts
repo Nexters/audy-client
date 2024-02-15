@@ -3,20 +3,19 @@ import { style } from '@vanilla-extract/css';
 import { COLOR } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
 
-export const sidePanel = style({
-    width: 'max-content',
-    minWidth: '505px',
-    height: `calc(100vh - 64px)`,
-    padding: '30px',
-
+export const wrapper = style({
     display: 'flex',
-    flexDirection: 'column',
-    rowGap: '18px',
-
-    flexGrow: 1,
-    borderRadius: '6px',
-    backgroundColor: COLOR.SurfaceLevel1,
+    maxHeight: `calc(100vh - 64px)`,
     overflowY: 'hidden',
+});
+
+export const map = style({
+    width: '100%',
+    height: `calc(100vh - 64px)`,
+    flexGrow: 3,
+    overflowY: 'hidden',
+
+    position: 'relative',
 });
 
 export const header = style({
@@ -41,7 +40,7 @@ export const modifyIcon = style({
     color: COLOR.Gray400,
 });
 
-export const courseViewWrapper = style({
+export const pathViewWrapper = style({
     height: '100%',
 });
 

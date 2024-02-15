@@ -4,33 +4,33 @@ import { motion } from 'framer-motion';
 
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useTmap } from '@/hooks/useTmap';
-import type { RouteModeType } from '@/types/map';
+import type { PathModeType } from '@/types/map';
 
 import * as S from './FloatMenu.css';
 
 const FloatMenu = () => {
     const { tmapModuleRef } = useTmap();
 
-    const [routeType, setRouteType] = useState<RouteModeType>('Vehicle');
-    const { value: isShowRoute, toggle: toggleShowRoute } = useDisclosure(true);
+    const [pathType, setPathType] = useState<PathModeType>('Vehicle');
+    const { value: isShowPath, toggle: toggleShowPath } = useDisclosure(true);
 
-    const handleChangeRouteMode = async (updatedMode: RouteModeType) => {
+    const handleChangePathMode = async (updatedMode: PathModeType) => {
         if (!tmapModuleRef.current) return;
-        setRouteType(updatedMode);
+        setPathType(updatedMode);
         await tmapModuleRef.current.togglePathMode(updatedMode);
     };
 
     const handleToggleShowPath = () => {
         if (!tmapModuleRef.current) return;
-        toggleShowRoute();
-        tmapModuleRef.current.toggleRouteVisibility();
-    }
+        toggleShowPath();
+        tmapModuleRef.current.togglePathVisibility();
+    };
 
     return (
         <div className={S.wrapper}>
             <p className={S.pathNotice}>경로 표시</p>
             <div
-                className={S.switchBox({ status: isShowRoute })}
+                className={S.switchBox({ status: isShowPath })}
                 onClick={handleToggleShowPath}
             >
                 <motion.div
@@ -46,9 +46,9 @@ const FloatMenu = () => {
             <div className={S.divider} />
             <div className={S.toggleBox}>
                 <motion.button
-                    onClick={() => handleChangeRouteMode('Pedestrian')}
+                    onClick={() => handleChangePathMode('Pedestrian')}
                     className={S.toggleButton({
-                        status: routeType === 'Pedestrian',
+                        status: pathType === 'Pedestrian',
                     })}
                     layout
                     transition={{
@@ -60,9 +60,9 @@ const FloatMenu = () => {
                     보행자 경로
                 </motion.button>
                 <motion.button
-                    onClick={() => handleChangeRouteMode('Vehicle')}
+                    onClick={() => handleChangePathMode('Vehicle')}
                     className={S.toggleButton({
-                        status: routeType === 'Vehicle',
+                        status: pathType === 'Vehicle',
                     })}
                     layout
                     transition={{

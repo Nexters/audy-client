@@ -2,18 +2,19 @@ import { useState } from 'react';
 
 import { Reorder } from 'framer-motion';
 
-import CourseItem from '@/features/course/course-item';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
 import { useTmap } from '@/hooks/useTmap';
 import type { MarkerType } from '@/types/map';
 
-import * as S from './CourseView.css';
-import CourseViewContextProvider from './CourseViewContextProvider';
+import PathItem from '../path-item';
+
+import * as S from './PathView.css';
+import PathViewContextProvider from './PathViewContextProvider';
 
 const REORDER_DELAY = 330;
 
-const CourseView = () => {
+const PathView = () => {
     const [markers, setMarkers] = useState<MarkerType[]>([]);
     const { tmapModuleRef } = useTmap();
 
@@ -38,7 +39,7 @@ const CourseView = () => {
     };
 
     return (
-        <CourseViewContextProvider>
+        <PathViewContextProvider>
             <Reorder.Group
                 as="section"
                 dragListener={false}
@@ -48,15 +49,15 @@ const CourseView = () => {
                 className={S.wrapper}
             >
                 {markers.map((marker, index) => (
-                    <CourseItem
+                    <PathItem
                         key={marker.id}
                         marker={marker}
                         order={index + 1}
                     />
                 ))}
             </Reorder.Group>
-        </CourseViewContextProvider>
+        </PathViewContextProvider>
     );
 };
 
-export default CourseView;
+export default PathView;

@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css';
+
 import { COLOR } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
 
@@ -9,7 +10,7 @@ export const wrapper = style({
     flexShrink: 1,
 });
 
-export const courseBox = style({
+export const pathBox = style({
     maxWidth: '220px',
 
     display: 'flex',
@@ -20,7 +21,7 @@ export const courseBox = style({
     flexShrink: 1,
 });
 
-export const courseName = style([
+export const pathName = style([
     sprinkles({ typography: 'ExtraBold18' }),
     {
         minWidth: 0,
