@@ -94,4 +94,17 @@ export const CourseRepository = {
             courseName,
         });
     },
+
+    async deleteCourse({
+        userId,
+        courseId,
+    }: CourseRequestParamType['deleteCourse']) {
+        return deleteAsync<void, CourseRequestParamType['deleteCourse']>(
+            '/v1/courses',
+            {
+                userId,
+                courseId,
+            },
+        );
+    }
 };

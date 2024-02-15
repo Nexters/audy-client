@@ -17,6 +17,10 @@ export interface CourseRequestParamType {
         userId: number;
         courseName: number;
     }
+    deleteCourse: {
+        userId: number;
+        courseId: number; 
+    }
 }
 
 export interface CourseResponseType {
