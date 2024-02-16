@@ -25,7 +25,7 @@ const PathView = () => {
     });
 
     useEventListeners('marker:remove', (event) => {
-        setMarkers(markers.filter((_, index) => index !== event.detail));
+        setMarkers(markers.filter((marker) => marker.id !== event.detail));
     });
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {

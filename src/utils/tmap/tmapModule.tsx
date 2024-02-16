@@ -33,6 +33,7 @@ export class TMapModule {
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
     #maxMarkerCount = 15;
+    #zoomLevel = 17;
 
     constructor({
         mapId = 'tmap',
@@ -141,16 +142,20 @@ export class TMapModule {
                 detail: newMarker,
             }),
         );
+
+        this.drawPathBetweenMarkers();
     }
 
     // 마커 삭제
-    removeMarker(markerIndex: number) {
+    removeMarker(id: string) {
+        const markerIndex = this.#markers.findIndex(
+            (marker) => marker.id === id,
+        );
+
         const [{ marker: targetMarker }] = this.#markers.splice(markerIndex, 1);
         targetMarker.setMap(null);
 
-        window.dispatchEvent(
-            new CustomEvent('removeMarker', { detail: markerIndex }),
-        );
+        window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
     }
 
     // 마커 수정
@@ -308,7 +313,7 @@ export class TMapModule {
         this.#infoWindow = infoWindow;
 
         this.#mapInstance.setCenter(infoWindowLatLng);
-        this.#mapInstance.setZoom(17);
+        this.#mapInstance.setZoom(this.#zoomLevel);
 
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
@@ -322,8 +327,6 @@ export class TMapModule {
                 lng,
             });
 
-            this.removeInfoWindow();
-
             this.createInfoWindow({
                 lat,
                 lng,
@@ -332,16 +335,10 @@ export class TMapModule {
                 id,
                 isPinned: true,
             });
-
-            if (this.#markers.length > 1) this.drawPathBetweenMarkers();
         };
 
         const handleUnPinButtonClick = () => {
-            const markerIndex = this.#markers.findIndex(
-                (marker) => marker.id === id,
-            );
-
-            this.removeMarker(markerIndex);
+            this.removeMarker(id);
             this.removeInfoWindow();
 
             this.modifyMarker(this.#markers);
@@ -369,7 +366,7 @@ export class TMapModule {
     // 특정 위경도로 줌인
     zoomIn({ lat, lng }: { lat: string; lng: string }) {
         this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
-        this.#mapInstance.setZoom(19);
+        this.#mapInstance.setZoom(this.#zoomLevel);
     }
 
     // 이미 존재하는 핀인지 확인
