@@ -1,8 +1,5 @@
+import { UserType } from "@/types";
+
 export interface UserResponseType {
-    getInformation: {
-        userId: string;
-        email: string;
-        username: string;
-        imageUrl: string;
-    };
+    getInformation: UserType;
 }

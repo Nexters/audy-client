@@ -10,3 +10,13 @@ export interface MarkerType {
     lat: string;
     lng: string;
 }
+
+export interface PinType {
+    pinId: string;
+    pinName: string;
+    originName: string;
+    latitude: number;
+    longitude: number;
+    address: string;
+    sequence: number;
+}

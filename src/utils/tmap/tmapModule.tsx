@@ -70,7 +70,7 @@ export class TMapModule {
 
             const { _lat: lat, _lng: lng } = event._data.lngLat;
             const { fullAddress, buildingName, roadAddressKey } =
-                await TmapRepository.getAddressFromLatLng({
+                await TmapRepository.getAddressFromLatLngAsync({
                     lat,
                     lng,
                 });
