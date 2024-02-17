@@ -9,14 +9,14 @@ import {
 import type { CourseRequestParamType, CourseResponseType } from './type';
 
 export const CourseRepository = {
-    async getCourse(courseId: number) {
+    async getCourseAsync(courseId: number) {
         const response = await getAsync<
             ApiResponseType<CourseResponseType['getCourse']>
         >(`/v1/courses/${courseId}`);
         return response.data;
     },
 
-    async getAllCourses({
+    async getAllCoursesAsync({
         page = 1,
         limit = 10,
     }: CourseRequestParamType['getAllCourses']) {
@@ -32,7 +32,7 @@ export const CourseRepository = {
         return response.data;
     },
 
-    async getOwnedCourses({
+    async getOwnedCoursesAsync({
         page = 1,
         limit = 10,
     }: CourseRequestParamType['getOwnedCourses']) {
@@ -48,7 +48,7 @@ export const CourseRepository = {
         return response.data;
     },
 
-    async getMemberCourses({
+    async getMemberCoursesAsync({
         page = 1,
         limit = 10,
     }: CourseRequestParamType['getOwnedCourses']) {
@@ -63,7 +63,7 @@ export const CourseRepository = {
         return response.data;
     },
 
-    async postInviteCourse({
+    async postInviteCourseAsync({
         userId,
         courseId,
     }: CourseRequestParamType['postInviteCourse']) {
@@ -76,7 +76,7 @@ export const CourseRepository = {
         });
     },
 
-    async patchUpdateCourse({
+    async patchUpdateCourseAsync({
         userId,
         courseId,
         courseName,
@@ -91,7 +91,7 @@ export const CourseRepository = {
         });
     },
 
-    async postSaveCourse({
+    async postSaveCourseAsync({
         userId,
         courseName,
     }: CourseRequestParamType['postSaveCourse']) {
@@ -104,7 +104,7 @@ export const CourseRepository = {
         });
     },
 
-    async deleteCourse({
+    async deleteCourseAsync({
         userId,
         courseId,
     }: CourseRequestParamType['deleteCourse']) {

@@ -21,7 +21,7 @@ const SearchBar = ({
     const [searchInputValue, setSearchInputValue] = useState('');
 
     const handleSearch = async () => {
-        const response = await TmapRepository.getPoiSearch({
+        const response = await TmapRepository.getPoiSearchAsync({
             keyword: searchInputValue,
         });
 

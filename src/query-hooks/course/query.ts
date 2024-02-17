@@ -13,8 +13,8 @@ import type { CourseDetailType, CourseType } from '@/types';
 
 import { COURSE_QUERY_KEY } from './key';
 
-// 생성된 코스 목록을 조회하는 Hook useGetCourseList
-export const useGetCourseList = ({
+// 생성된 코스 목록을 조회하는 Hook useGetCourses
+export const useGetCourses = ({
     limit = 10,
     ...options
 }: {
@@ -35,7 +35,7 @@ export const useGetCourseList = ({
     >({
         ...options,
         queryFn: ({ pageParam }) =>
-            CourseRepository.getAllCourses({ page: pageParam, limit }),
+            CourseRepository.getAllCoursesAsync({ page: pageParam, limit }),
         queryKey: COURSE_QUERY_KEY.list(),
         select: ({ pages }) =>
             pages.reduce<CourseType[]>(
@@ -51,8 +51,8 @@ export const useGetCourseList = ({
     });
 };
 
-// 내가 소유한 코스 목록을 조회하는 Hook useGetOwnCourseList
-export const useGetOwnCourseList = ({
+// 내가 소유한 코스 목록을 조회하는 Hook useGetOwnCourses
+export const useGetOwnCourses = ({
     limit = 10,
     ...options
 }: {
@@ -73,7 +73,7 @@ export const useGetOwnCourseList = ({
     >({
         ...options,
         queryFn: ({ pageParam }) =>
-            CourseRepository.getOwnedCourses({ page: pageParam, limit }),
+            CourseRepository.getOwnedCoursesAsync({ page: pageParam, limit }),
         queryKey: COURSE_QUERY_KEY.list(),
         select: ({ pages }) =>
             pages.reduce<CourseType[]>(
@@ -89,8 +89,8 @@ export const useGetOwnCourseList = ({
     });
 };
 
-// 내가 소속된 코스 목록을 조회하는 Hook useGetMemberCourseList
-export const useGetMemberCourseList = ({
+// 내가 소속된 코스 목록을 조회하는 Hook useGetMemberCourses
+export const useGetMemberCourses = ({
     limit = 10,
     ...options
 }: {
@@ -111,7 +111,7 @@ export const useGetMemberCourseList = ({
     >({
         ...options,
         queryFn: ({ pageParam }) =>
-            CourseRepository.getMemberCourses({ page: pageParam, limit }),
+            CourseRepository.getMemberCoursesAsync({ page: pageParam, limit }),
         queryKey: COURSE_QUERY_KEY.list(),
         select: ({ pages }) =>
             pages.reduce<CourseType[]>(
@@ -136,7 +136,7 @@ export const useGetCourseDetail = ({
     options: UseSuspenseQueryOptions<CourseDetailType, AxiosError>;
 }) => {
     return useSuspenseQuery<CourseDetailType, AxiosError>({
-        queryFn: () => CourseRepository.getCourse(courseId),
+        queryFn: () => CourseRepository.getCourseAsync(courseId),
         queryKey: COURSE_QUERY_KEY.detail(courseId),
         ...options,
     });

@@ -82,8 +82,8 @@ export const TmapRepository = {
         );
     },
 
-    // 위경도 좌표를 기반으로 건물 명과 실제 주소를 찾는 getAddressFromLatLng
-    async getAddressFromLatLng({
+    // 위경도 좌표를 기반으로 건물 명과 실제 주소를 찾는 getAddressFromLatLngAsync
+    async getAddressFromLatLngAsync({
         lat,
         lng,
     }: TmapRequestParamsType['getAddressFromLatLng']) {
@@ -106,8 +106,8 @@ export const TmapRepository = {
         return response.addressInfo;
     },
 
-    // 특정 키워드를 기반으로 POI 검색을 통해 나온 정보를 제공하는 getPoiSearch
-    async getPoiSearch({
+    // 특정 키워드를 기반으로 POI 검색을 통해 나온 정보를 제공하는 getPoiSearchAsync
+    async getPoiSearchAsync({
         keyword,
         radius = 0,
     }: TmapRequestParamsType['getPoiSearch']) {
