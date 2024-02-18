@@ -6,7 +6,7 @@ const serverUrl = 'wss://api.audy-gakka.com/course';
 
 export const useSocket = () => {
     const [socket, setSocket] = useState<Socket | null>(null);
-    const [receivedMessage, setReceivedMessage] = useState<string>('');
+    const [receivedData, setReceivedData] = useState<string>('');
 
     useEffect(() => {
         const newSocket = io(serverUrl);
@@ -20,22 +20,38 @@ export const useSocket = () => {
     useEffect(() => {
         if (!socket) return;
 
-        const handleSocketMessage = (data: string) => {
-            setReceivedMessage(data);
+        const handleSocketData = (data: string) => {
+            setReceivedData(data);
         };
 
-        socket.on('message', handleSocketMessage);
+        socket.on('data', handleSocketData);
 
         return () => {
-            socket.off('message', handleSocketMessage);
+            socket.off('data', handleSocketData);
         };
     }, [socket]);
 
-    const sendMessage = (message: string) => {
+    useEffect(() => {
+        const handleDisconnect = () => {
+            console.log('연결이 종료되었습니다.');
+        };
+
+        if (socket) {
+            socket.on('disconnect', handleDisconnect);
+        }
+
+        return () => {
+            if (socket) {
+                socket.off('disconnect', handleDisconnect);
+            }
+        };
+    }, [socket]);
+
+    const sendData = (data: string) => {
         if (socket && socket.connected) {
-            socket.emit('message', message);
+            socket.emit('sendData', data);
         }
     };
 
-    return { sendMessage, receivedMessage };
+    return { sendData, receivedData };
 };
