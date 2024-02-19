@@ -15,7 +15,6 @@ import {
 import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 import { MarkerType } from '@/types/map';
 
-import PathCheckBox from './PathCheckBox';
 import PathControlBox from './PathControlBox';
 import * as S from './PathItem.css';
 
@@ -70,15 +69,17 @@ const PathItem = ({ marker, order }: PropsType) => {
                 status: isHover || isSelected ? 'selected' : 'none',
             })}
         >
-            <PathCheckBox isHover={isHover} id={marker.id} order={order} />
+            <ListIcon
+                onPointerDown={handlePointerDownListIcon}
+                className={S.listIcon}
+            />
+
+            <div className={S.orderBox}>{order}</div>
+
             <PathControlBox
                 id={marker.id}
                 name={marker.name}
                 address={marker.address}
-            />
-            <ListIcon
-                onPointerDown={handlePointerDownListIcon}
-                className={S.listIcon}
             />
         </Reorder.Item>
     );
