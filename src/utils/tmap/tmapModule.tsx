@@ -120,6 +120,7 @@ export class TMapModule {
             id,
             lat,
             lng,
+            isHided: false,
         };
 
         const handleMarkerClick = () => {
@@ -372,5 +373,15 @@ export class TMapModule {
     // 이미 존재하는 핀인지 확인
     checkIsAlreadyPinned(id: string) {
         return this.#markers.some((marker) => marker.id === id);
+    }
+
+    // 핀의 경로에서 숨김 여부를 전환
+    toggleMarkerHiddenState(id: string) {
+        const targetMarker = this.#markers.find((marker) => marker.id === id);
+
+        if (!targetMarker) return;
+
+        const { isHided } = targetMarker;
+        targetMarker.isHided = !isHided;
     }
 }
