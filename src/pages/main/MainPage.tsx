@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import AddIcon from '@/assets/icons/add.svg?react';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
@@ -55,7 +56,9 @@ const MainPage = () => {
                         </p>
                     </button>
 
-                    <CoursesContainer courses={tempCourses} />
+                    <ErrorBoundary fallback={<div>에러</div>}>
+                        <CoursesContainer />
+                    </ErrorBoundary>
                 </SidePanel>
 
                 <div className={S.map} ref={mapContainerRef} />
