@@ -5,13 +5,13 @@ interface PropsType extends IntersectionObserverInit {
 }
 
 // targetRef 가 사용자가 명시한 root 와 교차하는지를 검증하는 Hook useIntersectionObserver
-export const useIntersectionObserver = ({
+export const useIntersectionObserver = <T extends HTMLElement>({
     root,
     rootMargin,
     threshold,
     onIntersect,
 }: PropsType) => {
-    const targetRef = useRef<HTMLElement | null>(null);
+    const targetRef = useRef<T>(null);
 
     useEffect(() => {
         if (!targetRef.current) return;
