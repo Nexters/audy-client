@@ -16,6 +16,7 @@ export interface ApiResponseType<T> {
  */
 const API = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL,
+    withCredentials: true,
 });
 
 /**
