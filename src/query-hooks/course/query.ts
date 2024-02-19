@@ -19,7 +19,7 @@ export const useGetCourses = ({
     ...options
 }: {
     limit?: number;
-    options: UseSuspenseInfiniteQueryOptions<
+    options?: UseSuspenseInfiniteQueryOptions<
         CourseResponseType['getAllCourses'],
         AxiosError,
         CourseType[],
@@ -57,7 +57,7 @@ export const useGetOwnCourses = ({
     ...options
 }: {
     limit?: number;
-    options: UseSuspenseInfiniteQueryOptions<
+    options?: UseSuspenseInfiniteQueryOptions<
         CourseResponseType['getOwnedCourses'],
         AxiosError,
         CourseType[],
@@ -95,7 +95,7 @@ export const useGetMemberCourses = ({
     ...options
 }: {
     limit?: number;
-    options: UseSuspenseInfiniteQueryOptions<
+    options?: UseSuspenseInfiniteQueryOptions<
         CourseResponseType['getMemberCourses'],
         AxiosError,
         CourseType[],
@@ -133,7 +133,7 @@ export const useGetCourseDetail = ({
     ...options
 }: {
     courseId: number;
-    options: UseSuspenseQueryOptions<CourseDetailType, AxiosError>;
+    options?: UseSuspenseQueryOptions<CourseDetailType, AxiosError>;
 }) => {
     return useSuspenseQuery<CourseDetailType, AxiosError>({
         queryFn: () => CourseRepository.getCourseAsync(courseId),
