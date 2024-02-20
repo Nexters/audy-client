@@ -7,7 +7,11 @@ import PathPopover from '../path-popover';
 
 import * as S from './ThreeDotButton.css';
 
-const ThreeDotButton = () => {
+interface PropsType {
+    markerId: string;
+}
+
+const ThreeDotButton = ({ markerId }: PropsType) => {
     const [isClicked, setIsClicked] = useState(false);
 
     const pathPopoverRef = useRef<HTMLDivElement | null>(null);
@@ -37,7 +41,7 @@ const ThreeDotButton = () => {
             </button>
 
             <div className={S.pathPopover({ isClicked })} ref={pathPopoverRef}>
-                <PathPopover isPinHided={true} />
+                <PathPopover markerId={markerId} />
             </div>
         </div>
     );

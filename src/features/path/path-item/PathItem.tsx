@@ -17,6 +17,7 @@ import { MarkerType } from '@/types/map';
 
 import PathControlBox from './PathControlBox';
 import * as S from './PathItem.css';
+import ThreeDotButton from './ThreeDotButton';
 
 interface PropsType {
     marker: MarkerType;
@@ -81,6 +82,7 @@ const PathItem = ({ marker, order }: PropsType) => {
                 name={marker.name}
                 address={marker.address}
             />
+            <ThreeDotButton markerId={marker.id} />
         </Reorder.Item>
     );
 };
