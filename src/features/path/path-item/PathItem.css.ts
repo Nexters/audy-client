@@ -7,11 +7,10 @@ import { sprinkles } from '@/styles/sprinkle.css';
 export const wrapper = recipe({
     base: {
         maxWidth: '429px',
-        padding: '16px 18px',
+        padding: '16px 12px 16px 8px',
 
         display: 'flex',
         alignItems: 'center',
-        columnGap: '12px',
 
         overflowX: 'hidden',
         flexShrink: 0,
@@ -46,5 +45,6 @@ export const orderBox = style([
         borderRadius: '4px',
         border: `1px solid ${COLOR.Gray300}`,
         color: COLOR.Gray500,
+        margin: '0 12px 0 0',
     },
 ]);

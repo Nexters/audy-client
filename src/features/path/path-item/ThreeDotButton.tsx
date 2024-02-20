@@ -36,7 +36,11 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
 
     return (
         <div>
-            <button onClick={handleThreeDotClick} ref={threeDotRef}>
+            <button
+                className={S.threeDotButton}
+                onClick={handleThreeDotClick}
+                ref={threeDotRef}
+            >
                 <ThreeDotIcon />
             </button>
 
