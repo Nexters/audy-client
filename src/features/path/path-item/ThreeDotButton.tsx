@@ -23,9 +23,8 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
         ref: pathPopoverRef,
         handler: ({ target }) => {
             if (
-                threeDotRef.current &&
                 target instanceof Node &&
-                threeDotRef.current.contains(target)
+                threeDotRef.current?.contains(target)
             ) {
                 return;
             }
