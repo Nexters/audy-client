@@ -109,6 +109,8 @@ export const TmapRepository = {
     // 특정 키워드를 기반으로 POI 검색을 통해 나온 정보를 제공하는 getPoiSearchAsync
     async getPoiSearchAsync({
         keyword,
+        page = 1,
+        limit = 10,
         radius = 0,
     }: TmapRequestParamsType['getPoiSearch']) {
         const response = await getAsync<TmapResponseType['getPoiSearch']>(
@@ -124,8 +126,9 @@ export const TmapRepository = {
                     resCoordType: 'WGS84GEO',
                     reqCoordType: 'WGS84GEO',
                     radius,
-                    count: 10,
-                    searchType: 'all',
+                    page,
+                    count: limit,
+                    searchType: 'name',
                 },
             },
         );

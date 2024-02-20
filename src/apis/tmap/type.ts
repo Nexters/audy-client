@@ -27,6 +27,8 @@ export interface TmapRequestParamsType {
     };
     getPoiSearch: {
         keyword: string;
+        page?: number;
+        limit?: number;
         radius?: number;
     };
 }
