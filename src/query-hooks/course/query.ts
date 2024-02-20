@@ -1,8 +1,8 @@
 import {
     QueryKey,
-    type UseSuspenseInfiniteQueryOptions,
+    type UseInfiniteQueryOptions,
     type UseSuspenseQueryOptions,
-    useSuspenseInfiniteQuery,
+    useInfiniteQuery,
     useSuspenseQuery,
 } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -19,14 +19,17 @@ export const useGetCourses = ({
     ...options
 }: {
     limit?: number;
-    options?: UseSuspenseInfiniteQueryOptions<
-        CourseResponseType['getAllCourses'],
-        AxiosError,
-        CourseType[],
-        CourseType[]
+    options?: Omit<
+        UseInfiniteQueryOptions<
+            CourseResponseType['getAllCourses'],
+            AxiosError,
+            CourseType[],
+            CourseType[]
+        >,
+        'queryKey' | 'initialPageParam' | 'getNextPageParam'
     >;
 }) => {
-    return useSuspenseInfiniteQuery<
+    return useInfiniteQuery<
         CourseResponseType['getAllCourses'],
         AxiosError,
         CourseType[],
@@ -48,6 +51,7 @@ export const useGetCourses = ({
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) =>
             lastPage.isLast ? undefined : allPages.length + 1,
+        staleTime: 20 * 1000,
     });
 };
 
@@ -57,14 +61,17 @@ export const useGetOwnCourses = ({
     ...options
 }: {
     limit?: number;
-    options?: UseSuspenseInfiniteQueryOptions<
-        CourseResponseType['getOwnedCourses'],
-        AxiosError,
-        CourseType[],
-        CourseType[]
+    options?: Omit<
+        UseInfiniteQueryOptions<
+            CourseResponseType['getOwnedCourses'],
+            AxiosError,
+            CourseType[],
+            CourseType[]
+        >,
+        'queryKey' | 'initialPageParam' | 'getNextPageParam'
     >;
 }) => {
-    return useSuspenseInfiniteQuery<
+    return useInfiniteQuery<
         CourseResponseType['getOwnedCourses'],
         AxiosError,
         CourseType[],
@@ -86,6 +93,7 @@ export const useGetOwnCourses = ({
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) =>
             lastPage.isLast ? undefined : allPages.length + 1,
+        staleTime: 20 * 1000,
     });
 };
 
@@ -95,14 +103,17 @@ export const useGetMemberCourses = ({
     ...options
 }: {
     limit?: number;
-    options?: UseSuspenseInfiniteQueryOptions<
-        CourseResponseType['getMemberCourses'],
-        AxiosError,
-        CourseType[],
-        CourseType[]
+    options?: Omit<
+        UseInfiniteQueryOptions<
+            CourseResponseType['getMemberCourses'],
+            AxiosError,
+            CourseType[],
+            CourseType[]
+        >,
+        'queryKey' | 'initialPageParam' | 'getNextPageParam'
     >;
 }) => {
-    return useSuspenseInfiniteQuery<
+    return useInfiniteQuery<
         CourseResponseType['getMemberCourses'],
         AxiosError,
         CourseType[],
@@ -124,6 +135,7 @@ export const useGetMemberCourses = ({
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) =>
             lastPage.isLast ? undefined : allPages.length + 1,
+        staleTime: 20 * 1000,
     });
 };
 
