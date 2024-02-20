@@ -395,6 +395,23 @@ export class TMapModule {
         const { isHidden } = targetMarker;
         targetMarker.isHidden = !isHidden;
 
+        const updatedIconHTML = renderToString(
+            <Marker
+                order={
+                    this.#markers.findIndex((marker) => marker.id === id) + 1
+                }
+                isHidden={!isHidden}
+            />,
+        );
+
+        targetMarker.marker.setMap(null);
+
+        targetMarker.marker = new Tmapv3.Marker({
+            position: new Tmapv3.LatLng(targetMarker.lat, targetMarker.lng),
+            iconHTML: updatedIconHTML,
+            map: this.#mapInstance,
+        });
+
         return !isHidden;
     }
 
