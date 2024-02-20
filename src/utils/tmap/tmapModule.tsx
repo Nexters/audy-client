@@ -193,10 +193,14 @@ export class TMapModule {
     async drawPathBetweenMarkers() {
         this.#removePath();
 
-        if (this.#markers.length < 2) return;
+        const notHiddenMarkers = this.#markers.filter(
+            ({ isHided }) => !isHided,
+        );
+
+        if (notHiddenMarkers.length < 2) return;
 
         const path: (typeof window.Tmapv3.LatLng)[] = [];
-        const endIndex = this.#markers.length - 1;
+        const endIndex = notHiddenMarkers.length - 1;
         const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
@@ -206,7 +210,7 @@ export class TMapModule {
             const currentEndIndex =
                 endIndex <= index + MAX_POINTS ? endIndex : index + MAX_POINTS;
 
-            const [startMarker, ...passMarkers] = this.#markers
+            const [startMarker, ...passMarkers] = notHiddenMarkers
                 .slice(currentStartIndex, currentEndIndex + 1)
                 .map(({ marker }) => marker);
 
