@@ -1,7 +1,8 @@
 export const Z_INDEX = {
     globalNavigation: 999,
     mapFloatMenu: 9,
-}
+    pathPopover: 10,
+};
 
 export const FONT = {
     pretendard: 'Pretendard',
@@ -838,10 +839,11 @@ export const COLOR = {
     SurfaceLevel2: '#F3F4F6',
     SurfaceLevel3: '#E5E7EB',
     SurfaceLevel4: '#C5CBD3',
-    GradientLinear: 'linear-gradient(90deg, #FF35F7 0%, #B600FF 46.5%, #1F1BFF 100%)'
+    GradientLinear:
+        'linear-gradient(90deg, #FF35F7 0%, #B600FF 46.5%, #1F1BFF 100%)',
 } as const;
 
 export const MEDIA_QUERY = {
-    tablet: "screen and (min-width: 768px) and (max-width: 1199px)",
-    mobile: "screen and (max-width: 767px)",
+    tablet: 'screen and (min-width: 768px) and (max-width: 1199px)',
+    mobile: 'screen and (max-width: 767px)',
 } as const;
