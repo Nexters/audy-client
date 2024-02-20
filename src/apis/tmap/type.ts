@@ -80,6 +80,9 @@ export interface TmapResponseType {
         };
     };
     getPoiSearch: {
+        totalCount: number;
+        count: number;
+        page: number;
         searchPoiInfo: {
             totalCount: number;
             count: number;

@@ -113,7 +113,7 @@ export const TmapRepository = {
         limit = 10,
         radius = 0,
     }: TmapRequestParamsType['getPoiSearch']) {
-        const response = await getAsync<TmapResponseType['getPoiSearch']>(
+        return await getAsync<TmapResponseType['getPoiSearch']>(
             '/pois',
             {
                 baseURL,
@@ -132,7 +132,5 @@ export const TmapRepository = {
                 },
             },
         );
-
-        return response.searchPoiInfo.pois.poi;
     },
 };
