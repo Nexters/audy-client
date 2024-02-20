@@ -96,7 +96,9 @@ export class TMapModule {
         id,
         lat,
         lng,
-        iconHTML = renderToString(<Marker order={this.#markers.length + 1} />),
+        iconHTML = renderToString(
+            <Marker order={this.#markers.length + 1} isHidden={false} />,
+        ),
     }: {
         name: string;
         originName: string;
@@ -120,7 +122,7 @@ export class TMapModule {
             id,
             lat,
             lng,
-            isHided: false,
+            isHidden: false,
         };
 
         const handleMarkerClick = () => {
@@ -165,18 +167,21 @@ export class TMapModule {
     modifyMarker(modifiedMarkers: MarkerType[]) {
         // 기존의 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
         this.#markers.forEach(({ marker }) => marker.setMap(null));
+
         this.#markers = modifiedMarkers.map(
-            ({ marker, lat, lng, ...rest }, index) => {
+            ({ marker, lat, lng, isHidden, ...rest }, index) => {
                 marker.setMap(null);
                 const updatedIconHTML = renderToString(
-                    <Marker order={index + 1} />,
+                    <Marker order={index + 1} isHidden={isHidden} />,
                 );
+
                 const updatedMarker = new Tmapv3.Marker({
                     position: new Tmapv3.LatLng(lat, lng),
                     iconHTML: updatedIconHTML,
                     map: this.#mapInstance,
                 });
-                return { lat, lng, marker: updatedMarker, ...rest };
+
+                return { lat, lng, marker: updatedMarker, isHidden, ...rest };
             },
         );
 
@@ -194,7 +199,7 @@ export class TMapModule {
         this.#removePath();
 
         const notHiddenMarkers = this.#markers.filter(
-            ({ isHided }) => !isHided,
+            ({ isHidden }) => !isHidden,
         );
 
         if (notHiddenMarkers.length < 2) return;
@@ -387,10 +392,10 @@ export class TMapModule {
 
         if (!targetMarker) return;
 
-        const { isHided } = targetMarker;
-        targetMarker.isHided = !isHided;
+        const { isHidden } = targetMarker;
+        targetMarker.isHidden = !isHidden;
 
-        return !isHided;
+        return !isHidden;
     }
 
     // 핀의 id를 받아서 핀의 다른 속성 반환
