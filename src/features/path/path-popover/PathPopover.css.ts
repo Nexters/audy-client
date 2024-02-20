@@ -3,17 +3,20 @@ import { style } from '@vanilla-extract/css';
 import { COLOR } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
 
-export const layout = style({
-    display: 'flex',
-    flexDirection: 'column',
-    position: 'absolute',
-    border: `1px solid ${COLOR.Gray200}`,
-    borderRadius: '15px',
-    backgroundColor: COLOR.MonoWhite,
-    padding: '8px 0',
-    width: '164px',
-    gap: '4px',
-});
+export const layout = style([
+    sprinkles({ zIndex: 'pathPopover' }),
+    {
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'absolute',
+        border: `1px solid ${COLOR.Gray200}`,
+        borderRadius: '15px',
+        backgroundColor: COLOR.MonoWhite,
+        padding: '8px 0',
+        width: '164px',
+        gap: '4px',
+    },
+]);
 
 export const popoverTextContainer = style({
     display: 'flex',
