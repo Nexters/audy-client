@@ -17,18 +17,19 @@ import { COURSE_QUERY_KEY } from './key';
 export const useGetCourses = ({
     limit = 10,
     ...options
-}: {
-    limit?: number;
-    options?: Omit<
-        UseInfiniteQueryOptions<
-            CourseResponseType['getAllCourses'],
-            AxiosError,
-            CourseType[],
-            CourseType[]
-        >,
-        'queryKey' | 'initialPageParam' | 'getNextPageParam'
-    >;
-}) => {
+}: Omit<
+    UseInfiniteQueryOptions<
+        CourseResponseType['getAllCourses'],
+        AxiosError,
+        CourseType[],
+        CourseResponseType['getAllCourses'],
+        QueryKey,
+        number
+    >,
+    'queryKey' | 'initialPageParam' | 'getNextPageParam'
+> & { limit: number }) => {
+    console.log(options);
+
     return useInfiniteQuery<
         CourseResponseType['getAllCourses'],
         AxiosError,
@@ -59,18 +60,17 @@ export const useGetCourses = ({
 export const useGetOwnCourses = ({
     limit = 10,
     ...options
-}: {
-    limit?: number;
-    options?: Omit<
-        UseInfiniteQueryOptions<
-            CourseResponseType['getOwnedCourses'],
-            AxiosError,
-            CourseType[],
-            CourseType[]
-        >,
-        'queryKey' | 'initialPageParam' | 'getNextPageParam'
-    >;
-}) => {
+}: Omit<
+    UseInfiniteQueryOptions<
+        CourseResponseType['getOwnedCourses'],
+        AxiosError,
+        CourseType[],
+        CourseResponseType['getOwnedCourses'],
+        QueryKey,
+        number
+    >,
+    'queryKey' | 'initialPageParam' | 'getNextPageParam'
+> & { limit: number }) => {
     return useInfiniteQuery<
         CourseResponseType['getOwnedCourses'],
         AxiosError,
@@ -101,18 +101,17 @@ export const useGetOwnCourses = ({
 export const useGetMemberCourses = ({
     limit = 10,
     ...options
-}: {
-    limit?: number;
-    options?: Omit<
-        UseInfiniteQueryOptions<
-            CourseResponseType['getMemberCourses'],
-            AxiosError,
-            CourseType[],
-            CourseType[]
-        >,
-        'queryKey' | 'initialPageParam' | 'getNextPageParam'
-    >;
-}) => {
+}: Omit<
+    UseInfiniteQueryOptions<
+        CourseResponseType['getMemberCourses'],
+        AxiosError,
+        CourseType[],
+        CourseResponseType['getMemberCourses'],
+        QueryKey,
+        number
+    >,
+    'queryKey' | 'initialPageParam' | 'getNextPageParam'
+> & { limit: number }) => {
     return useInfiniteQuery<
         CourseResponseType['getMemberCourses'],
         AxiosError,

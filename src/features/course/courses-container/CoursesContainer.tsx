@@ -14,11 +14,24 @@ interface PropsType {
 }
 
 const CoursesContainer = ({ selectedCourseTab }: PropsType) => {
-    const { data: wholeCourses } = useGetCourses({ limit: 10 });
-    const { data: ownedCourses } = useGetOwnCourses({ limit: 10 });
-    const { data: invitedCourses } = useGetMemberCourses({ limit: 10 });
+    console.log(selectedCourseTab);
 
-    const selectedCourseMap = new Map<CourseTabType, CourseType[]>([
+    const { data: wholeCourses } = useGetCourses({
+        limit: 10,
+        enabled: selectedCourseTab === 'allCourse',
+    });
+
+    const { data: ownedCourses } = useGetOwnCourses({
+        limit: 10,
+        enabled: selectedCourseTab === 'invitedCourse',
+    });
+
+    const { data: invitedCourses } = useGetMemberCourses({
+        limit: 10,
+        enabled: selectedCourseTab === 'myCourse',
+    });
+
+    const selectedCourseMap = new Map<CourseTabType, CourseType[] | undefined>([
         ['allCourse', wholeCourses],
         ['myCourse', ownedCourses],
         ['invitedCourse', invitedCourses],
@@ -28,15 +41,17 @@ const CoursesContainer = ({ selectedCourseTab }: PropsType) => {
 
     return (
         <div className={S.layout}>
-            {selectedCourse.map(({ courseId, courseName, editorCnt, pinCnt, owner }) => (
-                <CourseTab
-                    key={courseId}
-                    courseName={courseName}
-                    memberCount={editorCnt}
-                    pinCount={pinCnt}
-                    isMyCourse={owner}
-                />
-            ))}
+            {selectedCourse.map(
+                ({ courseId, courseName, editorCnt, pinCnt, owner }) => (
+                    <CourseTab
+                        key={courseId}
+                        courseName={courseName}
+                        memberCount={editorCnt}
+                        pinCount={pinCnt}
+                        isMyCourse={owner}
+                    />
+                ),
+            )}
         </div>
     );
 };
