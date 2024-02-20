@@ -50,5 +50,6 @@ export const useGetSearchPois = ({
         getNextPageParam: ({ totalCount, page, count }) =>
             totalCount > page * count  ? undefined : page + 1,
         staleTime: 20 * 1000,
+        enabled: !!keyword,
     });
 };
