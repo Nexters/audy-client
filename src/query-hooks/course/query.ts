@@ -74,7 +74,7 @@ export const useGetOwnCourses = ({
         ...options,
         queryFn: ({ pageParam }) =>
             CourseRepository.getOwnedCoursesAsync({ page: pageParam, limit }),
-        queryKey: COURSE_QUERY_KEY.list(),
+        queryKey: COURSE_QUERY_KEY.owned(),
         select: ({ pages }) =>
             pages.reduce<CourseType[]>(
                 (previous, { courseGetResList = [] }) => [
@@ -112,7 +112,7 @@ export const useGetMemberCourses = ({
         ...options,
         queryFn: ({ pageParam }) =>
             CourseRepository.getMemberCoursesAsync({ page: pageParam, limit }),
-        queryKey: COURSE_QUERY_KEY.list(),
+        queryKey: COURSE_QUERY_KEY.member(),
         select: ({ pages }) =>
             pages.reduce<CourseType[]>(
                 (previous, { courseGetResList = [] }) => [
