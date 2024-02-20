@@ -34,7 +34,7 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
     });
 
     return (
-        <div>
+        <>
             <button
                 className={S.threeDotButton}
                 onClick={handleThreeDotClick}
@@ -46,7 +46,7 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
             <div className={S.pathPopover({ isClicked })} ref={pathPopoverRef}>
                 <PathPopover markerId={markerId} />
             </div>
-        </div>
+        </>
     );
 };
 
