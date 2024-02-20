@@ -17,14 +17,8 @@ import { COURSE_QUERY_KEY } from './key';
 export const useGetCourses = ({
     limit = 10,
     ...options
-<<<<<<< HEAD
 }: Omit<
     UseInfiniteQueryOptions<
-=======
-}: {
-    limit?: number;
-    options?: UseSuspenseInfiniteQueryOptions<
->>>>>>> 5a1fe3d (✨ option 타입을 optional 하게 받도록 수정)
         CourseResponseType['getAllCourses'],
         AxiosError,
         CourseType[],
@@ -64,14 +58,8 @@ export const useGetCourses = ({
 export const useGetOwnCourses = ({
     limit = 10,
     ...options
-<<<<<<< HEAD
 }: Omit<
     UseInfiniteQueryOptions<
-=======
-}: {
-    limit?: number;
-    options?: UseSuspenseInfiniteQueryOptions<
->>>>>>> 5a1fe3d (✨ option 타입을 optional 하게 받도록 수정)
         CourseResponseType['getOwnedCourses'],
         AxiosError,
         CourseType[],
@@ -111,14 +99,8 @@ export const useGetOwnCourses = ({
 export const useGetMemberCourses = ({
     limit = 10,
     ...options
-<<<<<<< HEAD
 }: Omit<
     UseInfiniteQueryOptions<
-=======
-}: {
-    limit?: number;
-    options?: UseSuspenseInfiniteQueryOptions<
->>>>>>> 5a1fe3d (✨ option 타입을 optional 하게 받도록 수정)
         CourseResponseType['getMemberCourses'],
         AxiosError,
         CourseType[],
