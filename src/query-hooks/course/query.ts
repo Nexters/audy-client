@@ -140,13 +140,20 @@ export const useGetMemberCourses = ({
 export const useGetCourseDetail = ({
     courseId,
     ...options
-}: {
+}: UseSuspenseQueryOptions<
+    CourseResponseType['getCourse'],
+    AxiosError,
+    CourseDetailType
+> & {
     courseId: number;
-    options?: UseSuspenseQueryOptions<CourseDetailType, AxiosError>;
 }) => {
-    return useSuspenseQuery<CourseDetailType, AxiosError>({
+    return useSuspenseQuery<
+        CourseResponseType['getCourse'],
+        AxiosError,
+        CourseDetailType
+    >({
+        ...options,
         queryFn: () => CourseRepository.getCourseAsync(courseId),
         queryKey: COURSE_QUERY_KEY.detail(courseId),
-        ...options,
     });
 };
