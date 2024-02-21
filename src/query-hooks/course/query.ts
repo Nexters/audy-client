@@ -140,13 +140,19 @@ export const useGetMemberCourses = ({
 export const useGetCourseDetail = ({
     courseId,
     ...options
-}: UseSuspenseQueryOptions<
-    CourseResponseType['getCourse'],
-    AxiosError,
-    CourseDetailType
+}: Omit<
+    UseSuspenseQueryOptions<
+        CourseResponseType['getCourse'],
+        AxiosError,
+        CourseDetailType
+    >,
+    'queryKey'
 > & {
-    courseId: number;
+    courseId?: number;
 }) => {
+    if (!courseId)
+        throw new Error('courseId 는 number 타입의 값이어야 합니다.');
+
     return useSuspenseQuery<
         CourseResponseType['getCourse'],
         AxiosError,
