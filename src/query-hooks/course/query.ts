@@ -1,8 +1,8 @@
 import {
     QueryKey,
-    type UseSuspenseInfiniteQueryOptions,
+    type UseInfiniteQueryOptions,
     type UseSuspenseQueryOptions,
-    useSuspenseInfiniteQuery,
+    useInfiniteQuery,
     useSuspenseQuery,
 } from '@tanstack/react-query';
 import type { AxiosError } from 'axios';
@@ -17,16 +17,18 @@ import { COURSE_QUERY_KEY } from './key';
 export const useGetCourses = ({
     limit = 10,
     ...options
-}: {
-    limit?: number;
-    options: UseSuspenseInfiniteQueryOptions<
+}: Omit<
+    UseInfiniteQueryOptions<
         CourseResponseType['getAllCourses'],
         AxiosError,
         CourseType[],
-        CourseType[]
-    >;
-}) => {
-    return useSuspenseInfiniteQuery<
+        CourseResponseType['getAllCourses'],
+        QueryKey,
+        number
+    >,
+    'queryKey' | 'initialPageParam' | 'getNextPageParam'
+> & { limit: number }) => {
+    return useInfiniteQuery<
         CourseResponseType['getAllCourses'],
         AxiosError,
         CourseType[],
@@ -48,6 +50,7 @@ export const useGetCourses = ({
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) =>
             lastPage.isLast ? undefined : allPages.length + 1,
+        staleTime: 20 * 1000,
     });
 };
 
@@ -55,16 +58,18 @@ export const useGetCourses = ({
 export const useGetOwnCourses = ({
     limit = 10,
     ...options
-}: {
-    limit?: number;
-    options: UseSuspenseInfiniteQueryOptions<
+}: Omit<
+    UseInfiniteQueryOptions<
         CourseResponseType['getOwnedCourses'],
         AxiosError,
         CourseType[],
-        CourseType[]
-    >;
-}) => {
-    return useSuspenseInfiniteQuery<
+        CourseResponseType['getOwnedCourses'],
+        QueryKey,
+        number
+    >,
+    'queryKey' | 'initialPageParam' | 'getNextPageParam'
+> & { limit: number }) => {
+    return useInfiniteQuery<
         CourseResponseType['getOwnedCourses'],
         AxiosError,
         CourseType[],
@@ -74,7 +79,7 @@ export const useGetOwnCourses = ({
         ...options,
         queryFn: ({ pageParam }) =>
             CourseRepository.getOwnedCoursesAsync({ page: pageParam, limit }),
-        queryKey: COURSE_QUERY_KEY.list(),
+        queryKey: COURSE_QUERY_KEY.owned(),
         select: ({ pages }) =>
             pages.reduce<CourseType[]>(
                 (previous, { courseGetResList = [] }) => [
@@ -86,6 +91,7 @@ export const useGetOwnCourses = ({
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) =>
             lastPage.isLast ? undefined : allPages.length + 1,
+        staleTime: 20 * 1000,
     });
 };
 
@@ -93,16 +99,18 @@ export const useGetOwnCourses = ({
 export const useGetMemberCourses = ({
     limit = 10,
     ...options
-}: {
-    limit?: number;
-    options: UseSuspenseInfiniteQueryOptions<
+}: Omit<
+    UseInfiniteQueryOptions<
         CourseResponseType['getMemberCourses'],
         AxiosError,
         CourseType[],
-        CourseType[]
-    >;
-}) => {
-    return useSuspenseInfiniteQuery<
+        CourseResponseType['getMemberCourses'],
+        QueryKey,
+        number
+    >,
+    'queryKey' | 'initialPageParam' | 'getNextPageParam'
+> & { limit: number }) => {
+    return useInfiniteQuery<
         CourseResponseType['getMemberCourses'],
         AxiosError,
         CourseType[],
@@ -112,7 +120,7 @@ export const useGetMemberCourses = ({
         ...options,
         queryFn: ({ pageParam }) =>
             CourseRepository.getMemberCoursesAsync({ page: pageParam, limit }),
-        queryKey: COURSE_QUERY_KEY.list(),
+        queryKey: COURSE_QUERY_KEY.member(),
         select: ({ pages }) =>
             pages.reduce<CourseType[]>(
                 (previous, { courseGetResList = [] }) => [
@@ -124,6 +132,7 @@ export const useGetMemberCourses = ({
         initialPageParam: 1,
         getNextPageParam: (lastPage, allPages) =>
             lastPage.isLast ? undefined : allPages.length + 1,
+        staleTime: 20 * 1000,
     });
 };
 
@@ -133,7 +142,7 @@ export const useGetCourseDetail = ({
     ...options
 }: {
     courseId: number;
-    options: UseSuspenseQueryOptions<CourseDetailType, AxiosError>;
+    options?: UseSuspenseQueryOptions<CourseDetailType, AxiosError>;
 }) => {
     return useSuspenseQuery<CourseDetailType, AxiosError>({
         queryFn: () => CourseRepository.getCourseAsync(courseId),

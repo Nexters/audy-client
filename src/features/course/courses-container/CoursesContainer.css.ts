@@ -11,3 +11,8 @@ export const layout = style({
     borderRadius: '16px',
     backgroundColor: COLOR.MonoWhite,
 });
+
+export const lastChildren = style({
+    width: '100%',
+    height: '8px',
+})

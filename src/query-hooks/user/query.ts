@@ -10,11 +10,9 @@ import { UserType } from '@/types';
 import { USER_QUERY_KEY } from './key';
 
 export const useGetUserInformation = ({
-    userId,
     ...options
 }: {
-    userId?: string;
-    options: UseSuspenseQueryOptions<
+    options?: UseSuspenseQueryOptions<
         UserType,
         AxiosError,
         UserType
@@ -26,7 +24,7 @@ export const useGetUserInformation = ({
         UserType
     >({
         ...options,
-        queryFn: () => UserRepository.getInformationAsync(userId),
-        queryKey: USER_QUERY_KEY.info(userId),
+        queryFn: () => UserRepository.getInformationAsync(),
+        queryKey: USER_QUERY_KEY.info(),
     });
 };

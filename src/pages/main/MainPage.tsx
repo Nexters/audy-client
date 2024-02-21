@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import AddIcon from '@/assets/icons/add.svg?react';
+import AsyncBoundary from '@/components/async-boundary';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import SidePanel from '@/components/side-panel';
 import CourseFilteringTab from '@/features/course/course-filtering-tab/CourseFilteringTab';
@@ -20,23 +21,6 @@ const MainPage = () => {
         setSelectedCourseTab(tab);
     };
 
-    const tempCourses = [
-        {
-            id: '1',
-            name: '테스트 코스',
-            memberCount: 3,
-            pinCount: 5,
-            isMyCourse: true,
-        },
-        {
-            id: '2',
-            name: '테스트 코스2',
-            memberCount: 3,
-            pinCount: 5,
-            isMyCourse: false,
-        },
-    ];
-
     return (
         <>
             <GlobalNavigationBar />
@@ -55,7 +39,11 @@ const MainPage = () => {
                         </p>
                     </button>
 
-                    <CoursesContainer courses={tempCourses} />
+                    <AsyncBoundary>
+                        <CoursesContainer
+                            selectedCourseTab={selectedCourseTab}
+                        />
+                    </AsyncBoundary>
                 </SidePanel>
 
                 <div className={S.map} ref={mapContainerRef} />

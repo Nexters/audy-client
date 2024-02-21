@@ -10,13 +10,13 @@ import { COLOR } from '@/styles/foundation';
 import * as S from './CourseTab.css';
 
 interface PropsType {
-    name: string;
+    courseName: string;
     memberCount: number;
     pinCount: number;
     isMyCourse: boolean;
 }
 
-const CourseTab = ({ name, memberCount, pinCount, isMyCourse }: PropsType) => {
+const CourseTab = ({ courseName, memberCount, pinCount, isMyCourse }: PropsType) => {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
@@ -28,7 +28,7 @@ const CourseTab = ({ name, memberCount, pinCount, isMyCourse }: PropsType) => {
             <div>
                 <div className={S.courseNameContainer}>
                     {isMyCourse && <MyCourseIcon fill={COLOR.PinkPrimary} />}
-                    <p className={S.courseName}>{name}</p>
+                    <p className={S.courseName}>{courseName}</p>
                 </div>
 
                 <div className={S.courseDetailsContainer}>
