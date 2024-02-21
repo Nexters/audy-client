@@ -1,5 +1,7 @@
 import type { MutableRefObject, PropsWithChildren } from 'react';
-import { createContext, useEffect, useRef } from 'react';
+import { createContext, useLayoutEffect, useRef } from 'react';
+
+import { useInRouterContext } from 'react-router-dom';
 
 import { TMapModule, type TmapConstructorType } from './tmapModule';
 
@@ -28,10 +30,12 @@ export const TmapProvider = ({
 }: PropsType) => {
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const tmapModuleRef = useRef<TMapModule | null>(null);
+    const isClientRendered = useInRouterContext();
 
-    useEffect(() => {
+    console.log(tmapModuleRef.current, 'tmapModuleRef');
+
+    useLayoutEffect(() => {
         if (!mapContainerRef.current) return;
-
         mapContainerRef.current.id = mapId;
 
         tmapModuleRef.current = new TMapModule({
@@ -42,7 +46,7 @@ export const TmapProvider = ({
             lat,
             lng,
         });
-    }, [height, lat, lng, mapId, width, zoom]);
+    }, [height, isClientRendered, lat, lng, mapId, width, zoom]);
 
     return (
         <TmapContext.Provider value={{ mapContainerRef, tmapModuleRef }}>
