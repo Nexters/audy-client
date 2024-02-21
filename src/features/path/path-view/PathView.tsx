@@ -5,7 +5,7 @@ import { Reorder } from 'framer-motion';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
 import { useTmap } from '@/hooks/useTmap';
-import type { MarkerType } from '@/types/map';
+import type { PinType, MarkerType } from '@/types/map';
 
 import PathItem from '../path-item';
 
@@ -14,8 +14,12 @@ import PathViewContextProvider from './PathViewContextProvider';
 
 const REORDER_DELAY = 330;
 
-const PathView = () => {
-    const [markers, setMarkers] = useState<MarkerType[]>([]);
+interface PropsType {
+    pinList: PinType[];
+}
+
+const PathView = ({ pinList }: PropsType) => {
+    const [markers, setMarkers] = useState<PinType[]>(pinList);
     const { tmapModuleRef } = useTmap();
 
     const { debounce } = useDebounce();
@@ -28,7 +32,7 @@ const PathView = () => {
         setMarkers(markers.filter((marker) => marker.id !== event.detail));
     });
 
-    const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
+    const debouncedModifyMarker = debounce((newOrder: PinType[]) => {
         if (!tmapModuleRef.current) return;
         tmapModuleRef.current.modifyMarker(newOrder);
     }, REORDER_DELAY);
