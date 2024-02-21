@@ -28,8 +28,6 @@ export const useGetCourses = ({
     >,
     'queryKey' | 'initialPageParam' | 'getNextPageParam'
 > & { limit: number }) => {
-    console.log(options);
-
     return useInfiniteQuery<
         CourseResponseType['getAllCourses'],
         AxiosError,

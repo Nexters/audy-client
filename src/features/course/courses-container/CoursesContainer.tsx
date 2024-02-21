@@ -14,8 +14,6 @@ interface PropsType {
 }
 
 const CoursesContainer = ({ selectedCourseTab }: PropsType) => {
-    console.log(selectedCourseTab);
-
     const { data: wholeCourses } = useGetCourses({
         limit: 10,
         enabled: selectedCourseTab === 'allCourse',
