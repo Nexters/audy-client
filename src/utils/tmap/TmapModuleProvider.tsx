@@ -1,5 +1,5 @@
 import type { MutableRefObject, PropsWithChildren } from 'react';
-import { createContext, useLayoutEffect, useRef } from 'react';
+import { createContext, useEffect, useRef } from 'react';
 
 import { useInRouterContext } from 'react-router-dom';
 
@@ -32,9 +32,7 @@ export const TmapProvider = ({
     const tmapModuleRef = useRef<TMapModule | null>(null);
     const isClientRendered = useInRouterContext();
 
-    console.log(tmapModuleRef.current, 'tmapModuleRef');
-
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (!mapContainerRef.current) return;
         mapContainerRef.current.id = mapId;
 
