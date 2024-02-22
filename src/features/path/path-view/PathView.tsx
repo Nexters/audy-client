@@ -33,17 +33,20 @@ const PathView = ({ pinList }: PropsType) => {
     });
 
     useEffect(() => {
-        pinList.forEach(({ pinName, pinId, address, latitude, longitude }) => {
-            if (!tmapModuleRef.current) return;
-            tmapModuleRef.current.createMarker({
-                name: pinName,
-                originName: pinName,
-                address,
-                id: pinId,
-                lat: String(latitude),
-                lng: String(longitude),
-            });
-        });
+        const createdMarkerList: MarkerType[] = pinList
+            .map(({ pinName, pinId, address, latitude, longitude }) => {
+                return tmapModuleRef.current?.createMarker({
+                    name: pinName,
+                    originName: pinName,
+                    address,
+                    id: pinId,
+                    lat: String(latitude),
+                    lng: String(longitude),
+                });
+            })
+            .filter((marker): marker is MarkerType => !!marker);
+
+        setMarkers(createdMarkerList);
     }, [pinList, tmapModuleRef]);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
