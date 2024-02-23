@@ -94,7 +94,7 @@ export class TMapModule {
         this.#mapInstance.on('Click', handleMapClick);
 
         this.#mapInstance.on('Zoom', () => {
-            this.#clusterSize = 0.05 / this.#mapInstance.getZoom();
+            this.#clusterSize = 0.07 / this.#mapInstance.getZoom();
             this.clusterMarkers();
         });
     }
@@ -437,6 +437,9 @@ export class TMapModule {
 
     clusterMarkers() {
         this.#clusters.forEach((cluster) => {
+            cluster.markers.forEach(({ marker }) => {
+                marker.setMap(null);
+            });
             if (cluster.clusterMarker) cluster.clusterMarker.setMap(null);
         });
 
@@ -480,7 +483,13 @@ export class TMapModule {
             const size = cluster.getSize();
             const iconHTML = renderToString(<Cluster count={size} />);
 
-            // if (cluster.markers.length < 2) return;
+            if (cluster.markers.length < 2) {
+                cluster.markers.forEach(({ marker }) => {
+                    marker.setMap(this.#mapInstance);
+                });
+
+                return;
+            }
 
             cluster.clusterMarker = new Tmapv3.Marker({
                 position: new Tmapv3.LatLng(center.lat, center.lng),
