@@ -1,9 +1,12 @@
 import { renderToString } from 'react-dom/server';
 
 import { TmapRepository } from '@/apis/tmap';
+import Cluster from '@/features/map/cluster/Cluster';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
 import Marker from '@/features/map/marker/Marker';
 import { MarkerType, PathModeType } from '@/types/map';
+
+import { ClusterModule } from './ClusterModule';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -34,6 +37,9 @@ export class TMapModule {
 
     #maxMarkerCount = 15;
     #zoomLevel = 17;
+
+    #clusters: ClusterModule[] = [];
+    #clusterSize = 0.1;
 
     constructor({
         mapId = 'tmap',
@@ -86,6 +92,11 @@ export class TMapModule {
         };
 
         this.#mapInstance.on('Click', handleMapClick);
+
+        this.#mapInstance.on('Zoom', () => {
+            this.#clusterSize = 0.05 / this.#mapInstance.getZoom();
+            this.clusterMarkers();
+        });
     }
 
     // 마커 생성
@@ -147,6 +158,7 @@ export class TMapModule {
         );
 
         this.drawPathBetweenMarkers();
+        this.clusterMarkers();
 
         return newMarker;
     }
@@ -421,5 +433,60 @@ export class TMapModule {
     getMarkerInfoFromId(id: string) {
         const targetMarker = this.#markers.find((marker) => marker.id === id);
         return targetMarker;
+    }
+
+    clusterMarkers() {
+        this.#clusters.forEach((cluster) => {
+            if (cluster.clusterMarker) cluster.clusterMarker.setMap(null);
+        });
+
+        this.#clusters = [];
+
+        this.#markers.forEach((marker) => {
+            const clusterIndex = this.findCluster(marker);
+
+            if (clusterIndex === -1) {
+                const newCluster = new ClusterModule();
+                newCluster.addMarker(marker);
+                this.#clusters.push(newCluster);
+            } else {
+                this.#clusters[clusterIndex].addMarker(marker);
+            }
+        });
+
+        this.updateClusters();
+    }
+
+    findCluster(marker: MarkerType): number {
+        for (let i = 0; i < this.#clusters.length; i++) {
+            const cluster = this.#clusters[i];
+            const center = cluster.getCenter();
+
+            if (
+                Math.abs(center.lat - parseFloat(marker.lat)) <=
+                    this.#clusterSize &&
+                Math.abs(center.lng - parseFloat(marker.lng)) <=
+                    this.#clusterSize
+            ) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    updateClusters() {
+        this.#clusters.forEach((cluster) => {
+            const center = cluster.getCenter();
+            const size = cluster.getSize();
+            const iconHTML = renderToString(<Cluster count={size} />);
+
+            // if (cluster.markers.length < 2) return;
+
+            cluster.clusterMarker = new Tmapv3.Marker({
+                position: new Tmapv3.LatLng(center.lat, center.lng),
+                iconHTML,
+                map: this.#mapInstance,
+            });
+        });
     }
 }
