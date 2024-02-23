@@ -433,6 +433,7 @@ export class TMapModule {
         return targetMarker;
     }
 
+    // 현재 지도 상의 모든 마커의 클러스터링을 수행하고, 클러스터링 결과를 업데이트
     clusterMarkers() {
         this.#clusters.forEach((cluster) => {
             cluster.markers.forEach(({ marker }) => {
@@ -458,7 +459,10 @@ export class TMapModule {
         this.updateClusters();
     }
 
+    // 주어진 마커가 속해야 하는 클러스터의 인덱스 반환
     findCluster(marker: MarkerType): number {
+        const markerSize = 50;
+
         for (let i = 0; i < this.#clusters.length; i++) {
             const cluster = this.#clusters[i];
             const center = cluster.getCenter();
@@ -474,8 +478,8 @@ export class TMapModule {
             );
 
             if (
-                Math.abs(centerPoint.x - markerPoint.x) <= 56 &&
-                Math.abs(centerPoint.y - markerPoint.y) <= 48
+                Math.abs(centerPoint.x - markerPoint.x) <= markerSize &&
+                Math.abs(centerPoint.y - markerPoint.y) <= markerSize
             ) {
                 return i;
             }
@@ -483,6 +487,7 @@ export class TMapModule {
         return -1;
     }
 
+    // 현재 클러스터 상태를 기반으로 클러스터 마커 업데이트
     updateClusters() {
         this.#clusters.forEach((cluster) => {
             const center = cluster.getCenter();
