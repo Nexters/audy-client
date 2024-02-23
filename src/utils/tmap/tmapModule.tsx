@@ -461,7 +461,7 @@ export class TMapModule {
 
     // 주어진 마커가 속해야 하는 클러스터의 인덱스 반환
     findCluster(marker: MarkerType): number {
-        const markerSize = 50;
+        const MARKER_SIZE = 50;
 
         for (let i = 0; i < this.#clusters.length; i++) {
             const cluster = this.#clusters[i];
@@ -478,8 +478,8 @@ export class TMapModule {
             );
 
             if (
-                Math.abs(centerPoint.x - markerPoint.x) <= markerSize &&
-                Math.abs(centerPoint.y - markerPoint.y) <= markerSize
+                Math.abs(centerPoint.x - markerPoint.x) <= MARKER_SIZE &&
+                Math.abs(centerPoint.y - markerPoint.y) <= MARKER_SIZE
             ) {
                 return i;
             }
