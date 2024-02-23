@@ -1,9 +1,16 @@
 import { style } from '@vanilla-extract/css';
 
-import { COLOR } from '@/styles/foundation';
+import { sprinkles } from '@/styles/sprinkle.css';
 
-export const layout = style({
-    backgroundColor: COLOR.MonoWhite,
-    borderRadius: '6px',
-    padding: '5px',
-});
+export const layout = style([
+    sprinkles({ typography: 'SemiBold20' }),
+    {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: `rgba(0, 0, 0, 0.2)`,
+        borderRadius: '50%',
+        width: '50px',
+        height: '50px',
+    },
+]);
