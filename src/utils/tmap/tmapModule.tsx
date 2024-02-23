@@ -39,7 +39,6 @@ export class TMapModule {
     #zoomLevel = 17;
 
     #clusters: ClusterModule[] = [];
-    #clusterSize = 0.1;
 
     constructor({
         mapId = 'tmap',
@@ -94,7 +93,6 @@ export class TMapModule {
         this.#mapInstance.on('Click', handleMapClick);
 
         this.#mapInstance.on('Zoom', () => {
-            this.#clusterSize = 0.07 / this.#mapInstance.getZoom();
             this.clusterMarkers();
         });
     }
@@ -465,11 +463,19 @@ export class TMapModule {
             const cluster = this.#clusters[i];
             const center = cluster.getCenter();
 
+            const centerPoint = this.#mapInstance.realToScreen(
+                new Tmapv3.LatLng(center.lat, center.lng),
+            );
+            const markerPoint = this.#mapInstance.realToScreen(
+                new Tmapv3.LatLng(
+                    parseFloat(marker.lat),
+                    parseFloat(marker.lng),
+                ),
+            );
+
             if (
-                Math.abs(center.lat - parseFloat(marker.lat)) <=
-                    this.#clusterSize &&
-                Math.abs(center.lng - parseFloat(marker.lng)) <=
-                    this.#clusterSize
+                Math.abs(centerPoint.x - markerPoint.x) <= 56 &&
+                Math.abs(centerPoint.y - markerPoint.y) <= 48
             ) {
                 return i;
             }
