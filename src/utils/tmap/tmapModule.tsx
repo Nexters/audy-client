@@ -412,6 +412,8 @@ export class TMapModule {
             map: this.#mapInstance,
         });
 
+        this.drawPathBetweenMarkers();
+
         return !isHidden;
     }
 
