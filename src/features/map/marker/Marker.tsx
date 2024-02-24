@@ -9,14 +9,11 @@ interface PropsType {
 }
 
 const Marker = ({ order, isHidden }: PropsType) => {
+    const MarkerImage = isHidden ? MarkerWhiteImage : MarkerBlackImage;
+
     return (
         <div>
-            {isHidden ? (
-                <MarkerWhiteImage className={S.marker} />
-            ) : (
-                <MarkerBlackImage className={S.marker} />
-            )}
-
+            <MarkerImage className={S.marker} />
             <p className={S.numberWrapper({ isHidden })}>{order}</p>
         </div>
     );
