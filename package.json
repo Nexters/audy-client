@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
     "@tanstack/react-query": "^5.17.10",
     "@vanilla-extract/css": "^1.14.0",
     "@vanilla-extract/recipes": "^0.5.1",
@@ -21,8 +22,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.12",
-    "react-router-dom": "^6.21.2",
-    "socket.io-client": "^4.7.4"
+    "react-router-dom": "^6.21.2"
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.17.10",
