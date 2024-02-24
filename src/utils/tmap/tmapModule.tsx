@@ -420,6 +420,6 @@ export class TMapModule {
     // 핀의 id를 받아서 핀의 다른 속성 반환
     getMarkerInfoFromId(id: string) {
         const targetMarker = this.#markers.find((marker) => marker.id === id);
-        return { ...targetMarker };
+        return targetMarker;
     }
 }
