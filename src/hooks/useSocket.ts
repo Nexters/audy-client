@@ -2,9 +2,11 @@ import { useEffect, useRef } from 'react';
 
 import { Client as StompClient } from '@stomp/stompjs';
 
-import type { CourseSocketSubType } from '@/apis/course/type';
+import type {
+    CourseSocketPubType,
+    CourseSocketSubType,
+} from '@/apis/course/type';
 import { useTmap } from '@/hooks/useTmap';
-import { PinType } from '@/types';
 
 export const useSocket = (courseId: number) => {
     const stompClient = useRef<StompClient | null>(null);
@@ -13,10 +15,7 @@ export const useSocket = (courseId: number) => {
     const modifyPinName = ({
         pinId,
         pinName,
-    }: {
-        pinId: string;
-        pinName: string;
-    }) => {
+    }: CourseSocketPubType['modification']) => {
         stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/modification`,
             body: JSON.stringify({
@@ -28,18 +27,16 @@ export const useSocket = (courseId: number) => {
 
     const addPin = ({
         courseId,
-        pinId,
         pinName,
         originName,
         latitude,
         longitude,
         sequence,
-    }: PinType & { courseId: number }) => {
+    }: CourseSocketPubType['addition']) => {
         stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/addition`,
             body: JSON.stringify({
                 courseId,
-                pinId,
                 pinName,
                 originName,
                 latitude,
@@ -49,7 +46,7 @@ export const useSocket = (courseId: number) => {
         });
     };
 
-    const removePin = (pinId: string) => {
+    const removePin = ({ pinId }: CourseSocketPubType['removal']) => {
         stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/removal`,
             body: JSON.stringify({
@@ -103,6 +100,7 @@ export const useSocket = (courseId: number) => {
             },
             onStompError: (frame) => {
                 console.log('Broker reported error:', frame);
+                stomp.deactivate();
             },
         });
 

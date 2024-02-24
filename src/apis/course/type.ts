@@ -45,6 +45,25 @@ export interface CourseResponseType {
     };
 }
 
+export interface CourseSocketPubType {
+    addition: {
+        courseId: number;
+        pinName: string;
+        originName: string;
+        latitude: number;
+        longitude: number;
+        address: string;
+        sequence: number;
+    };
+    modification: {
+        pinId: string;
+        pinName: string;
+    };
+    removal: {
+        pinId: string;
+    };
+}
+
 export interface CourseSocketSubType {
     addition: {
         courseId: number;
