@@ -1,4 +1,4 @@
-import { globalStyle, globalFontFace } from '@vanilla-extract/css';
+import { globalFontFace, globalStyle } from '@vanilla-extract/css';
 
 import { theme } from '@/styles/theme.css';
 
@@ -61,30 +61,29 @@ globalStyle('ol, ul', {
 globalFontFace(theme.font.pretendard, {
     src: "url('/fonts/Pretendard-Black.subset.woff2') format('woff2')",
     fontWeight: 800,
-})
+});
 
 globalFontFace(theme.font.pretendard, {
     src: "url('/fonts/Pretendard-ExtraBold.subset.woff2') format('woff2')",
     fontWeight: 700,
-})
-
+});
 
 globalFontFace(theme.font.pretendard, {
     src: "url('/fonts/Pretendard-Bold.subset.woff2') format('woff2')",
     fontWeight: 600,
-})
+});
 
 globalFontFace(theme.font.pretendard, {
     src: "url('/fonts/Pretendard-SemiBold.subset.woff2') format('woff2')",
     fontWeight: 500,
-})
+});
 
 globalFontFace(theme.font.pretendard, {
     src: "url('/fonts/Pretendard-Medium.subset.woff2') format('woff2')",
     fontWeight: 400,
-})
+});
 
 globalFontFace(theme.font.pretendard, {
     src: "url('/fonts/Pretendard-Regular.subset.woff2') format('woff2')",
     fontWeight: 300,
-})
+});

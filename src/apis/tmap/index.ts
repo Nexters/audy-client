@@ -20,7 +20,7 @@ export const TmapRepository = {
             TmapResponseType['getVehiclePath'],
             TmapRequestParamsType['getVehiclePath']
         >(
-            '/paths',
+            '/routes',
             {
                 startX,
                 startY,
@@ -39,6 +39,7 @@ export const TmapRepository = {
                     version: 1,
                     format: 'json',
                 },
+                withCredentials: false,
             },
         );
     },
@@ -57,7 +58,7 @@ export const TmapRepository = {
             TmapResponseType['getPedestrianPath'],
             TmapRequestParamsType['getPedestrianPath']
         >(
-            '/paths/pedestrian',
+            '/routes/pedestrian',
             {
                 startX,
                 startY,
@@ -78,6 +79,7 @@ export const TmapRepository = {
                     version: 1,
                     format: 'json',
                 },
+                withCredentials: false,
             },
         );
     },
@@ -101,6 +103,7 @@ export const TmapRepository = {
                 callback: 'result',
                 keyInfo: 'Y',
             },
+            withCredentials: false,
         });
 
         return response.addressInfo;
@@ -130,6 +133,7 @@ export const TmapRepository = {
                     count: limit,
                     searchType: 'name',
                 },
+                withCredentials: false,
             },
         );
     },

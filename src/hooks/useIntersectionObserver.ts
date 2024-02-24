@@ -24,8 +24,7 @@ export const useIntersectionObserver = <T extends HTMLElement>({
         observer.observe(targetRef.current);
 
         return () => observer.disconnect();
-
     }, [root, rootMargin, threshold, onIntersect]);
 
-    return { targetRef }
+    return { targetRef };
 };

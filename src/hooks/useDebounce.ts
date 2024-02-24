@@ -13,7 +13,7 @@ export const useDebounce = () => {
             (...args: Parameters<T>) => {
                 clearTimeout(timer.current);
                 timer.current = setTimeout(() => {
-                    callback(...args)
+                    callback(...args);
                 }, delay);
             },
         [],

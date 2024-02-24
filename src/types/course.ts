@@ -1,4 +1,4 @@
-import type { PinType } from "./map";
+import type { PinType } from './map';
 
 export interface CourseInformationType {
     id: string;
@@ -20,6 +20,6 @@ export interface CourseDetailType {
     courseId: number;
     courseName: string;
     pinList: PinType[];
-};
+}
 
 export type CourseTabType = 'allCourse' | 'myCourse' | 'invitedCourse';
