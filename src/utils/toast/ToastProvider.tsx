@@ -10,9 +10,7 @@ export const ToastContext = createContext<ToastProviderType>(
     {} as ToastProviderType,
 );
 
-interface PropsType extends PropsWithChildren {}
-
-export const ToastProvider = ({ children }: PropsType) => {
+export const ToastProvider = ({ children }: PropsWithChildren) => {
     const [toastMessage, setToastMessage] = useState<string>('');
 
     return (
