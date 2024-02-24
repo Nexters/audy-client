@@ -64,20 +64,17 @@ export const CourseRepository = {
     },
 
     async postInviteCourseAsync({
-        userId,
         courseId,
     }: CourseRequestParamType['postInviteCourse']) {
         return postAsync<
             ApiResponseType<CourseResponseType['postInviteCourse']>,
             CourseRequestParamType['postInviteCourse']
         >('/v1/courses/invite', {
-            userId,
             courseId,
         });
     },
 
     async patchUpdateCourseAsync({
-        userId,
         courseId,
         courseName,
     }: CourseRequestParamType['patchUpdateCourse']) {
@@ -85,21 +82,18 @@ export const CourseRepository = {
             ApiResponseType<void>,
             CourseRequestParamType['patchUpdateCourse']
         >('/v1/courses', {
-            userId,
             courseId,
             courseName,
         });
     },
 
     async postSaveCourseAsync({
-        userId,
         courseName,
     }: CourseRequestParamType['postSaveCourse']) {
         return postAsync<
             ApiResponseType<CourseResponseType['postSaveCourse']>,
             CourseRequestParamType['postSaveCourse']
-        >('/v1/courses/invite', {
-            userId,
+        >('/v1/courses', {
             courseName,
         });
     },
