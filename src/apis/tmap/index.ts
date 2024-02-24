@@ -20,11 +20,7 @@ export const TmapRepository = {
             TmapResponseType['getVehiclePath'],
             TmapRequestParamsType['getVehiclePath']
         >(
-<<<<<<< Updated upstream
-            '/paths',
-=======
             '/routes',
->>>>>>> Stashed changes
             {
                 startX,
                 startY,
@@ -43,10 +39,7 @@ export const TmapRepository = {
                     version: 1,
                     format: 'json',
                 },
-<<<<<<< Updated upstream
-=======
                 withCredentials: false,
->>>>>>> Stashed changes
             },
         );
     },
@@ -65,11 +58,7 @@ export const TmapRepository = {
             TmapResponseType['getPedestrianPath'],
             TmapRequestParamsType['getPedestrianPath']
         >(
-<<<<<<< Updated upstream
-            '/paths/pedestrian',
-=======
             '/routes/pedestrian',
->>>>>>> Stashed changes
             {
                 startX,
                 startY,
@@ -90,10 +79,7 @@ export const TmapRepository = {
                     version: 1,
                     format: 'json',
                 },
-<<<<<<< Updated upstream
-=======
                 withCredentials: false,
->>>>>>> Stashed changes
             },
         );
     },
@@ -117,10 +103,7 @@ export const TmapRepository = {
                 callback: 'result',
                 keyInfo: 'Y',
             },
-<<<<<<< Updated upstream
-=======
             withCredentials: false,
->>>>>>> Stashed changes
         });
 
         return response.addressInfo;
@@ -150,10 +133,7 @@ export const TmapRepository = {
                     count: limit,
                     searchType: 'name',
                 },
-<<<<<<< Updated upstream
-=======
                 withCredentials: false,
->>>>>>> Stashed changes
             },
         );
     },
