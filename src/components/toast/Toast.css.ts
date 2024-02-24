@@ -9,7 +9,7 @@ const fadeOutAnimation = keyframes({
 });
 
 export const layout = style([
-    sprinkles({ typography: 'SemiBold16' }),
+    sprinkles({ typography: 'SemiBold16', zIndex: 'toast' }),
     {
         position: 'absolute',
         border: `1px solid ${COLOR.Gray200}`,
@@ -17,7 +17,6 @@ export const layout = style([
         borderRadius: '18px',
         padding: '20px',
         color: COLOR.Gray800,
-        zIndex: 1000,
 
         animation: `${fadeOutAnimation} 3s ease-in-out`,
         animationDelay: '3s',

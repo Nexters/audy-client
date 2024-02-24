@@ -3,6 +3,7 @@ export const Z_INDEX = {
     globalNavigation: 999,
     mapFloatMenu: 9,
     pathPopover: 10,
+    toast: 100,
 };
 
 export const FONT = {
