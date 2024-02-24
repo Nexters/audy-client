@@ -1,4 +1,5 @@
 export const Z_INDEX = {
+    appPortal: 9999,
     globalNavigation: 999,
     mapFloatMenu: 9,
     pathPopover: 10,

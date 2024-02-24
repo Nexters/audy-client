@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
+import AppPortal from '@/components/app-portal';
 import { CoursePage, coursePageLoader } from '@/pages/course';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
@@ -18,15 +19,17 @@ const queryClient = new QueryClient({
 
 const InitializedRouter = () => (
     <QueryClientProvider client={queryClient}>
-        <TmapProvider
-            width="100%"
-            height="calc(100vh - 64px)"
-            lat={37.5652045}
-            lng={126.98702028}
-        >
-            <ReactQueryDevtools />
-            <Outlet />
-        </TmapProvider>
+        <AppPortal.Provider>
+            <TmapProvider
+                width="100%"
+                height="calc(100vh - 64px)"
+                lat={37.5652045}
+                lng={126.98702028}
+            >
+                <ReactQueryDevtools />
+                <Outlet />
+            </TmapProvider>
+        </AppPortal.Provider>
     </QueryClientProvider>
 );
 
