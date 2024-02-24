@@ -4,6 +4,7 @@ export const Z_INDEX = {
     mapFloatMenu: 9,
     pathPopover: 10,
     toast: 100,
+    snackBar: 100,
 };
 
 export const FONT = {
