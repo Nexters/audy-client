@@ -1,8 +1,5 @@
 import { style } from '@vanilla-extract/css';
 
-import { COLOR } from '@/styles/foundation';
-import { sprinkles } from '@/styles/sprinkle.css';
-
 export const wrapper = style({
     display: 'flex',
     maxHeight: `calc(100vh - 64px)`,

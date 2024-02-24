@@ -1,7 +1,5 @@
 import { useContext } from 'react';
 
-import clsx from 'clsx';
-
 import GlobalNavigationBar from '@/components/global-navigation-bar';
 import SidePanel from '@/components/side-panel';
 import CourseNameInput from '@/features/course/course-name-input';
