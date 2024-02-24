@@ -6,10 +6,7 @@ import CourseNameInput from '@/features/course/course-name-input';
 import FloatMenu from '@/features/map/float-menu';
 import PathView from '@/features/path/path-view';
 import SearchBar from '@/features/search/search-bar';
-import {
-    SearchContextProvider,
-    SearchContextValue,
-} from '@/features/search/search-context';
+import { SearchContextProvider } from '@/features/search/search-context';
 import SearchResultsContainer from '@/features/search/search-results-container';
 import { useTmap } from '@/hooks/useTmap';
 
@@ -17,8 +14,6 @@ import * as S from './CoursePage.css';
 
 function CoursePage() {
     const { mapContainerRef } = useTmap();
-    const { isSearchMode } = useContext(SearchContextValue);
-
     return (
         <>
             <GlobalNavigationBar />
