@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import { Reorder } from 'framer-motion';
+import { useParams } from 'react-router-dom';
 
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
+import { useSocket } from '@/hooks/useSocket';
 import { useTmap } from '@/hooks/useTmap';
 import type { MarkerType, PinType } from '@/types/map';
 
@@ -19,17 +21,31 @@ interface PropsType {
 }
 
 const PathView = ({ pinList }: PropsType) => {
+    const { courseId } = useParams();
     const [markers, setMarkers] = useState<MarkerType[]>([]);
     const { tmapModuleRef } = useTmap();
 
     const { debounce } = useDebounce();
+    const stompClient = useSocket(Number(courseId));
 
     useEventListeners('marker:create', (event) => {
+        if (!courseId) return;
         setMarkers((previous) => [...previous, event.detail]);
+        stompClient.addPin({
+            pinName: event.detail.name,
+            originName: event.detail.originName,
+            courseId: Number(courseId),
+            latitude: Number(event.detail.lat),
+            longitude: Number(event.detail.lng),
+            address: event.detail.address,
+            sequence: 1, // TODO : TmapModule 구현체 로직 변경 필요
+        });
     });
 
     useEventListeners('marker:remove', (event) => {
+        if (!courseId) return;
         setMarkers(markers.filter((marker) => marker.id !== event.detail));
+        stompClient.removePin({ pinId: event.detail });
     });
 
     useEffect(() => {

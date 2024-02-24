@@ -25,7 +25,7 @@ export interface CourseRequestParamType {
 
 export interface CourseResponseType {
     getCourse: CourseDetailType;
-    getAllCourses:{
+    getAllCourses: {
         courseGetResList: CourseType[];
         isLast: boolean;
     };
@@ -42,5 +42,52 @@ export interface CourseResponseType {
     };
     postSaveCourse: {
         courseId: number;
+    };
+}
+
+export interface CourseSocketPubType {
+    addition: {
+        courseId: number;
+        pinName: string;
+        originName: string;
+        latitude: number;
+        longitude: number;
+        address: string;
+        sequence: number;
+    };
+    modificationName: {
+        pinId: string;
+        pinName: string;
+    };
+    modificationOrder: {
+        pinId: string;
+        sequence: number;
+    };
+    removal: {
+        pinId: string;
+    };
+}
+
+export interface CourseSocketSubType {
+    addition: {
+        courseId: number;
+        pinId: string;
+        pinName: string;
+        originName: string;
+        latitude: number;
+        longitude: number;
+        address: string;
+        sequence: number;
+    };
+    modificationName: {
+        pinId: string;
+        pinName: string;
+    };
+    modificationOrder: {
+        pinId: string;
+        sequence: number;
+    };
+    removal: {
+        pinId: string;
     };
 }
