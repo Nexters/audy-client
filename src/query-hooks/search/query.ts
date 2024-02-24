@@ -36,7 +36,11 @@ export const useGetSearchPois = ({
     >({
         ...options,
         queryFn: ({ pageParam }) =>
-            TmapRepository.getPoiSearchAsync({ keyword, page: pageParam, limit }),
+            TmapRepository.getPoiSearchAsync({
+                keyword,
+                page: pageParam,
+                limit,
+            }),
         queryKey: SEARCH_QUERY_KEY.pois(keyword),
         select: ({ pages }) =>
             pages.reduce<SearchResultType[]>(
@@ -47,8 +51,9 @@ export const useGetSearchPois = ({
                 [],
             ),
         initialPageParam: 1,
-        getNextPageParam: ({ totalCount, page, count }) =>
-            totalCount > page * count  ? undefined : page + 1,
+        getNextPageParam: ({ searchPoiInfo: { totalCount, page, count } }) => {
+            return totalCount > page * count ? Number(page) + 1 : undefined;
+        },
         staleTime: 20 * 1000,
         enabled: !!keyword,
     });

@@ -1,32 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
-import { TmapRepository } from '@/apis/tmap';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import XCircle from '@/assets/icons/xCircle.svg?react';
-import { SearchResultType } from '@/types/search';
-
+import { SearchContextAction, SearchContextValue } from '@/features/search/search-context';
 import * as S from './SearchBar.css';
 
-interface PropsType {
-    isSearchMode: boolean;
-    setIsSearchMode: React.Dispatch<React.SetStateAction<boolean>>;
-    setSearchResults: React.Dispatch<React.SetStateAction<SearchResultType[]>>;
-}
-
-const SearchBar = ({
-    isSearchMode,
-    setIsSearchMode,
-    setSearchResults,
-}: PropsType) => {
+const SearchBar = () => {
     const [searchInputValue, setSearchInputValue] = useState('');
 
-    const handleSearch = async () => {
-        const response = await TmapRepository.getPoiSearchAsync({
-            keyword: searchInputValue,
-        });
-
-        setSearchResults(response);
-    };
+    const { setIsSearchMode, setSearchKeyword } = useContext(SearchContextAction);
+    const { isSearchMode } = useContext(SearchContextValue);
 
     const handleSearchInput = ({
         target,
@@ -37,7 +20,9 @@ const SearchBar = ({
     const handleSearchInputKeyDown = (
         event: React.KeyboardEvent<HTMLInputElement>,
     ) => {
-        if (event.key === 'Enter') handleSearch();
+        if (event.key === 'Enter') {
+            setSearchKeyword(searchInputValue);
+        };
     };
 
     const handleInitializeInput = () => setSearchInputValue('');
@@ -45,7 +30,6 @@ const SearchBar = ({
     const handleCancelSearch = () => {
         setSearchInputValue('');
         setIsSearchMode(false);
-        setSearchResults([]);
     };
 
     const handleSearchInputFocus = () => {

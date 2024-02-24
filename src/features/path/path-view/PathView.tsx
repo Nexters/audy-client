@@ -1,28 +1,33 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { Reorder } from 'framer-motion';
+import { useParams } from 'react-router-dom';
 
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
 import { useTmap } from '@/hooks/useTmap';
-import type { MarkerType, PinType } from '@/types/map';
+import { useGetCourseDetail } from '@/query-hooks/course/query';
+import type { MarkerType } from '@/types/map';
 
 import PathItem from '../path-item';
 
 import * as S from './PathView.css';
 import PathViewContextProvider from './PathViewContextProvider';
+import { SearchContextValue } from '@/features/search/search-context';
 
 const REORDER_DELAY = 330;
 
-interface PropsType {
-    pinList: PinType[];
-}
-
-const PathView = ({ pinList }: PropsType) => {
-    const [markers, setMarkers] = useState<MarkerType[]>([]);
+const PathView = () => {
+    const { courseId } = useParams();
+    const { debounce } = useDebounce();
     const { tmapModuleRef } = useTmap();
 
-    const { debounce } = useDebounce();
+    const {
+        data: { pinList = [] },
+    } = useGetCourseDetail({ courseId: Number(courseId) });
+
+    const [markers, setMarkers] = useState<MarkerType[]>([]);
+    const { isSearchMode } = useContext(SearchContextValue);
 
     useEventListeners('marker:create', (event) => {
         setMarkers((previous) => [...previous, event.detail]);
@@ -31,23 +36,6 @@ const PathView = ({ pinList }: PropsType) => {
     useEventListeners('marker:remove', (event) => {
         setMarkers(markers.filter((marker) => marker.id !== event.detail));
     });
-
-    useEffect(() => {
-        const createdMarkerList: MarkerType[] = pinList
-            .map(({ pinName, pinId, address, latitude, longitude }) => {
-                return tmapModuleRef.current?.createMarker({
-                    name: pinName,
-                    originName: pinName,
-                    address,
-                    id: pinId,
-                    lat: String(latitude),
-                    lng: String(longitude),
-                });
-            })
-            .filter((marker): marker is MarkerType => !!marker);
-
-        setMarkers(createdMarkerList);
-    }, [pinList, tmapModuleRef]);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModuleRef.current) return;
@@ -58,6 +46,8 @@ const PathView = ({ pinList }: PropsType) => {
         setMarkers(newOrder);
         debouncedModifyMarker(newOrder);
     };
+
+    if (isSearchMode) return null;
 
     return (
         <PathViewContextProvider>

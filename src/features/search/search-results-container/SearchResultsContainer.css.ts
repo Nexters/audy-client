@@ -10,3 +10,8 @@ export const layout = style({
     padding: '12px 8px',
     backgroundColor: COLOR.MonoWhite,
 });
+
+export const observer = style({
+    width: '100%',
+    height: '4px',
+})
