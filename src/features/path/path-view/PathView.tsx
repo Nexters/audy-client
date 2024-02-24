@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Reorder } from 'framer-motion';
 
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
 import { useTmap } from '@/hooks/useTmap';
-import type { MarkerType } from '@/types/map';
+import type { MarkerType, PinType } from '@/types/map';
 
 import PathItem from '../path-item';
 
@@ -14,7 +14,11 @@ import PathViewContextProvider from './PathViewContextProvider';
 
 const REORDER_DELAY = 330;
 
-const PathView = () => {
+interface PropsType {
+    pinList: PinType[];
+}
+
+const PathView = ({ pinList }: PropsType) => {
     const [markers, setMarkers] = useState<MarkerType[]>([]);
     const { tmapModuleRef } = useTmap();
 
@@ -27,6 +31,23 @@ const PathView = () => {
     useEventListeners('marker:remove', (event) => {
         setMarkers(markers.filter((marker) => marker.id !== event.detail));
     });
+
+    useEffect(() => {
+        const createdMarkerList: MarkerType[] = pinList
+            .map(({ pinName, pinId, address, latitude, longitude }) => {
+                return tmapModuleRef.current?.createMarker({
+                    name: pinName,
+                    originName: pinName,
+                    address,
+                    id: pinId,
+                    lat: String(latitude),
+                    lng: String(longitude),
+                });
+            })
+            .filter((marker): marker is MarkerType => !!marker);
+
+        setMarkers(createdMarkerList);
+    }, [pinList, tmapModuleRef]);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModuleRef.current) return;

@@ -1,11 +1,13 @@
-import { QueryClient } from '@tanstack/react-query';
-import { createBrowserRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { Outlet, createBrowserRouter } from 'react-router-dom';
 
-import CoursePage from '@/pages/course';
+import { CoursePage, coursePageLoader } from '@/pages/course';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
+import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
 
-export const queryClient = new QueryClient({
+const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
             refetchOnWindowFocus: false,
@@ -14,19 +16,38 @@ export const queryClient = new QueryClient({
     },
 });
 
+const InitializedRouter = () => (
+    <QueryClientProvider client={queryClient}>
+        <TmapProvider
+            width="100%"
+            height="calc(100vh - 64px)"
+            lat={37.5652045}
+            lng={126.98702028}
+        >
+            <ReactQueryDevtools />
+            <Outlet />
+        </TmapProvider>
+    </QueryClientProvider>
+);
+
 export const router = createBrowserRouter([
     {
-        path: '/',
-        errorElement: <div>에러</div>,
-        element: <MainPage />,
-    },
-    {
-        path: 'login',
-        element: <LoginPage />,
-    },
-    {
-        // FIXME: 임시 라우팅
-        path: '/course',
-        element: <CoursePage />,
+        element: <InitializedRouter />,
+        children: [
+            {
+                path: '/',
+                errorElement: <div>에러</div>,
+                element: <MainPage />,
+            },
+            {
+                path: 'login',
+                element: <LoginPage />,
+            },
+            {
+                path: '/course/:courseId',
+                loader: coursePageLoader(queryClient),
+                element: <CoursePage />,
+            },
+        ],
     },
 ]);

@@ -1,3 +1,4 @@
 import CoursePage from './CoursePage';
+import { coursePageLoader } from './CoursePage.loader';
 
-export default CoursePage;
+export { CoursePage, coursePageLoader };

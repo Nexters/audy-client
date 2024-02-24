@@ -145,6 +145,8 @@ export class TMapModule {
         );
 
         this.drawPathBetweenMarkers();
+
+        return newMarker;
     }
 
     // 마커 삭제

@@ -31,7 +31,6 @@ export const TmapProvider = ({
 
     useEffect(() => {
         if (!mapContainerRef.current) return;
-
         mapContainerRef.current.id = mapId;
 
         tmapModuleRef.current = new TMapModule({

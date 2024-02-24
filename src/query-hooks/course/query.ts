@@ -140,13 +140,26 @@ export const useGetMemberCourses = ({
 export const useGetCourseDetail = ({
     courseId,
     ...options
-}: {
-    courseId: number;
-    options?: UseSuspenseQueryOptions<CourseDetailType, AxiosError>;
+}: Omit<
+    UseSuspenseQueryOptions<
+        CourseResponseType['getCourse'],
+        AxiosError,
+        CourseDetailType
+    >,
+    'queryKey'
+> & {
+    courseId?: number;
 }) => {
-    return useSuspenseQuery<CourseDetailType, AxiosError>({
+    if (!courseId)
+        throw new Error('courseId 는 number 타입의 값이어야 합니다.');
+
+    return useSuspenseQuery<
+        CourseResponseType['getCourse'],
+        AxiosError,
+        CourseDetailType
+    >({
+        ...options,
         queryFn: () => CourseRepository.getCourseAsync(courseId),
         queryKey: COURSE_QUERY_KEY.detail(courseId),
-        ...options,
     });
 };
