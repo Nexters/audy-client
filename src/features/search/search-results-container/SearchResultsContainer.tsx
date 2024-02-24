@@ -28,21 +28,29 @@ const SearchResultsContainer = () => {
         onIntersect: handleIntersectBottom,
     });
 
+    const isEmptySearchResults = !searchKeyword || !searchResults.length;
+
     if (!isSearchMode) return null;
 
     return (
         <div className={S.layout} ref={rootRef}>
-            {searchResults.map(
-                ({ pkey, name, newAddressList, noorLat, noorLon }) => (
-                    <SearchResultTab
-                        key={pkey}
-                        id={pkey}
-                        name={name}
-                        address={newAddressList.newAddress[0].fullAddressRoad}
-                        lat={noorLat}
-                        lng={noorLon}
-                    />
-                ),
+            {isEmptySearchResults ? (
+                <p className={S.emptyNotice}>검색결과가 없습니다.</p>
+            ) : (
+                searchResults.map(
+                    ({ pkey, name, newAddressList, noorLat, noorLon }) => (
+                        <SearchResultTab
+                            key={pkey}
+                            id={pkey}
+                            name={name}
+                            address={
+                                newAddressList.newAddress[0].fullAddressRoad
+                            }
+                            lat={noorLat}
+                            lng={noorLon}
+                        />
+                    ),
+                )
             )}
             <div className={S.observer} ref={targetRef} />
         </div>

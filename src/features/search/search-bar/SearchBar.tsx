@@ -2,13 +2,18 @@ import { useContext, useState } from 'react';
 
 import SearchIcon from '@/assets/icons/search.svg?react';
 import XCircle from '@/assets/icons/xCircle.svg?react';
-import { SearchContextAction, SearchContextValue } from '@/features/search/search-context';
+import {
+    SearchContextAction,
+    SearchContextValue,
+} from '@/features/search/search-context';
+
 import * as S from './SearchBar.css';
 
 const SearchBar = () => {
     const [searchInputValue, setSearchInputValue] = useState('');
 
-    const { setIsSearchMode, setSearchKeyword } = useContext(SearchContextAction);
+    const { setIsSearchMode, setSearchKeyword } =
+        useContext(SearchContextAction);
     const { isSearchMode } = useContext(SearchContextValue);
 
     const handleSearchInput = ({
@@ -22,13 +27,17 @@ const SearchBar = () => {
     ) => {
         if (event.key === 'Enter') {
             setSearchKeyword(searchInputValue);
-        };
+        }
     };
 
-    const handleInitializeInput = () => setSearchInputValue('');
+    const handleInitializeInput = () => {
+        setSearchInputValue('');
+        setSearchKeyword('');
+    };
 
     const handleCancelSearch = () => {
         setSearchInputValue('');
+        setSearchKeyword('');
         setIsSearchMode(false);
     };
 
