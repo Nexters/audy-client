@@ -1,5 +1,7 @@
 import { useToast } from '@/hooks/useToast';
 
+import AppPortal from '../app-portal';
+
 import * as S from './Toast.css';
 
 const Toast = () => {
@@ -8,9 +10,11 @@ const Toast = () => {
     if (!toastMessage) return null;
 
     return (
-        <div className={S.layout} onAnimationEnd={() => setToast('')}>
-            {toastMessage}
-        </div>
+        <AppPortal.Wrapper>
+            <div className={S.layout} onAnimationEnd={() => setToast('')}>
+                {toastMessage}
+            </div>
+        </AppPortal.Wrapper>
     );
 };
 
