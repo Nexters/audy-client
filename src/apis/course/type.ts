@@ -55,9 +55,13 @@ export interface CourseSocketPubType {
         address: string;
         sequence: number;
     };
-    modification: {
+    modificationName: {
         pinId: string;
         pinName: string;
+    };
+    modificationOrder: {
+        pinId: string;
+        sequence: number;
     };
     removal: {
         pinId: string;
@@ -75,9 +79,13 @@ export interface CourseSocketSubType {
         address: string;
         sequence: number;
     };
-    modification: {
+    modificationName: {
         pinId: string;
         pinName: string;
+    };
+    modificationOrder: {
+        pinId: string;
+        sequence: number;
     };
     removal: {
         pinId: string;

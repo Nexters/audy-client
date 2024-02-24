@@ -15,12 +15,25 @@ export const useSocket = (courseId: number) => {
     const modifyPinName = ({
         pinId,
         pinName,
-    }: CourseSocketPubType['modification']) => {
+    }: CourseSocketPubType['modificationName']) => {
         stompClient.current?.publish({
-            destination: `/pub/${courseId}/pin/modification`,
+            destination: `/pub/${courseId}/pin/modification/name`,
             body: JSON.stringify({
                 pinId,
                 pinName,
+            }),
+        });
+    };
+
+    const modifyPinOrder = ({
+        pinId,
+        sequence,
+    }: CourseSocketPubType['modificationOrder']) => {
+        stompClient.current?.publish({
+            destination: `/pub/${courseId}/pin/modification/order`,
+            body: JSON.stringify({
+                pinId,
+                sequence,
             }),
         });
     };
@@ -75,16 +88,29 @@ export const useSocket = (courseId: number) => {
                     });
                 });
                 stomp.subscribe(
-                    `/sub/${courseId}/pin/modification`,
+                    `/sub/${courseId}/pin/modification/name`,
                     (message) => {
                         if (!tmapModuleRef.current) return;
                         const {
                             pinId,
                             pinName,
-                        }: CourseSocketSubType['modification'] = JSON.parse(
+                        }: CourseSocketSubType['modificationName'] = JSON.parse(
                             message.body,
                         );
-                        console.log(pinId, pinName);
+                        console.log(pinId, pinName);  // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
+                    },
+                );
+                stomp.subscribe(
+                    `/sub/${courseId}/pin/modification/order`,
+                    (message) => {
+                        if (!tmapModuleRef.current) return;
+                        const {
+                            pinId,
+                            sequence,
+                        }: CourseSocketSubType['modificationOrder'] = JSON.parse(
+                            message.body,
+                        );
+                        console.log(pinId, sequence); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
                     },
                 );
                 stomp.subscribe(`/sub/${courseId}/pin/removal`, (message) => {
@@ -114,6 +140,7 @@ export const useSocket = (courseId: number) => {
 
     return {
         modifyPinName,
+        modifyPinOrder,
         addPin,
         removePin,
     };
