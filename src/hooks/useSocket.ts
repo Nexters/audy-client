@@ -58,7 +58,7 @@ export const useSocket = (courseId: number) => {
 
     useEffect(() => {
         const stomp = new StompClient({
-            brokerURL: 'wss://api.audy-gakka.com/course',
+            brokerURL: `wss://api.audy-gakka.com/course/${courseId}`,
             onConnect: () => {
                 console.log('Connected to the broker');
                 stomp.subscribe(`/sub/${courseId}/pin/addition`, (message) => {
