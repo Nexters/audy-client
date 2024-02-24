@@ -96,7 +96,9 @@ export class TMapModule {
         id,
         lat,
         lng,
-        iconHTML = renderToString(<Marker order={this.#markers.length + 1} />),
+        iconHTML = renderToString(
+            <Marker order={this.#markers.length + 1} isHidden={false} />,
+        ),
     }: {
         name: string;
         originName: string;
@@ -120,7 +122,7 @@ export class TMapModule {
             id,
             lat,
             lng,
-            isHided: false,
+            isHidden: false,
         };
 
         const handleMarkerClick = () => {
@@ -165,18 +167,21 @@ export class TMapModule {
     modifyMarker(modifiedMarkers: MarkerType[]) {
         // 기존의 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
         this.#markers.forEach(({ marker }) => marker.setMap(null));
+
         this.#markers = modifiedMarkers.map(
-            ({ marker, lat, lng, ...rest }, index) => {
+            ({ marker, lat, lng, isHidden, ...rest }, index) => {
                 marker.setMap(null);
                 const updatedIconHTML = renderToString(
-                    <Marker order={index + 1} />,
+                    <Marker order={index + 1} isHidden={isHidden} />,
                 );
+
                 const updatedMarker = new Tmapv3.Marker({
                     position: new Tmapv3.LatLng(lat, lng),
                     iconHTML: updatedIconHTML,
                     map: this.#mapInstance,
                 });
-                return { lat, lng, marker: updatedMarker, ...rest };
+
+                return { lat, lng, marker: updatedMarker, isHidden, ...rest };
             },
         );
 
@@ -193,10 +198,14 @@ export class TMapModule {
     async drawPathBetweenMarkers() {
         this.#removePath();
 
-        if (this.#markers.length < 2) return;
+        const notHiddenMarkers = this.#markers.filter(
+            ({ isHidden }) => !isHidden,
+        );
+
+        if (notHiddenMarkers.length < 2) return;
 
         const path: (typeof window.Tmapv3.LatLng)[] = [];
-        const endIndex = this.#markers.length - 1;
+        const endIndex = notHiddenMarkers.length - 1;
         const MAX_POINTS = 6;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
@@ -206,7 +215,7 @@ export class TMapModule {
             const currentEndIndex =
                 endIndex <= index + MAX_POINTS ? endIndex : index + MAX_POINTS;
 
-            const [startMarker, ...passMarkers] = this.#markers
+            const [startMarker, ...passMarkers] = notHiddenMarkers
                 .slice(currentStartIndex, currentEndIndex + 1)
                 .map(({ marker }) => marker);
 
@@ -383,15 +392,34 @@ export class TMapModule {
 
         if (!targetMarker) return;
 
-        const { isHided } = targetMarker;
-        targetMarker.isHided = !isHided;
+        const { isHidden } = targetMarker;
+        targetMarker.isHidden = !isHidden;
 
-        return !isHided;
+        const updatedIconHTML = renderToString(
+            <Marker
+                order={
+                    this.#markers.findIndex((marker) => marker.id === id) + 1
+                }
+                isHidden={!isHidden}
+            />,
+        );
+
+        targetMarker.marker.setMap(null);
+
+        targetMarker.marker = new Tmapv3.Marker({
+            position: new Tmapv3.LatLng(targetMarker.lat, targetMarker.lng),
+            iconHTML: updatedIconHTML,
+            map: this.#mapInstance,
+        });
+
+        this.drawPathBetweenMarkers();
+
+        return !isHidden;
     }
 
     // 핀의 id를 받아서 핀의 다른 속성 반환
     getMarkerInfoFromId(id: string) {
         const targetMarker = this.#markers.find((marker) => marker.id === id);
-        return { ...targetMarker };
+        return targetMarker;
     }
 }

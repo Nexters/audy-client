@@ -9,7 +9,7 @@ export interface MarkerType {
     id: string;
     lat: string;
     lng: string;
-    isHided: boolean;
+    isHidden: boolean;
 }
 
 export interface PinType {

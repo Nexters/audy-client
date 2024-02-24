@@ -16,7 +16,7 @@ const PathPopover = ({ markerId }: PropsType) => {
     const { tmapModuleRef } = useTmap();
 
     const [isPinHided, setIsPinHided] = useState(
-        tmapModuleRef.current?.getMarkerInfoFromId(markerId).isHided,
+        tmapModuleRef.current?.getMarkerInfoFromId(markerId).isHidden,
     );
 
     const handlePinHide = () => {
