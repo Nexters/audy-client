@@ -45,42 +45,47 @@ const SearchBar = () => {
         if (!isSearchMode) setIsSearchMode(true);
     };
 
+    const handleSearchInputBlur = () => {
+        if (!searchInputValue) setIsSearchMode(false);
+    }
+
     return (
         <div className={S.searchBox}>
             <div className={S.searchInnerBox}>
                 <SearchIcon width={20} height={20} />
 
                 <input
-                    className={S.searchInput}
-                    placeholder="장소를 입력해주세요."
+                    className={S.searchInput({ isSearchMode })}
+                    placeholder="찾고 싶은 장소를 검색해보세요."
                     onKeyDown={handleSearchInputKeyDown}
                     value={searchInputValue}
                     onChange={handleSearchInput}
                     onFocus={handleSearchInputFocus}
+                    onBlur={handleSearchInputBlur}
                 />
 
-                <div className={S.cancelContainer}>
-                    {searchInputValue && (
+                {searchInputValue && (
+                    <div className={S.cancelContainer}>
                         <button
                             className={S.initializeButton}
                             onClick={handleInitializeInput}
                         >
                             <XCircle fill="rgba(0, 0, 0, 0.2)" />
                         </button>
-                    )}
 
-                    {isSearchMode && (
-                        <>
-                            <div className={S.divider}></div>
-                            <button
-                                className={S.cancelButton}
-                                onClick={handleCancelSearch}
-                            >
-                                취소
-                            </button>
-                        </>
-                    )}
-                </div>
+                        {isSearchMode && (
+                            <>
+                                <div className={S.divider}></div>
+                                <button
+                                    className={S.cancelButton}
+                                    onClick={handleCancelSearch}
+                                >
+                                    취소
+                                </button>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );
