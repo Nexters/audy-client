@@ -1,9 +1,12 @@
 import { renderToString } from 'react-dom/server';
 
 import { TmapRepository } from '@/apis/tmap';
+import Cluster from '@/features/map/cluster/Cluster';
 import InfoWindow from '@/features/map/info-window/InfoWindow';
 import Marker from '@/features/map/marker/Marker';
 import { MarkerType, PathModeType } from '@/types/map';
+
+import { ClusterModule } from './ClusterModule';
 
 export interface TmapConstructorType {
     /** 지도를 렌더링할 HTMLDivElement 에 적용할 id */
@@ -34,6 +37,8 @@ export class TMapModule {
 
     #maxMarkerCount = 15;
     #zoomLevel = 17;
+
+    #clusters: ClusterModule[] = [];
 
     constructor({
         mapId = 'tmap',
@@ -86,6 +91,18 @@ export class TMapModule {
         };
 
         this.#mapInstance.on('Click', handleMapClick);
+
+        let throttleTimeout: NodeJS.Timeout | null = null;
+        const THROTTLE_TIME = 800;
+
+        this.#mapInstance.on('Zoom', () => {
+            if (!throttleTimeout) {
+                throttleTimeout = setTimeout(() => {
+                    this.clusterMarkers();
+                    throttleTimeout = null;
+                }, THROTTLE_TIME);
+            }
+        });
     }
 
     // 마커 생성
@@ -147,6 +164,7 @@ export class TMapModule {
         );
 
         this.drawPathBetweenMarkers();
+        this.clusterMarkers();
 
         return newMarker;
     }
@@ -421,5 +439,82 @@ export class TMapModule {
     getMarkerInfoFromId(id: string) {
         const targetMarker = this.#markers.find((marker) => marker.id === id);
         return targetMarker;
+    }
+
+    // 현재 지도 상의 모든 마커의 클러스터링을 수행하고, 클러스터링 결과를 업데이트
+    clusterMarkers() {
+        this.#clusters.forEach((cluster) => {
+            cluster.markers.forEach(({ marker }) => {
+                marker.setMap(null);
+            });
+            if (cluster.clusterMarker) cluster.clusterMarker.setMap(null);
+        });
+
+        this.#clusters = [];
+
+        this.#markers.forEach((marker) => {
+            const clusterIndex = this.findCluster(marker);
+
+            if (clusterIndex === -1) {
+                const newCluster = new ClusterModule();
+                newCluster.addMarker(marker);
+                this.#clusters.push(newCluster);
+            } else {
+                this.#clusters[clusterIndex].addMarker(marker);
+            }
+        });
+
+        this.updateClusters();
+    }
+
+    // 주어진 마커가 속해야 하는 클러스터의 인덱스 반환
+    findCluster(marker: MarkerType): number {
+        const MARKER_SIZE = 50;
+
+        for (let i = 0; i < this.#clusters.length; i++) {
+            const cluster = this.#clusters[i];
+            const center = cluster.getCenter();
+
+            const centerPoint = this.#mapInstance.realToScreen(
+                new Tmapv3.LatLng(center.lat, center.lng),
+            );
+            const markerPoint = this.#mapInstance.realToScreen(
+                new Tmapv3.LatLng(
+                    parseFloat(marker.lat),
+                    parseFloat(marker.lng),
+                ),
+            );
+
+            if (
+                Math.abs(centerPoint.x - markerPoint.x) <= MARKER_SIZE &&
+                Math.abs(centerPoint.y - markerPoint.y) <= MARKER_SIZE
+            ) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    // 현재 클러스터 상태를 기반으로 클러스터 마커 업데이트
+    updateClusters() {
+        this.#clusters.forEach((cluster) => {
+            const center = cluster.getCenter();
+            const size = cluster.getSize();
+            const iconHTML = renderToString(<Cluster count={size} />);
+
+            if (cluster.markers.length < 2) {
+                cluster.markers.forEach(({ marker }) => {
+                    marker.setMap(this.#mapInstance);
+                });
+
+                return;
+            }
+
+            cluster.clusterMarker = new Tmapv3.Marker({
+                position: new Tmapv3.LatLng(center.lat, center.lng),
+                iconHTML,
+                map: this.#mapInstance,
+            });
+        });
     }
 }
