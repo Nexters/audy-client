@@ -10,12 +10,13 @@ export const FONT = {
 };
 
 const FONT_WEIGHT = {
-    regular: 300,
-    medium: 400,
-    semiBold: 500,
-    bold: 600,
-    extraBold: 700,
-    black: 800,
+    light: 300,
+    regular: 400,
+    medium: 500,
+    semiBold: 600,
+    bold: 700,
+    extraBold: 800,
+    black: 900,
 };
 
 const LINE_HEIGHT = '140%';
