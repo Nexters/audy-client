@@ -1,9 +1,9 @@
-import { type PropsWithChildren } from 'react';
+import { type ComponentProps } from 'react';
 
 import * as S from './PopOver.css';
 
-const PopOverItem = ({ children }: PropsWithChildren) => {
-    return <div className={S.item}>{children}</div>;
+const PopOverItem = ({ children }: ComponentProps<"button">) => {
+    return <button className={S.item}>{children}</button>;
 };
 
 export default PopOverItem;

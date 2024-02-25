@@ -6,7 +6,7 @@ import { usePopOverContext } from './PopOver';
 import * as S from './PopOver.css';
 
 const PopOverContent = ({ children }: PropsWithChildren) => {
-    const { closePopOver } = usePopOverContext();
+    const { isPopOverOpen, closePopOver } = usePopOverContext();
 
     const contentRef = useRef<HTMLDivElement>(null);
 
@@ -24,9 +24,13 @@ const PopOverContent = ({ children }: PropsWithChildren) => {
     });
 
     return (
-        <div className={S.content} ref={contentRef}>
-            {children}
-        </div>
+        <>
+            {isPopOverOpen && (
+                <div className={S.content} ref={contentRef}>
+                    {children}
+                </div>
+            )}
+        </>
     );
 };
 

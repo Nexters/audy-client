@@ -16,12 +16,12 @@ export const content = style({
     flexDirection: 'column',
     gap: '4px',
 
-    width: 'fit-content',
+    width: 'max-content',
     padding: '8px 0',
 
     position: 'absolute',
     zIndex: Z_INDEX.popOver,
-    top: '4px',
+    bottom: '4px',
     right: '0',
     
     backgroundColor: COLOR.MonoWhite,
