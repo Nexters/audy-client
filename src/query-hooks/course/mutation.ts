@@ -10,11 +10,11 @@ export const useDeleteCourse = ({
     userId,
     courseId,
     ...options
-}: CourseRequestParamType['deleteCourse'] & UseMutationOptions<unknown, AxiosError>) => {
+}: CourseRequestParamType['deleteCourse'] & UseMutationOptions<void, AxiosError>) => {
     const queryClient = useQueryClient();
     return useMutation({
         ...options,
-        mutationFn: () => CourseRepository.deleteCourse({ userId, courseId }),
+        mutationFn: () => CourseRepository.deleteCourseAsync({ userId, courseId }),
         onSuccess: () => {
             queryClient.removeQueries({
                 queryKey: COURSE_QUERY_KEY.detail(courseId),
@@ -24,17 +24,15 @@ export const useDeleteCourse = ({
     });
 };
 
-// 코스 정보를 수정하는 Hook usePatchCourse
-export const usePatchCourse = ({
-    userId,
+// 코스 이름을 수정하는 Hook usePatchCourseName
+export const usePatchCourseName = ({
     courseId,
-    courseName,
     ...options
-}: CourseRequestParamType['patchUpdateCourse'] & UseMutationOptions<unknown, AxiosError>) => {
+}: { courseId: number } & UseMutationOptions<void, AxiosError, string>) => {
     const queryClient = useQueryClient();
     return useMutation({
         ...options,
-        mutationFn: () => CourseRepository.patchUpdateCourse({ courseId, userId, courseName }),
+        mutationFn: (courseName: string) => CourseRepository.patchUpdateCourseAsync({ courseId, courseName }),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: COURSE_QUERY_KEY.detail(courseId),

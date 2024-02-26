@@ -114,27 +114,20 @@ export const TmapRepository = {
         keyword,
         page = 1,
         limit = 10,
-        radius = 0,
     }: TmapRequestParamsType['getPoiSearch']) {
-        return await getAsync<TmapResponseType['getPoiSearch']>(
-            '/pois',
-            {
-                baseURL,
-                headers: { appKey },
-                params: {
-                    version: 1,
-                    format: 'json',
-                    callback: 'result',
-                    searchKeyword: keyword,
-                    resCoordType: 'WGS84GEO',
-                    reqCoordType: 'WGS84GEO',
-                    radius,
-                    page,
-                    count: limit,
-                    searchType: 'name',
-                },
-                withCredentials: false,
+        return await getAsync<TmapResponseType['getPoiSearch']>('/pois', {
+            baseURL,
+            headers: { appKey },
+            params: {
+                version: 1,
+                appKey,
+                searchKeyword: keyword,
+                resCoordType: 'WGS84GEO',
+                reqCoordType: 'WGS84GEO',
+                page,
+                count: limit,
             },
-        );
+            withCredentials: false,
+        });
     },
 };

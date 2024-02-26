@@ -1,32 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { Reorder } from 'framer-motion';
 import { useParams } from 'react-router-dom';
 
+import { SearchContextValue } from '@/features/search/search-context';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
-import { useSocket } from '@/hooks/useSocket';
 import { useTmap } from '@/hooks/useTmap';
-import type { MarkerType, PinType } from '@/types/map';
+import { useGetCourseDetail } from '@/query-hooks/course/query';
+import type { MarkerType } from '@/types/map';
 
 import PathItem from '../path-item';
 
 import * as S from './PathView.css';
 import PathViewContextProvider from './PathViewContextProvider';
+import { useSocket } from '@/hooks/useSocket';
 
 const REORDER_DELAY = 330;
 
-interface PropsType {
-    pinList: PinType[];
-}
-
-const PathView = ({ pinList }: PropsType) => {
+const PathView = () => {
     const { courseId } = useParams();
-    const [markers, setMarkers] = useState<MarkerType[]>([]);
-    const { tmapModuleRef } = useTmap();
-
     const { debounce } = useDebounce();
+    const { tmapModuleRef } = useTmap();
     const stompClient = useSocket(Number(courseId));
+
+    const {
+        data: { pinList = [] },
+    } = useGetCourseDetail({ courseId: Number(courseId) });
+
+    const [markers, setMarkers] = useState<MarkerType[]>([]);
+    const { isSearchMode } = useContext(SearchContextValue);
 
     useEventListeners('marker:create', (event) => {
         if (!courseId) return;
@@ -49,21 +52,22 @@ const PathView = ({ pinList }: PropsType) => {
     });
 
     useEffect(() => {
-        const createdMarkerList: MarkerType[] = pinList
-            .map(({ pinName, pinId, address, latitude, longitude }) => {
-                return tmapModuleRef.current?.createMarker({
+        if (!tmapModuleRef.current) return;
+        const initMarkerList: MarkerType[] = pinList
+            .map(({ pinName, pinId, address, latitude, longitude }) =>
+                tmapModuleRef.current?.createMarker({
                     name: pinName,
                     originName: pinName,
                     address,
                     id: pinId,
                     lat: String(latitude),
                     lng: String(longitude),
-                });
-            })
+                }),
+            )
             .filter((marker): marker is MarkerType => !!marker);
-
-        setMarkers(createdMarkerList);
-    }, [pinList, tmapModuleRef]);
+        setMarkers(initMarkerList);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModuleRef.current) return;
@@ -74,6 +78,8 @@ const PathView = ({ pinList }: PropsType) => {
         setMarkers(newOrder);
         debouncedModifyMarker(newOrder);
     };
+
+    if (isSearchMode) return null;
 
     return (
         <PathViewContextProvider>

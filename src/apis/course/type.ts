@@ -5,16 +5,13 @@ export interface CourseRequestParamType {
     getOwnedCourses: PaginationType;
     getMemberCourses: PaginationType;
     postInviteCourse: {
-        userId: number;
         courseId: number;
     };
     patchUpdateCourse: {
-        userId: number;
         courseId: number;
         courseName: string;
     };
     postSaveCourse: {
-        userId: number;
         courseName: number;
     };
     deleteCourse: {

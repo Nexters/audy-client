@@ -1,32 +1,20 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
-import { TmapRepository } from '@/apis/tmap';
 import SearchIcon from '@/assets/icons/search.svg?react';
 import XCircle from '@/assets/icons/xCircle.svg?react';
-import { SearchResultType } from '@/types/search';
+import {
+    SearchContextAction,
+    SearchContextValue,
+} from '@/features/search/search-context';
 
 import * as S from './SearchBar.css';
 
-interface PropsType {
-    isSearchMode: boolean;
-    setIsSearchMode: React.Dispatch<React.SetStateAction<boolean>>;
-    setSearchResults: React.Dispatch<React.SetStateAction<SearchResultType[]>>;
-}
-
-const SearchBar = ({
-    isSearchMode,
-    setIsSearchMode,
-    setSearchResults,
-}: PropsType) => {
+const SearchBar = () => {
     const [searchInputValue, setSearchInputValue] = useState('');
 
-    const handleSearch = async () => {
-        const response = await TmapRepository.getPoiSearchAsync({
-            keyword: searchInputValue,
-        });
-
-        setSearchResults(response);
-    };
+    const { setIsSearchMode, setSearchKeyword } =
+        useContext(SearchContextAction);
+    const { isSearchMode } = useContext(SearchContextValue);
 
     const handleSearchInput = ({
         target,
@@ -37,20 +25,29 @@ const SearchBar = ({
     const handleSearchInputKeyDown = (
         event: React.KeyboardEvent<HTMLInputElement>,
     ) => {
-        if (event.key === 'Enter') handleSearch();
+        if (event.key === 'Enter') {
+            setSearchKeyword(searchInputValue);
+        }
     };
 
-    const handleInitializeInput = () => setSearchInputValue('');
+    const handleInitializeInput = () => {
+        setSearchInputValue('');
+        setSearchKeyword('');
+    };
 
     const handleCancelSearch = () => {
         setSearchInputValue('');
+        setSearchKeyword('');
         setIsSearchMode(false);
-        setSearchResults([]);
     };
 
     const handleSearchInputFocus = () => {
         if (!isSearchMode) setIsSearchMode(true);
     };
+
+    const handleSearchInputBlur = () => {
+        if (!searchInputValue) setIsSearchMode(false);
+    }
 
     return (
         <div className={S.searchBox}>
@@ -58,36 +55,37 @@ const SearchBar = ({
                 <SearchIcon width={20} height={20} />
 
                 <input
-                    className={S.searchInput}
-                    placeholder="장소를 입력해주세요."
+                    className={S.searchInput({ isSearchMode })}
+                    placeholder="찾고 싶은 장소를 검색해보세요."
                     onKeyDown={handleSearchInputKeyDown}
                     value={searchInputValue}
                     onChange={handleSearchInput}
                     onFocus={handleSearchInputFocus}
+                    onBlur={handleSearchInputBlur}
                 />
 
-                <div className={S.cancelContainer}>
-                    {searchInputValue && (
+                {searchInputValue && (
+                    <div className={S.cancelContainer}>
                         <button
                             className={S.initializeButton}
                             onClick={handleInitializeInput}
                         >
                             <XCircle fill="rgba(0, 0, 0, 0.2)" />
                         </button>
-                    )}
 
-                    {isSearchMode && (
-                        <>
-                            <div className={S.divider}></div>
-                            <button
-                                className={S.cancelButton}
-                                onClick={handleCancelSearch}
-                            >
-                                취소
-                            </button>
-                        </>
-                    )}
-                </div>
+                        {isSearchMode && (
+                            <>
+                                <div className={S.divider}></div>
+                                <button
+                                    className={S.cancelButton}
+                                    onClick={handleCancelSearch}
+                                >
+                                    취소
+                                </button>
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     );

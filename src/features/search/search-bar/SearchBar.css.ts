@@ -1,6 +1,8 @@
 import { style } from '@vanilla-extract/css';
+import { recipe } from '@vanilla-extract/recipes';
 
 import { COLOR } from '@/styles/foundation';
+import { sprinkles } from '@/styles/sprinkle.css';
 
 export const searchBox = style({
     width: '100%',
@@ -15,7 +17,7 @@ export const searchBox = style({
 
 export const searchInnerBox = style({
     width: '100%',
-    padding: '12px 16px',
+    padding: '8px 16px',
 
     display: 'flex',
     alignItems: 'center',
@@ -26,12 +28,29 @@ export const searchInnerBox = style({
     backgroundColor: COLOR.MonoWhite,
 });
 
-export const searchInput = style({
-    width: '100%',
-    flex: '1',
+export const searchInput = recipe({
+    base: [
+        sprinkles({ typography: 'SemiBold16' }),
+        {
+            width: '100%',
+            padding: '4px 15px',
+            flex: '1',
 
-    '::placeholder': {
-        color: COLOR.Gray400,
+            '::placeholder': {
+                color: COLOR.Gray400,
+            },
+        },
+    ],
+    variants: {
+        isSearchMode: {
+            true: {
+                backgroundColor: COLOR.Gray50,
+                borderRadius: '8px',
+            },
+            false: {
+                backgroundColor: COLOR.MonoWhite,
+            },
+        },
     },
 });
 
