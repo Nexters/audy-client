@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { ToastContext } from '@/utils/toast/ToastProvider';
+import { ToastContext } from '@/utils/ui/ToastProvider';
 
 /**
  * Toast를 사용할 수 있는 Hook useToast

@@ -3,12 +3,14 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
 import AppPortal from '@/components/app-portal';
+import SnackBar from '@/components/snack-bar';
 import Toast from '@/components/toast';
 import { CoursePage, coursePageLoader } from '@/pages/course';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
 import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
-import { ToastProvider } from '@/utils/toast/ToastProvider';
+import { SnackBarProvider } from '@/utils/ui/SnackBarProvider';
+import { ToastProvider } from '@/utils/ui/ToastProvider';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -23,17 +25,20 @@ const InitializedRouter = () => (
     <QueryClientProvider client={queryClient}>
         <AppPortal.Provider>
             <ToastProvider>
-                <Toast />
+                <SnackBarProvider>
+                    <Toast />
+                    <SnackBar />
 
-                <TmapProvider
-                    width="100%"
-                    height="calc(100vh - 64px)"
-                    lat={37.5652045}
-                    lng={126.98702028}
-                >
-                    <ReactQueryDevtools />
-                    <Outlet />
-                </TmapProvider>
+                    <TmapProvider
+                        width="100%"
+                        height="calc(100vh - 64px)"
+                        lat={37.5652045}
+                        lng={126.98702028}
+                    >
+                        <ReactQueryDevtools />
+                        <Outlet />
+                    </TmapProvider>
+                </SnackBarProvider>
             </ToastProvider>
         </AppPortal.Provider>
     </QueryClientProvider>
