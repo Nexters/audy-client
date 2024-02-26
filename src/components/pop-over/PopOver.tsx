@@ -6,6 +6,7 @@ import {
 } from 'react';
 
 import { useDisclosure } from '@/hooks/useDisclosure';
+import { useOnClickOutside } from '@/hooks/useOnClickOutside';
 
 import * as S from './PopOver.css';
 import PopOverContent from './PopOverContent';
@@ -36,9 +37,15 @@ const PopOverRoot = ({ children }: PropsWithChildren) => {
         [closePopOver, isPopOverOpen, openPopOver],
     );
 
+    const { targetRef } = useOnClickOutside({
+        onClickOutside: closePopOver,
+    });
+
     return (
         <PopOverContext.Provider value={value}>
-            <div className={S.wrapper}>{children}</div>
+            <div className={S.wrapper} ref={targetRef}>
+                {children}
+            </div>
         </PopOverContext.Provider>
     );
 };

@@ -22,7 +22,6 @@ const PathControlBox = ({ id, name, address }: PropsType) => {
     const { selectedId } = useContext(PathViewContextValue);
     const { setSelectedId } = useContext(PathViewContextAction);
 
-    const pathInputRef = useRef<HTMLInputElement | null>(null);
     const [modifiedPathName, setModifiedPathName] = useState(name);
 
     const { value: isModifyPathName, toggle: toggleModifyPathName } =
@@ -43,16 +42,15 @@ const PathControlBox = ({ id, name, address }: PropsType) => {
         setSelectedId(null);
     };
 
+    const { targetRef: pathInputRef } = useOnClickOutside<HTMLInputElement>({
+        onClickOutside: handleInputOutsideClick,
+    });
+
     const handleModifyIconClick = () => {
         if (!pathInputRef.current) return;
         if (!isModifyPathName) pathInputRef.current.focus();
         toggleModifyPathName();
     };
-
-    useOnClickOutside({
-        ref: pathInputRef,
-        handler: handleInputOutsideClick,
-    });
 
     return (
         <div className={S.wrapper}>

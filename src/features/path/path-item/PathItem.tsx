@@ -30,8 +30,6 @@ const PathItem = ({ marker, order }: PropsType) => {
     const { selectedId } = useContext(PathViewContextValue);
     const { setSelectedId } = useContext(PathViewContextAction);
 
-    const containerRef = useRef<HTMLDivElement | null>(null);
-
     const controls = useDragControls();
     const y = useMotionValue(0);
 
@@ -47,13 +45,15 @@ const PathItem = ({ marker, order }: PropsType) => {
         setIsHover(false);
     };
 
+    const { targetRef: containerRef } = useOnClickOutside({
+        onClickOutside: handleOutsideClick,
+    });
+
     const handlePointerDownListIcon = (
         event: React.PointerEvent<SVGSVGElement>,
     ) => {
         controls.start(event);
     };
-
-    useOnClickOutside({ ref: containerRef, handler: handleOutsideClick });
 
     return (
         <Reorder.Item
