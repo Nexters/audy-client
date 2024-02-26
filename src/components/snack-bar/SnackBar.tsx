@@ -23,10 +23,26 @@ const SnackBar = () => {
         });
     };
 
+    const handleSnackBarClose = () => {
+        setSnackBar({
+            message: '',
+            undoFunction: () => {},
+        });
+    };
+
     return (
         <div className={S.layout} onAnimationEnd={handleOnAnimationEnd}>
             {snackBarMessage}
-            <button onClick={handleSnackBarUndoFunction}>undo</button>
+
+            <div>
+                <button
+                    onClick={handleSnackBarUndoFunction}
+                    className={S.undoButton}
+                >
+                    실행취소
+                </button>
+                <button onClick={handleSnackBarClose}>x</button>
+            </div>
         </div>
     );
 };

@@ -9,16 +9,41 @@ const fadeOutAnimation = keyframes({
 });
 
 export const layout = style([
-    sprinkles({ typography: 'Bold14', zIndex: 'snackBar' }),
+    sprinkles({ typography: 'SemiBold14', zIndex: 'snackBar' }),
     {
         position: 'absolute',
+        left: '50%',
+        top: '73px',
+        transform: 'translateX(-50%)',
         border: `1px solid ${COLOR.Gray200}`,
         backgroundColor: COLOR.MonoWhite,
         borderRadius: '8px',
-        padding: '14px 20px',
+        padding: '13px 20px',
         color: COLOR.Gray800,
+        width: '320px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
 
         animation: `${fadeOutAnimation} 3s ease-in-out`,
         animationDelay: '8s',
+    },
+]);
+
+export const undoButton = style([
+    sprinkles({ typography: 'SemiBold14' }),
+
+    {
+        padding: '5px 8px',
+        color: COLOR.Gray500,
+        backgroundColor: 'rgba(0, 0, 0, 0.03)',
+        borderRadius: '4px',
+        margin: '0 10px 0 0',
+        transition: 'background-color 0.2s',
+
+        ':hover': {
+            backgroundColor: COLOR.Blue500,
+            color: COLOR.MonoWhite,
+        },
     },
 ]);
