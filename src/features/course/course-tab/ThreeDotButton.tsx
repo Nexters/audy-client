@@ -1,6 +1,4 @@
 import EditIcon from '@/assets/icons/edit.svg?react';
-import EyeClosedIcon from '@/assets/icons/eyeClosed.svg?react';
-import EyeOpenedIcon from '@/assets/icons/eyeOpened.svg?react';
 import ThreeDotIcon from '@/assets/icons/threeDot.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import PopOver from '@/components/pop-over';

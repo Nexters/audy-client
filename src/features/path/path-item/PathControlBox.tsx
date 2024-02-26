@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import LocationIcon from '@/assets/icons/location.svg?react';
 import ModifyIcon from '@/assets/icons/modify.svg?react';
