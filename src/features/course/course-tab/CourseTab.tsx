@@ -8,23 +8,25 @@ import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import { COLOR } from '@/styles/foundation';
 
 import * as S from './CourseTab.css';
+import ThreeDotButton from './ThreeDotButton';
 
 interface PropsType {
+    courseId: number;
     courseName: string;
     memberCount: number;
     pinCount: number;
     isMyCourse: boolean;
 }
 
-const CourseTab = ({ courseName, memberCount, pinCount, isMyCourse }: PropsType) => {
-    const [isHovered, setIsHovered] = useState(false);
-
+const CourseTab = ({
+    courseId,
+    courseName,
+    memberCount,
+    pinCount,
+    isMyCourse,
+}: PropsType) => {
     return (
-        <div
-            className={S.layout}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
+        <div className={S.layout}>
             <div>
                 <div className={S.courseNameContainer}>
                     {isMyCourse && <MyCourseIcon fill={COLOR.PinkPrimary} />}
@@ -53,18 +55,7 @@ const CourseTab = ({ courseName, memberCount, pinCount, isMyCourse }: PropsType)
                     </div>
                 </div>
             </div>
-
-            <div className={S.courseActionsContainer}>
-                <button className={S.removeButton({ isHovered })}>
-                    <TrashCanIcon fill={COLOR.Gray400} />
-                </button>
-                <LeftArrowIcon
-                    transform="scale(-1, 1)"
-                    fill={COLOR.Gray500}
-                    height={24}
-                    width={24}
-                />
-            </div>
+            <ThreeDotButton courseId={courseId} />
         </div>
     );
 };

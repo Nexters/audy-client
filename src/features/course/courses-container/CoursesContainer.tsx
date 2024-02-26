@@ -43,6 +43,7 @@ const CoursesContainer = ({ selectedCourseTab }: PropsType) => {
                 ({ courseId, courseName, editorCnt, pinCnt, owner }) => (
                     <CourseTab
                         key={courseId}
+                        courseId={courseId}
                         courseName={courseName}
                         memberCount={editorCnt}
                         pinCount={pinCnt}
