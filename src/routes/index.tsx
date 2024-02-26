@@ -7,8 +7,6 @@ import { Outlet, createBrowserRouter } from 'react-router-dom';
 
 import AppPortal from '@/components/app-portal';
 import FeedbacksStacks from '@/components/feedbacks-stack';
-import SnackBar from '@/components/snack-bar';
-import Toast from '@/components/toast';
 import { CoursePage, coursePageLoader } from '@/pages/course';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
@@ -29,14 +27,11 @@ const queryClient = new QueryClient({
 
 const UIProvider = ({ children }: PropsWithChildren) => (
     <AppPortal.Provider>
-        <ToastProvider>
-            <SnackBarProvider>
-                <ModalProvider />
-                <Toast />
-                <SnackBar />
-                {children}
-            </SnackBarProvider>
-        </ToastProvider>
+        <FeedbacksProvider>
+            <ModalProvider />
+            <FeedbacksStacks />
+            {children}
+        </FeedbacksProvider>
     </AppPortal.Provider>
 );
 
@@ -45,18 +40,15 @@ const InitializedRouter = () => (
         <AppPortal.Provider>
             <JotaiAtomProvider>
                 <UIProvider>
-                    <FeedbacksProvider>
-                        <FeedbacksStacks />
-                        <TmapProvider
-                            width="100%"
-                            height="calc(100vh - 64px)"
-                            lat={37.5652045}
-                            lng={126.98702028}
-                        >
-                            <ReactQueryDevtools />
-                            <Outlet />
-                        </TmapProvider>
-                    </FeedbacksProvider>
+                    <TmapProvider
+                        width="100%"
+                        height="calc(100vh - 64px)"
+                        lat={37.5652045}
+                        lng={126.98702028}
+                    >
+                        <ReactQueryDevtools />
+                        <Outlet />
+                    </TmapProvider>
                 </UIProvider>
             </JotaiAtomProvider>
         </AppPortal.Provider>
