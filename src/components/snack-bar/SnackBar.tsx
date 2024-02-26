@@ -12,9 +12,9 @@ interface PropsType {
 }
 
 const SnackBar = ({ message, undoFunction = () => {} }: PropsType) => {
-    const [isVisible, setIsVisible] = useState(true);
-
     if (!message) return null;
+
+    const [isVisible, setIsVisible] = useState(true);
 
     const handleSnackBarUndoFunction = () => {
         undoFunction();
@@ -25,10 +25,6 @@ const SnackBar = ({ message, undoFunction = () => {} }: PropsType) => {
         setIsVisible(false);
     };
 
-    const transition = isVisible
-        ? { duration: 0.5, delay: 8 }
-        : { duration: 0.5 };
-
     return (
         <AnimatePresence>
             {isVisible && (
@@ -38,12 +34,11 @@ const SnackBar = ({ message, undoFunction = () => {} }: PropsType) => {
                     animate={{
                         opacity: 0,
                         transitionEnd: { display: 'none' },
+                        transition: { duration: 0.5, delay: 8 },
                     }}
                     exit={{ opacity: 0 }}
-                    transition={transition}
                 >
                     {message}
-
                     <div>
                         <button
                             className={S.undoButton}
