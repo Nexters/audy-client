@@ -19,6 +19,6 @@ export const layout = style([
         color: COLOR.Gray800,
 
         animation: `${fadeOutAnimation} 3s ease-in-out`,
-        animationDelay: '5s',
+        animationDelay: '8s',
     },
 ]);

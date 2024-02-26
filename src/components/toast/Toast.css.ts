@@ -23,6 +23,6 @@ export const layout = style([
         width: '320px',
 
         animation: `${fadeOutAnimation} 3s ease-in-out`,
-        animationDelay: '3s',
+        animationDelay: '4s',
     },
 ]);
