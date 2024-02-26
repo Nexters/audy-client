@@ -30,3 +30,21 @@ export const savingStatus = style([
 export const settingIcon = style({
     color: COLOR.Gray500,
 });
+
+export const settingContent = style({
+    minWidth: '164px'
+})
+
+export const logoutText= style([
+    sprinkles({ typography: 'Regular15' }),
+    {
+        color: COLOR.Gray950,
+    },
+]);
+
+export const withdrawText = style([
+    sprinkles({ typography: 'Regular15' }),
+    {
+        color: COLOR.Red500,
+    },
+])
