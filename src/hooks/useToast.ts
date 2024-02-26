@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { ToastContext } from '@/utils/ui/ToastProvider';
+import { FeedbacksContext } from '@/utils/ui/FeedBacksProvider';
 
 /**
  * Toast를 사용할 수 있는 Hook useToast
@@ -8,9 +8,19 @@ import { ToastContext } from '@/utils/ui/ToastProvider';
  */
 
 export const useToast = () => {
-    const { toastMessage, setToastMessage } = useContext(ToastContext);
+    const { setFeedbacks } = useContext(FeedbacksContext);
 
-    const setToast = (message: string) => setToastMessage(message);
+    const setToast = (message: string) => {
+        if (!message) return;
 
-    return { toastMessage, setToast };
+        setFeedbacks((previous) => [
+            ...previous,
+            {
+                type: 'toast',
+                message,
+            },
+        ]);
+    };
+
+    return { setToast };
 };

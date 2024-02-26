@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { SnackBarContext } from '@/utils/ui/SnackBarProvider';
+import { FeedbacksContext } from '@/utils/ui/FeedBacksProvider';
 
 /**
  * SnackBar를 사용할 수 있는 Hook useSnackBar
@@ -8,23 +8,26 @@ import { SnackBarContext } from '@/utils/ui/SnackBarProvider';
  */
 
 export const useSnackBar = () => {
-    const {
-        snackBarMessage,
-        setSnackBarMessage,
-        snackBarUndoFunction,
-        setSnackBarUndoFunction,
-    } = useContext(SnackBarContext);
+    const { setFeedbacks } = useContext(FeedbacksContext);
 
     const setSnackBar = ({
         message,
         undoFunction,
     }: {
         message: string;
-        undoFunction: () => void;
-    }) => {
-        setSnackBarMessage(message);
-        setSnackBarUndoFunction(undoFunction);
+        undoFunction?: () => void;
+    }): void => {
+        if (!message) return;
+
+        setFeedbacks((previous) => [
+            ...previous,
+            {
+                type: 'snackBar',
+                message,
+                undoFunction,
+            },
+        ]);
     };
 
-    return { snackBarMessage, snackBarUndoFunction, setSnackBar };
+    return { setSnackBar };
 };
