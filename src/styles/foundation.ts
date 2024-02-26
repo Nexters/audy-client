@@ -1,10 +1,10 @@
 export const Z_INDEX = {
     appPortal: 9999,
-    globalNavigation: 999,
+    globalNavigation: 99,
     mapFloatMenu: 9,
     pathPopover: 10,
-    toast: 100,
-    snackBar: 100,
+    toast: 999,
+    snackBar: 999,
 };
 
 export const FONT = {
