@@ -12,9 +12,9 @@ interface PropsType {
 }
 
 const SnackBar = ({ message, undoFunction = () => {} }: PropsType) => {
-    if (!message) return null;
-
     const [isVisible, setIsVisible] = useState(true);
+
+    if (!message) return null;
 
     const handleSnackBarUndoFunction = () => {
         undoFunction();
@@ -39,14 +39,20 @@ const SnackBar = ({ message, undoFunction = () => {} }: PropsType) => {
                     exit={{ opacity: 0 }}
                 >
                     {message}
-                    <div>
+
+                    <div className={S.buttonsContainer}>
                         <button
                             className={S.undoButton}
                             onClick={handleSnackBarUndoFunction}
                         >
                             실행취소
                         </button>
-                        <button onClick={handleSnackBarClose}>x</button>
+                        <button
+                            onClick={handleSnackBarClose}
+                            className={S.closeButton}
+                        >
+                            <CloseIcon />
+                        </button>
                     </div>
                 </motion.div>
             )}
