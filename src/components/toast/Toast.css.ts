@@ -18,7 +18,7 @@ export const layout = style([
         border: `1px solid ${COLOR.Gray200}`,
         backgroundColor: COLOR.MonoWhite,
         borderRadius: '8px',
-        padding: '13px 20px',
+        padding: '10px 20px',
         color: COLOR.Gray800,
         width: '320px',
 
