@@ -18,7 +18,7 @@ export const layout = style([
         border: `1px solid ${COLOR.Gray200}`,
         backgroundColor: COLOR.MonoWhite,
         borderRadius: '8px',
-        padding: '13px 20px',
+        padding: '0 8px 0 20px',
         color: COLOR.Gray800,
         width: '320px',
         display: 'flex',
@@ -30,15 +30,18 @@ export const layout = style([
     },
 ]);
 
+export const buttonsContainer = style({
+    display: 'flex',
+    alignItems: 'center',
+});
+
 export const undoButton = style([
     sprinkles({ typography: 'SemiBold14' }),
-
     {
         padding: '5px 8px',
         color: COLOR.Gray500,
         backgroundColor: 'rgba(0, 0, 0, 0.03)',
         borderRadius: '4px',
-        margin: '0 10px 0 0',
         transition: 'background-color 0.2s',
 
         ':hover': {
@@ -47,3 +50,8 @@ export const undoButton = style([
         },
     },
 ]);
+
+export const closeButton = style({
+    color: COLOR.Gray400,
+    padding: '10px',
+});
