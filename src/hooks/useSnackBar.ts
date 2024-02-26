@@ -23,7 +23,7 @@ export const useSnackBar = () => {
         undoFunction: () => void;
     }) => {
         setSnackBarMessage(message);
-        setSnackBarUndoFunction(() => undoFunction);
+        setSnackBarUndoFunction(undoFunction);
     };
 
     return { snackBarMessage, snackBarUndoFunction, setSnackBar };
