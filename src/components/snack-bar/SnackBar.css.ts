@@ -6,11 +6,6 @@ import { sprinkles } from '@/styles/sprinkle.css';
 export const layout = style([
     sprinkles({ typography: 'SemiBold14', zIndex: 'snackBar' }),
     {
-        // position: 'absolute',
-        // left: '50%',
-        // top: '73px',
-        // transform: 'translateX(-50%)',
-
         border: `1px solid ${COLOR.Gray200}`,
         backgroundColor: COLOR.MonoWhite,
         borderRadius: '8px',
