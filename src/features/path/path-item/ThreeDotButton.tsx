@@ -1,9 +1,11 @@
-import { useRef, useState } from 'react';
-
+import EditIcon from '@/assets/icons/edit.svg?react';
+import EyeClosedIcon from '@/assets/icons/eyeClosed.svg?react';
+import EyeOpenedIcon from '@/assets/icons/eyeOpened.svg?react';
 import ThreeDotIcon from '@/assets/icons/threeDot.svg?react';
-import { useOnClickOutside } from '@/hooks/useOnClickOutside';
-
-import PathPopover from '../path-popover';
+import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
+import PopOver from '@/components/pop-over';
+import { useDisclosure } from '@/hooks/useDisclosure';
+import { useTmap } from '@/hooks/useTmap';
 
 import * as S from './ThreeDotButton.css';
 
@@ -12,41 +14,49 @@ interface PropsType {
 }
 
 const ThreeDotButton = ({ markerId }: PropsType) => {
-    const [isClicked, setIsClicked] = useState(false);
+    const { tmapModuleRef } = useTmap();
 
-    const pathPopoverRef = useRef<HTMLDivElement | null>(null);
-    const threeDotRef = useRef<HTMLButtonElement | null>(null);
+    const initPinHided =
+        !!tmapModuleRef.current?.getMarkerInfoFromId(markerId)?.isHidden;
 
-    const handleThreeDotClick = () => setIsClicked((prev) => !prev);
+    const { value: isPinHided, toggle: togglePinHided } =
+        useDisclosure(initPinHided);
 
-    useOnClickOutside({
-        ref: pathPopoverRef,
-        handler: ({ target }) => {
-            if (
-                target instanceof Node &&
-                threeDotRef.current?.contains(target)
-            ) {
-                return;
-            }
-
-            setIsClicked(false);
-        },
-    });
+    const handlePinHide = () => {
+        if (!tmapModuleRef.current) return;
+        tmapModuleRef.current.toggleMarkerHiddenState(markerId);
+        togglePinHided();
+    };
 
     return (
-        <>
-            <button
-                className={S.threeDotButton}
-                onClick={handleThreeDotClick}
-                ref={threeDotRef}
-            >
+        <PopOver>
+            <PopOver.Trigger className={S.threeDotButton}>
                 <ThreeDotIcon />
-            </button>
+            </PopOver.Trigger>
+            <PopOver.Content>
+                {isPinHided ? (
+                    <PopOver.Item onClick={handlePinHide}>
+                        <EyeOpenedIcon />
+                        <p className={S.text}>경로에서 보이기</p>
+                    </PopOver.Item>
+                ) : (
+                    <PopOver.Item onClick={handlePinHide}>
+                        <EyeClosedIcon />
+                        <p className={S.text}>경로에서 숨기기</p>
+                    </PopOver.Item>
+                )}
 
-            <div className={S.pathPopover({ isClicked })} ref={pathPopoverRef}>
-                <PathPopover markerId={markerId} />
-            </div>
-        </>
+                <PopOver.Item>
+                    <EditIcon />
+                    <p className={S.text}>장소명 수정</p>
+                </PopOver.Item>
+
+                <PopOver.Item>
+                    <TrashCanIcon />
+                    <p className={S.text}>장소 삭제</p>
+                </PopOver.Item>
+            </PopOver.Content>
+        </PopOver>
     );
 };
 
