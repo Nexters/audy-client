@@ -1,20 +1,23 @@
-import { useToast } from '@/hooks/useToast';
-
-import AppPortal from '../app-portal';
+import { motion } from 'framer-motion';
 
 import * as S from './Toast.css';
 
-const Toast = () => {
-    const { toastMessage, setToast } = useToast();
+interface PropsType {
+    message: string;
+}
 
-    if (!toastMessage) return null;
+const Toast = ({ message }: PropsType) => {
+    if (!message) return null;
 
     return (
-        <AppPortal.Wrapper>
-            <div className={S.layout} onAnimationEnd={() => setToast('')}>
-                {toastMessage}
-            </div>
-        </AppPortal.Wrapper>
+        <motion.div
+            className={S.layout}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 0, transitionEnd: { display: 'none' } }}
+            transition={{ duration: 0.5, delay: 4 }}
+        >
+            {message}
+        </motion.div>
     );
 };
 
