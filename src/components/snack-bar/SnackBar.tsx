@@ -1,6 +1,5 @@
 import CloseIcon from '@/assets/icons/close.svg?react';
 import { useSnackBar } from '@/hooks/useSnackBar';
-import { COLOR } from '@/styles/foundation';
 
 import * as S from './SnackBar.css';
 
@@ -8,7 +7,7 @@ const SnackBar = () => {
     const { snackBarMessage, snackBarUndoFunction, setSnackBar } =
         useSnackBar();
 
-    // if (!snackBarMessage) return null;
+    if (!snackBarMessage) return null;
 
     const handleOnAnimationEnd = () => {
         setSnackBar({
