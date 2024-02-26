@@ -35,6 +35,7 @@ export const item = style({
     display: 'flex',
     gap: '12px',
 
+    width: '164px',
     padding: '8px 16px',
 
     ':hover': {

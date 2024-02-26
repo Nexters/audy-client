@@ -32,7 +32,8 @@ export const settingIcon = style({
 });
 
 export const settingContent = style({
-    minWidth: '164px'
+    minWidth: '164px',
+    transform: 'translate(0, calc(100% + 8px))',
 })
 
 export const logoutText= style([
