@@ -39,10 +39,6 @@ export const courseNameSaveButton = style([
     },
 ]);
 
-export const backArrowIcon = style({
-    color: COLOR.Gray900,
-});
-
 export const courseNameEditButton = style({
     color: COLOR.Gray400,
     padding: '4px',
@@ -52,4 +48,8 @@ export const courseNameEditButton = style({
         color: COLOR.Gray800,
         backgroundColor: COLOR.Gray200,
     },
+});
+
+export const goBackButton = style({
+    padding: '0px',
 });
