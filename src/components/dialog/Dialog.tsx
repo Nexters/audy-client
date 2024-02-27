@@ -7,10 +7,10 @@ import {
 
 import { useDisclosure } from '@/hooks/useDisclosure';
 
+import DialogClose from './DialogClose';
+import DialogContent from './DialogContent';
 import DialogTitle from './DialogTitle';
 import DialogTrigger from './DialogTrigger';
-import DialogContent from './DialogContent';
-import DialogClose from './DialogClose';
 
 interface DialogContextType {
     isDialogOpen: boolean;
