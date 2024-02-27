@@ -7,7 +7,8 @@ export const wrapper = style([
     sprinkles({ zIndex: 'globalNavigation' }),
     {
         width: '100%',
-        padding: '17px 30px',
+        height: '64px',
+        padding: '0 30px',
 
         display: 'flex',
         alignItems: 'center',
@@ -29,14 +30,15 @@ export const savingStatus = style([
 
 export const settingIcon = style({
     color: COLOR.Gray500,
+    margin: '0 0 0 26px',
 });
 
 export const settingContent = style({
     minWidth: '164px',
     transform: 'translate(0, calc(100% + 8px))',
-})
+});
 
-export const logoutText= style([
+export const logoutText = style([
     sprinkles({ typography: 'Regular15' }),
     {
         color: COLOR.Gray950,
@@ -48,4 +50,4 @@ export const withdrawText = style([
     {
         color: COLOR.Red500,
     },
-])
+]);
