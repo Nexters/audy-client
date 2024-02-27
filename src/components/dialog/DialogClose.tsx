@@ -1,10 +1,14 @@
 import { ComponentProps, MouseEvent } from 'react';
 
 import { useDialogContext } from './Dialog';
+import Slot from '@/components/slot';
 
-interface PropsType extends ComponentProps<'div'> {}
+interface PropsType extends ComponentProps<'div'> {
+    asChild?: boolean;
+}
 
 const DialogClose = ({
+    asChild,
     children,
     className,
     onClick,
@@ -17,14 +21,16 @@ const DialogClose = ({
         closeDialog();
     };
 
+    const RenderedComponent = asChild ? Slot : 'div'
+
     return (
-        <div
+        <RenderedComponent
             onClick={handleDialogCloseClick}
             className={className}
             {...restProps}
         >
             {children}
-        </div>
+        </RenderedComponent>
     );
 };
 
