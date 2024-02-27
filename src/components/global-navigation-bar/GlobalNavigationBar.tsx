@@ -19,26 +19,23 @@ const GlobalNavigationBar = () => {
     };
 
     return (
-        <>
-            <div className={S.wrapper}>
-                <AudyLogoIcon />
-                <p className={S.savingStatus}>수정된 코스 저장중...</p>
-                <PopOver>
-                    <PopOver.Trigger>
-                        <SettingIcon className={S.settingIcon} />
-                    </PopOver.Trigger>
-                    <PopOver.Content className={S.settingContent}>
-                        <PopOver.Item onClick={handleSignOutButtonClick}>
-                            <p className={S.logoutText}>로그아웃</p>
-                        </PopOver.Item>
-                        <PopOver.Item onClick={handleWithdrawButtonClick}>
-                            <p className={S.withdrawText}>회원탈퇴</p>
-                        </PopOver.Item>
-                    </PopOver.Content>
-                </PopOver>
-            </div>
-            {isSignOutModalOpen && <SignOutModal />}
-        </>
+        <div className={S.wrapper}>
+            <AudyLogoIcon />
+            <p className={S.savingStatus}>수정된 코스 저장중...</p>
+            <PopOver>
+                <PopOver.Trigger>
+                    <SettingIcon className={S.settingIcon} />
+                </PopOver.Trigger>
+                <PopOver.Content className={S.settingContent}>
+                    <PopOver.Item onClick={handleSignOutButtonClick}>
+                        <p className={S.logoutText}>로그아웃</p>
+                    </PopOver.Item>
+                    <PopOver.Item onClick={handleWithdrawButtonClick}>
+                        <p className={S.withdrawText}>회원탈퇴</p>
+                    </PopOver.Item>
+                </PopOver.Content>
+            </PopOver>
+        </div>
     );
 };
 
