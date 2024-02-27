@@ -14,6 +14,8 @@ const GlobalNavigationBar = () => {
     const { pathname } = useLocation();
     const { openModal } = useModal();
 
+    const isCoursePage = pathname.split('/')[1] === 'course';
+
     const handleSignOutButtonClick = () => {
         openModal(<SignOutModal />);
     };
