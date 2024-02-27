@@ -88,12 +88,14 @@ export const CourseRepository = {
     },
 
     async postSaveCourseAsync({
+        userId,
         courseName,
     }: CourseRequestParamType['postSaveCourse']) {
         return postAsync<
             ApiResponseType<CourseResponseType['postSaveCourse']>,
             CourseRequestParamType['postSaveCourse']
         >('/v1/courses', {
+            userId,
             courseName,
         });
     },
