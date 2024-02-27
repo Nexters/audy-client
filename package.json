@@ -42,7 +42,6 @@
     "prettier": "^3.2.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8",
-    "vite-plugin-mkcert": "^1.17.3",
     "vite-plugin-svgr": "^4.2.0"
   }
 }
