@@ -3,6 +3,11 @@ import { recipe } from '@vanilla-extract/recipes';
 
 import { COLOR } from '@/styles/foundation';
 
+export const layout = style({
+    position: 'relative',
+    width: 'max-content',
+});
+
 export const profileImageWrapper = style({
     position: 'relative',
     display: 'flex',
@@ -45,4 +50,12 @@ export const profileImageOuterBorder = recipe({
             },
         },
     },
+});
+
+export const tooltipWrapper = style({
+    display: 'flex',
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 'calc(100% + 4px)',
+    left: '50%',
 });
