@@ -23,6 +23,7 @@ export const profileImage = style({
     position: 'absolute',
     width: '38px',
     height: '38px',
+    objectFit: 'cover',
 });
 
 export const profileImageInnerBorder = style({
