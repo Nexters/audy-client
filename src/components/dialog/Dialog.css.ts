@@ -29,9 +29,9 @@ export const content = style({
     width: '360px',
     padding: '24px',
 
+
     display: 'flex',
     flexDirection: 'column',
-    gap: '40px',
     alignItems: 'flex-start',
 
     backgroundColor: COLOR.MonoWhite,
