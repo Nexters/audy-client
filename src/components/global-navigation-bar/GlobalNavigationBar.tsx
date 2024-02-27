@@ -11,6 +11,7 @@ import { useModal } from '@/hooks/useModal';
 import * as S from './GlobalNavigationBar.css';
 
 const GlobalNavigationBar = () => {
+    const { pathname } = useLocation();
     const { openModal } = useModal();
 
     const handleSignOutButtonClick = () => {
@@ -21,7 +22,6 @@ const GlobalNavigationBar = () => {
         openModal(<WithdrawModal />);
     };
 
-    const { pathname } = useLocation();
     const isCoursePage = pathname.split('/')[1] === 'course';
 
     return (
