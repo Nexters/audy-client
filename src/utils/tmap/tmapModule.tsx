@@ -25,6 +25,9 @@ export interface TmapConstructorType {
 
 const { Tmapv3 } = window;
 
+const pathname = window.location.pathname;
+const isCoursePage = pathname.split('/')[1] === 'course';
+
 export class TMapModule {
     #mapInstance: typeof Tmapv3.Map;
     #markers: MarkerType[] = [];
@@ -90,19 +93,22 @@ export class TMapModule {
             });
         };
 
-        this.#mapInstance.on('Click', handleMapClick);
+        if (isCoursePage)
+            (() => {
+                this.#mapInstance.on('Click', handleMapClick);
 
-        let throttleTimeout: NodeJS.Timeout | null = null;
-        const THROTTLE_TIME = 800;
+                let throttleTimeout: NodeJS.Timeout | null = null;
+                const THROTTLE_TIME = 800;
 
-        this.#mapInstance.on('Zoom', () => {
-            if (!throttleTimeout) {
-                throttleTimeout = setTimeout(() => {
-                    this.clusterMarkers();
-                    throttleTimeout = null;
-                }, THROTTLE_TIME);
-            }
-        });
+                this.#mapInstance.on('Zoom', () => {
+                    if (!throttleTimeout) {
+                        throttleTimeout = setTimeout(() => {
+                            this.clusterMarkers();
+                            throttleTimeout = null;
+                        }, THROTTLE_TIME);
+                    }
+                });
+            })();
     }
 
     // 마커 생성
