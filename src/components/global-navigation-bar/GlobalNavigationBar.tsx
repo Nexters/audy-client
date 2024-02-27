@@ -1,7 +1,8 @@
 import AudyLogoIcon from '@/assets/icons/audyLogo.svg?react';
 import SettingIcon from '@/assets/icons/setting.svg?react';
 import PopOver from '@/components/pop-over';
-import SignOutModal from '@/features/auth/sign-out-modal/SignOutModal';
+import SignOutModal from '@/features/auth/sign-out-modal';
+import WithdrawModal from '@/features/auth/withdraw-modal';
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useModal } from '@/hooks/useModal';
 
@@ -17,6 +18,10 @@ const GlobalNavigationBar = () => {
         openModal(<SignOutModal />);
     };
 
+    const handleWithdrawButtonClick = () => {
+        openModal(<WithdrawModal />);
+    };
+
     return (
         <>
             <div className={S.wrapper}>
@@ -27,14 +32,11 @@ const GlobalNavigationBar = () => {
                         <SettingIcon className={S.settingIcon} />
                     </PopOver.Trigger>
                     <PopOver.Content className={S.settingContent}>
-                        <PopOver.Item
-                            className={S.logoutText}
-                            onClick={handleSignOutButtonClick}
-                        >
-                            <p onClick={openSignOutModal}>로그아웃</p>
+                        <PopOver.Item onClick={handleSignOutButtonClick}>
+                            <p className={S.logoutText}>로그아웃</p>
                         </PopOver.Item>
-                        <PopOver.Item className={S.withdrawText}>
-                            <p>회원탈퇴</p>
+                        <PopOver.Item onClick={handleWithdrawButtonClick}>
+                            <p className={S.withdrawText}>회원탈퇴</p>
                         </PopOver.Item>
                     </PopOver.Content>
                 </PopOver>
