@@ -1,5 +1,3 @@
-import { useNavigate } from 'react-router-dom';
-
 import { CourseRepository } from '@/apis/course';
 import Modal from '@/components/modal';
 import { useModal } from '@/hooks/useModal';
@@ -24,8 +22,8 @@ const CourseInviteModal = ({ courseId }: PropsType) => {
             setToast('초대 링크 복사가 완료되었습니다!');
         } catch (error) {
             setToast('유저 초대에 실패했습니다.');
-            closeModal();
         }
+        closeModal();
     };
 
     return (
