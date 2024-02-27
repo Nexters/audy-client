@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import AddIcon from '@/assets/icons/add.svg?react';
 import AsyncBoundary from '@/components/async-boundary';
 import GlobalNavigationBar from '@/components/global-navigation-bar';
@@ -9,14 +11,22 @@ import CoursesContainer from '@/features/course/courses-container';
 import MakeNewCourseModal from '@/features/course/make-new-course-modal';
 import { useModal } from '@/hooks/useModal';
 import { useTmap } from '@/hooks/useTmap';
-import { COLOR } from '@/styles/foundation';
+import { usePostSaveCourse } from '@/query-hooks/course/mutation';
+import { useGetUserInformation } from '@/query-hooks/user/query';
 import { CourseTabType } from '@/types';
 
 import * as S from './MainPage.css';
+import { COLOR } from '@/styles/foundation';
 
 const MainPage = () => {
     const { mapContainerRef } = useTmap();
     const { openModal } = useModal();
+    const navigate = useNavigate();
+
+    const { data: userInformation } = useGetUserInformation({});
+    const { mutateAsync: makeNewCourse } = usePostSaveCourse({
+        userId: userInformation.userId,
+    });
 
     const [selectedCourseTab, setSelectedCourseTab] =
         useState<CourseTabType>('allCourse');
@@ -27,6 +37,8 @@ const MainPage = () => {
 
     const handleMakeNewCourse = async () => {
         openModal(<MakeNewCourseModal />);
+        const response = await makeNewCourse('새로운 코스');
+        navigate(`/course/${response.data.courseId}`);
     };
 
     return (
