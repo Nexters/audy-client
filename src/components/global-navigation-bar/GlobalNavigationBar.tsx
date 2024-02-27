@@ -5,8 +5,8 @@ import SettingIcon from '@/assets/icons/setting.svg?react';
 import PopOver from '@/components/pop-over';
 import SignOutModal from '@/features/auth/sign-out-modal';
 import WithdrawModal from '@/features/auth/withdraw-modal';
-import { useModal } from '@/hooks/useModal';
 import EditorList from '@/features/user/editor-list';
+import { useModal } from '@/hooks/useModal';
 
 import * as S from './GlobalNavigationBar.css';
 
