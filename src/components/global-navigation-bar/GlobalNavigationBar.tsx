@@ -3,15 +3,11 @@ import SettingIcon from '@/assets/icons/setting.svg?react';
 import PopOver from '@/components/pop-over';
 import SignOutModal from '@/features/auth/sign-out-modal';
 import WithdrawModal from '@/features/auth/withdraw-modal';
-import { useDisclosure } from '@/hooks/useDisclosure';
 import { useModal } from '@/hooks/useModal';
 
 import * as S from './GlobalNavigationBar.css';
 
 const GlobalNavigationBar = () => {
-    const { value: isSignOutModalOpen, open: openSignOutModal } =
-        useDisclosure(false);
-
     const { openModal } = useModal();
 
     const handleSignOutButtonClick = () => {
