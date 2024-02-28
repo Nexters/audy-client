@@ -22,9 +22,10 @@ const PopOverTrigger = ({
     };
 
     const handlePopOverTrigger = (event: MouseEvent<HTMLDivElement>) => {
+        event.stopPropagation();
         onClick?.(event);
         togglePopOver();
-    }
+    };
 
     return (
         <div
