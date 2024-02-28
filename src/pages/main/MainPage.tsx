@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import AddIcon from '@/assets/icons/add.svg?react';
 import AsyncBoundary from '@/components/async-boundary';
@@ -27,6 +27,20 @@ const MainPage = () => {
     const handleMakeNewCourse = async () => {
         openModal(<MakeNewCourseModal />);
     };
+
+    useEffect(() => {
+        const handleMapContainerClick = (event: MouseEvent) => {
+            event.stopPropagation();
+        };
+
+        const mapContainer = mapContainerRef.current;
+
+        mapContainer?.addEventListener('click', handleMapContainerClick, true);
+
+        return () => {
+            mapContainer?.removeEventListener('click', handleMapContainerClick);
+        };
+    }, [mapContainerRef]);
 
     return (
         <>
