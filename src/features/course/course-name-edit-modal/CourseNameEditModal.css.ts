@@ -4,12 +4,12 @@ import { recipe } from '@vanilla-extract/recipes';
 import { COLOR } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
 
-export const informationText = style([
-    sprinkles({ typography: 'Medium18' }),
-    {
-        color: COLOR.Gray600,
-    },
-]);
+export const modalHeader = style({
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+});
 
 export const couseNameInput = style({
     border: `1px solid ${COLOR.Gray200}`,
@@ -42,4 +42,9 @@ export const editButton = recipe({
             },
         },
     },
+});
+
+export const modalCloseButton = style({
+    padding: '6px',
+    color: COLOR.Gray400,
 });

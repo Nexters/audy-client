@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import CloseIcon from '@/assets/icons/close.svg?react';
 import Modal from '@/components/modal/Modal';
 import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
@@ -38,7 +39,13 @@ const CourseNameEditModal = ({ courseId, courseName }: PropsType) => {
 
     return (
         <Modal>
-            <Modal.Title>코스명 수정</Modal.Title>
+            <div className={S.modalHeader}>
+                <Modal.Title>코스명 수정</Modal.Title>
+                <button className={S.modalCloseButton} onClick={closeModal}>
+                    <CloseIcon width={28} height={28} />
+                </button>
+            </div>
+
             <Modal.Content>
                 <input
                     className={S.couseNameInput}
@@ -46,6 +53,7 @@ const CourseNameEditModal = ({ courseId, courseName }: PropsType) => {
                     onChange={handleNewCourseNameChange}
                 />
             </Modal.Content>
+
             <Modal.Footer>
                 <button
                     className={S.editButton({ isButtonDisabled })}
