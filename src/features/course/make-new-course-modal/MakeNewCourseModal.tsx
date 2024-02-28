@@ -40,7 +40,7 @@ const MakeNewCourseModal = () => {
     return (
         <Modal>
             <div className={S.modalHeader}>
-                <Modal.Title>코스명 수정</Modal.Title>
+                <Modal.Title>새 코스 추가</Modal.Title>
                 <button className={S.modalCloseButton} onClick={closeModal}>
                     <CloseIcon width={28} height={28} />
                 </button>
