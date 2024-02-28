@@ -17,7 +17,6 @@ export const wrapper = recipe({
     variants: {
         status: {
             selected: {
-                borderRadius: '100px',
                 backgroundColor: `${COLOR.MonoBlack}08`,
             },
             none: {},

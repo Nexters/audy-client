@@ -4,7 +4,7 @@ import { COLOR } from '@/styles/foundation';
 
 export const wrapper = style({
     height: '100%',
-    padding: '12px 8px',
+    padding: '12px 0',
 
     display: 'flex',
     flexDirection: 'column',
@@ -12,11 +12,11 @@ export const wrapper = style({
     backgroundColor: COLOR.MonoWhite,
     overflowY: 'scroll',
 
-    "::-webkit-scrollbar": {
+    '::-webkit-scrollbar': {
         width: '8px',
     },
 
-    "::-webkit-scrollbar-thumb": {
+    '::-webkit-scrollbar-thumb': {
         width: '3px',
 
         backgroundClip: 'padding-box',
