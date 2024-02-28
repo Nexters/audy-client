@@ -1,4 +1,8 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
+import axios, {
+    type AxiosError,
+    type AxiosRequestConfig,
+    type AxiosResponse,
+} from 'axios';
 
 import { STATUS_CODE } from '@/constants/status';
 import { ApiError } from '@/utils/error/ApiError';
@@ -31,7 +35,25 @@ API.interceptors.response.use(
         }
 
         return response;
-    }
+    },
+    (error: AxiosError | Error): Promise<ApiError> => {
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                throw new ApiError({
+                    code: STATUS_CODE.NETWORK_ERROR,
+                    data: null,
+                    message:
+                        error.response?.data ??
+                        '알 수 없는 에러가 발생했습니다',
+                });
+            }
+        }
+        throw new ApiError({
+            code: STATUS_CODE.NETWORK_ERROR,
+            data: null,
+            message: '알 수 없는 에러가 발생했습니다',
+        });
+    },
 );
 
 /**
