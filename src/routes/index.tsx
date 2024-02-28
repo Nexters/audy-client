@@ -8,6 +8,7 @@ import { Outlet, createBrowserRouter } from 'react-router-dom';
 import AppPortal from '@/components/app-portal';
 import FeedbacksStacks from '@/components/feedbacks-stack';
 import { CoursePage, coursePageLoader } from '@/pages/course';
+import InvitePage from '@/pages/invite/InvitePage';
 import { invitePageLoader } from '@/pages/invite/InvitePage.loader';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
@@ -16,7 +17,6 @@ import { FeedbacksProvider } from '@/utils/ui/FeedBacksProvider';
 import { ModalProvider } from '@/utils/ui/ModalProvider';
 import { SnackBarProvider } from '@/utils/ui/SnackBarProvider';
 import { ToastProvider } from '@/utils/ui/ToastProvider';
-import InvitePage from '@/pages/invite/InvitePage';
 
 const queryClient = new QueryClient({
     defaultOptions: {
