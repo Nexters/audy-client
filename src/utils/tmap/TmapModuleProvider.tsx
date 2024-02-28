@@ -1,6 +1,8 @@
 import type { MutableRefObject, PropsWithChildren } from 'react';
 import { createContext, useEffect, useRef } from 'react';
 
+import { useLocation } from 'react-router-dom';
+
 import { TMapModule, type TmapConstructorType } from './tmapModule';
 
 interface TmapProviderType {
@@ -29,8 +31,11 @@ export const TmapProvider = ({
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
     const tmapModuleRef = useRef<TMapModule | null>(null);
 
+    const { pathname } = useLocation();
+
     useEffect(() => {
         if (!mapContainerRef.current) return;
+
         mapContainerRef.current.id = mapId;
 
         tmapModuleRef.current = new TMapModule({
@@ -41,7 +46,11 @@ export const TmapProvider = ({
             lat,
             lng,
         });
-    }, [height, lat, lng, mapId, width, zoom]);
+
+        return () => {
+            tmapModuleRef.current = null;
+        };
+    }, [height, lat, lng, mapId, width, zoom, pathname]);
 
     return (
         <TmapContext.Provider value={{ mapContainerRef, tmapModuleRef }}>

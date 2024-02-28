@@ -12,6 +12,7 @@ import * as S from './CoursePage.css';
 
 function CoursePage() {
     const { mapContainerRef } = useTmap();
+
     return (
         <>
             <GlobalNavigationBar />
