@@ -1,4 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
+
+import { STATUS_CODE } from '@/constants/status';
+import { ApiError } from '@/utils/error/ApiError';
 
 /**
  * 백엔드로부터 인계 받은 응답의 기본 Interface ApiResponseType
@@ -18,6 +21,18 @@ const API = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL,
     withCredentials: true,
 });
+
+API.interceptors.response.use(
+    (response: AxiosResponse<ApiResponseType<unknown>>) => {
+        const { code, data, message } = response.data;
+
+        if (code !== STATUS_CODE.OK) {
+            throw new ApiError({ code, data, message });
+        }
+
+        return response;
+    }
+);
 
 /**
  * GET 요청을 처리하는 유틸 API 함수 getAsync
