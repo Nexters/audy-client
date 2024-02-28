@@ -8,19 +8,19 @@ export const layout = style({
     flexDirection: 'column',
     height: '100%',
     overflowY: 'auto',
-    padding: '12px 8px',
+    padding: '12px 0',
     backgroundColor: COLOR.MonoWhite,
 });
 
 export const observer = style({
     width: '100%',
     height: '4px',
-})
+});
 
 export const emptyNotice = style([
     sprinkles({ typography: 'Medium14' }),
     {
         margin: 'auto',
         color: COLOR.Gray400,
-    }
-])
+    },
+]);
