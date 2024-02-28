@@ -51,17 +51,12 @@ export const usePatchCourseName = ({
 };
 
 // 새로운 코스를 만드는 Hook usePostSaveCourse
-export const usePostSaveCourse = ({
-    userId,
-    ...options
-}: {
-    userId: number;
-}) => {
+export const usePostSaveCourse = ({ ...options }) => {
     const queryClient = useQueryClient();
     return useMutation({
         ...options,
         mutationFn: (courseName: string) =>
-            CourseRepository.postSaveCourseAsync({ userId, courseName }),
+            CourseRepository.postSaveCourseAsync({ courseName }),
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: COURSE_QUERY_KEY.list(),

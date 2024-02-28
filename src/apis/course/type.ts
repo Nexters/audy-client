@@ -12,7 +12,6 @@ export interface CourseRequestParamType {
         courseName: string;
     };
     postSaveCourse: {
-        userId: number;
         courseName: string;
     };
     deleteCourse: {

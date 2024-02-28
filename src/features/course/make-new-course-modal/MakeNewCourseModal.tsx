@@ -10,17 +10,13 @@ import { usePostSaveCourse } from '@/query-hooks/course/mutation';
 
 import * as S from './MakeNewCourseModal.css';
 
-interface PropsType {
-    userId: number;
-}
-
-const MakeNewCourseModal = ({ userId }: PropsType) => {
+const MakeNewCourseModal = () => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [courseName, setCourseName] = useState('새로운 코스');
 
     const { closeModal } = useModal();
     const { setToast } = useToast();
-    const { mutateAsync: makeNewCourse } = usePostSaveCourse({ userId });
+    const { mutateAsync: makeNewCourse } = usePostSaveCourse({});
 
     const navigate = useNavigate();
 

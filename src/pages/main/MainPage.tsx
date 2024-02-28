@@ -9,7 +9,6 @@ import CoursesContainer from '@/features/course/courses-container';
 import MakeNewCourseModal from '@/features/course/make-new-course-modal';
 import { useModal } from '@/hooks/useModal';
 import { useTmap } from '@/hooks/useTmap';
-import { useGetUserInformation } from '@/query-hooks/user/query';
 import { CourseTabType } from '@/types';
 
 import * as S from './MainPage.css';
@@ -17,7 +16,6 @@ import * as S from './MainPage.css';
 const MainPage = () => {
     const { mapContainerRef } = useTmap();
     const { openModal } = useModal();
-    const { data: userInformation } = useGetUserInformation({});
 
     const [selectedCourseTab, setSelectedCourseTab] =
         useState<CourseTabType>('allCourse');
@@ -27,7 +25,7 @@ const MainPage = () => {
     };
 
     const handleMakeNewCourse = async () => {
-        openModal(<MakeNewCourseModal userId={userInformation.userId} />);
+        openModal(<MakeNewCourseModal />);
     };
 
     return (
