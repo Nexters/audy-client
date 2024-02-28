@@ -11,7 +11,6 @@ export const layout = style({
     padding: '17px 24px',
     width: '100%',
     backgroundColor: COLOR.MonoWhite,
-    borderRadius: '42px',
     cursor: 'pointer',
 
     ':hover': {
