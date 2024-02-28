@@ -14,6 +14,7 @@ const PopOverItem = ({
     const { closePopOver } = usePopOverContext();
 
     const handlePopOverItem = (event: MouseEvent<HTMLButtonElement>) => {
+        event.stopPropagation();
         onClick?.(event);
         closePopOver();
     };
