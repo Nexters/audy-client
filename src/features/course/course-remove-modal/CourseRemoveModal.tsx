@@ -1,5 +1,6 @@
 import Modal from '@/components/modal/Modal';
 import { useModal } from '@/hooks/useModal';
+import { useToast } from '@/hooks/useToast';
 import { useDeleteCourse } from '@/query-hooks/course/mutation';
 
 import * as S from './CourseRemoveModal.css';
@@ -11,6 +12,7 @@ interface PropsType {
 
 const CourseRemoveModal = ({ courseId, userId }: PropsType) => {
     const { closeModal } = useModal();
+    const { setToast } = useToast();
     const { mutate: deleteCourse } = useDeleteCourse({
         courseId,
         userId: userId,
@@ -19,6 +21,7 @@ const CourseRemoveModal = ({ courseId, userId }: PropsType) => {
     const handleRemoveButtonClick = () => {
         deleteCourse();
         closeModal();
+        setToast('코스가 삭제되었어요');
     };
 
     return (
