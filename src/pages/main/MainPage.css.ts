@@ -24,8 +24,14 @@ export const addNewCourseButton = style({
     justifyContent: 'center',
     gap: '12px',
     backgroundColor: COLOR.MonoWhite,
-    padding: '21px',
-    borderRadius: '16px',
+    padding: '14px',
+    borderRadius: '6px',
+    border: `1px solid ${COLOR.Gray200}`,
+    transition: 'background-color 0.2s',
+
+    ':hover': {
+        backgroundColor: COLOR.Gray200,
+    },
 });
 
 export const addNewCourseButtonText = style([

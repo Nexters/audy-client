@@ -12,7 +12,7 @@ export interface CourseRequestParamType {
         courseName: string;
     };
     postSaveCourse: {
-        courseName: number;
+        courseName: string;
     };
     deleteCourse: {
         userId: number;

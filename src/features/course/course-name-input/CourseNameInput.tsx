@@ -1,24 +1,26 @@
 import { useState } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import LeftArrowIcon from '@/assets/icons/leftArrow.svg?react';
 import ModifyFilledIcon from '@/assets/icons/modifyFilled.svg?react';
+import { usePatchCourseName } from '@/query-hooks/course/mutation';
 import { useGetCourseDetail } from '@/query-hooks/course/query';
+import { COLOR } from '@/styles/foundation';
 
 import * as S from './CourseNameInput.css';
-import { usePatchCourseName } from '@/query-hooks/course/mutation';
 
 const CourseNameInput = () => {
     const { courseId } = useParams();
+    const navigate = useNavigate();
 
     const {
         data: { courseName },
     } = useGetCourseDetail({ courseId: Number(courseId) });
 
-    const {
-        mutate: updateCourseName,
-    } = usePatchCourseName({ courseId: Number(courseId) })
+    const { mutate: updateCourseName } = usePatchCourseName({
+        courseId: Number(courseId),
+    });
 
     const [isCourseNameEditing, setIsCourseNameEditing] = useState(false);
     const [editedCourseName, setEditedCourseName] = useState(courseName);
@@ -36,11 +38,16 @@ const CourseNameInput = () => {
     return (
         <div className={S.wrapper}>
             {isCourseNameEditing || (
-                <LeftArrowIcon
-                    width={24}
-                    height={24}
-                    className={S.backArrowIcon}
-                />
+                <button
+                    onClick={() => navigate('/')}
+                    className={S.goBackButton}
+                >
+                    <LeftArrowIcon
+                        width={24}
+                        height={24}
+                        fill={COLOR.Gray900}
+                    />
+                </button>
             )}
 
             {isCourseNameEditing ? (
