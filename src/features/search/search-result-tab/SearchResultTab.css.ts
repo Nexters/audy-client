@@ -8,7 +8,7 @@ export const layout = style({
     justifyContent: 'space-between',
     backgroundColor: COLOR.MonoWhite,
     padding: '15px 16px 13px 24px',
-    borderRadius: '6px',
+
     cursor: 'pointer',
 
     ':hover': {

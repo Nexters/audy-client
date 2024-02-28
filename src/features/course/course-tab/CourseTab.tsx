@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import MyCourseIcon from '@/assets/icons/myCourse.svg?react';
 import PersonIcon from '@/assets/icons/person.svg?react';
 import PinIcon from '@/assets/icons/pin.svg?react';
@@ -21,8 +23,14 @@ const CourseTab = ({
     pinCount,
     isMyCourse,
 }: PropsType) => {
+    const navigate = useNavigate();
+
+    const handleMoveToCourse = () => {
+        navigate(`/course/${courseId}`);
+    };
+
     return (
-        <div className={S.layout}>
+        <div className={S.layout} onClick={handleMoveToCourse}>
             <div>
                 <div className={S.courseNameContainer}>
                     {isMyCourse && <MyCourseIcon fill={COLOR.PinkPrimary} />}
