@@ -1,9 +1,12 @@
+import { useLocation } from 'react-router-dom';
+
 import AudyLogoIcon from '@/assets/icons/audyLogo.svg?react';
 import SettingIcon from '@/assets/icons/setting.svg?react';
 import PopOver from '@/components/pop-over';
 import SignOutModal from '@/features/auth/sign-out-modal';
 import WithdrawModal from '@/features/auth/withdraw-modal';
 import { useModal } from '@/hooks/useModal';
+import EditorList from '@/features/user/editor-list';
 
 import * as S from './GlobalNavigationBar.css';
 
@@ -18,10 +21,14 @@ const GlobalNavigationBar = () => {
         openModal(<WithdrawModal />);
     };
 
+    const { pathname } = useLocation();
+    const isCoursePage = pathname.split('/')[1] === 'course';
+
     return (
         <div className={S.wrapper}>
             <AudyLogoIcon />
             <p className={S.savingStatus}>수정된 코스 저장중...</p>
+            {isCoursePage && <EditorList />}
             <PopOver>
                 <PopOver.Trigger>
                     <SettingIcon className={S.settingIcon} />

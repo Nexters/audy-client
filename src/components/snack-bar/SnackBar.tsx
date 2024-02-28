@@ -1,3 +1,4 @@
+import CloseIcon from '@/assets/icons/close.svg?react';
 import { useSnackBar } from '@/hooks/useSnackBar';
 
 import * as S from './SnackBar.css';
@@ -23,10 +24,27 @@ const SnackBar = () => {
         });
     };
 
+    const handleSnackBarClose = () => {
+        setSnackBar({
+            message: '',
+            undoFunction: () => {},
+        });
+    };
+
     return (
         <div className={S.layout} onAnimationEnd={handleOnAnimationEnd}>
             {snackBarMessage}
-            <button onClick={handleSnackBarUndoFunction}>undo</button>
+            <div className={S.buttonsContainer}>
+                <button
+                    onClick={handleSnackBarUndoFunction}
+                    className={S.undoButton}
+                >
+                    실행취소
+                </button>
+                <button onClick={handleSnackBarClose} className={S.closeButton}>
+                    <CloseIcon />
+                </button>
+            </div>
         </div>
     );
 };
