@@ -24,8 +24,6 @@ const GlobalNavigationBar = () => {
         openModal(<WithdrawModal />);
     };
 
-    const isCoursePage = pathname.split('/')[1] === 'course';
-
     return (
         <div className={S.wrapper}>
             <AudyLogoIcon />

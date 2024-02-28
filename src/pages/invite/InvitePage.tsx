@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useLoaderData, useNavigate } from 'react-router-dom';
 
 import AddIcon from '@/assets/icons/add.svg?react';
 import AsyncBoundary from '@/components/async-boundary';
@@ -6,17 +8,26 @@ import GlobalNavigationBar from '@/components/global-navigation-bar';
 import SidePanel from '@/components/side-panel';
 import CourseFilteringTab from '@/features/course/course-filtering-tab/CourseFilteringTab';
 import CoursesContainer from '@/features/course/courses-container';
-import MakeNewCourseModal from '@/features/course/make-new-course-modal';
+import InvalidLinkModal from '@/features/course/member-limit-modal';
 import { useModal } from '@/hooks/useModal';
 import { useTmap } from '@/hooks/useTmap';
-import { COLOR } from '@/styles/foundation';
 import { CourseTabType } from '@/types';
 
-import * as S from './MainPage.css';
+import * as S from './InvitePage.css';
 
-const MainPage = () => {
+const InvitePage = () => {
     const { mapContainerRef } = useTmap();
     const { openModal } = useModal();
+    const loadedData = useLoaderData();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        console.log(loadedData);
+        if (!loadedData) {
+            openModal(<InvalidLinkModal />);
+            navigate('/');
+        }
+    }, [loadedData, openModal]);
 
     const [selectedCourseTab, setSelectedCourseTab] =
         useState<CourseTabType>('allCourse');
@@ -25,9 +36,7 @@ const MainPage = () => {
         setSelectedCourseTab(tab);
     };
 
-    const handleMakeNewCourse = async () => {
-        openModal(<MakeNewCourseModal />);
-    };
+    console.log('render');
 
     return (
         <>
@@ -41,11 +50,7 @@ const MainPage = () => {
                     />
 
                     <button className={S.addNewCourseButton}>
-                        <AddIcon
-                            fill={COLOR.MonoBlack}
-                            width={20}
-                            height={20}
-                        />
+                        <AddIcon fill="#000000" width={20} height={20} />
                         <p className={S.addNewCourseButtonText}>
                             새로운 코스 만들기
                         </p>
@@ -64,4 +69,4 @@ const MainPage = () => {
     );
 };
 
-export default MainPage;
+export default InvitePage;

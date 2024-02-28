@@ -14,6 +14,9 @@ import MainPage from '@/pages/main';
 import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
 import { FeedbacksProvider } from '@/utils/ui/FeedBacksProvider';
 import { ModalProvider } from '@/utils/ui/ModalProvider';
+import { SnackBarProvider } from '@/utils/ui/SnackBarProvider';
+import { ToastProvider } from '@/utils/ui/ToastProvider';
+import InvitePage from '@/pages/invite/InvitePage';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -75,7 +78,7 @@ export const router = createBrowserRouter([
             {
                 path: '/invite/:invitationCode',
                 loader: invitePageLoader,
-                element: <div />,
+                element: <InvitePage />,
             },
         ],
     },
