@@ -40,7 +40,10 @@ const MainPage = () => {
                         handleCourseTabClick={handleCourseTabClick}
                     />
 
-                    <button className={S.addNewCourseButton}>
+                    <button
+                        className={S.addNewCourseButton}
+                        onClick={handleMakeNewCourse}
+                    >
                         <AddIcon
                             fill={COLOR.MonoBlack}
                             width={20}

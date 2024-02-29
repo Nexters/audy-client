@@ -15,8 +15,6 @@ import MainPage from '@/pages/main';
 import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
 import { FeedbacksProvider } from '@/utils/ui/FeedBacksProvider';
 import { ModalProvider } from '@/utils/ui/ModalProvider';
-import { SnackBarProvider } from '@/utils/ui/SnackBarProvider';
-import { ToastProvider } from '@/utils/ui/ToastProvider';
 
 const queryClient = new QueryClient({
     defaultOptions: {
