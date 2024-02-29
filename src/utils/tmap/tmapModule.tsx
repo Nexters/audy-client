@@ -177,10 +177,12 @@ export class TMapModule {
             (marker) => marker.id === id,
         );
 
-        const [{ marker: targetMarker }] = this.#markers.splice(markerIndex, 1);
-        targetMarker.setMap(null);
+        const targetMarker = this.#markers.splice(markerIndex, 1)[0];
+        targetMarker.marker.setMap(null);
 
         window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
+
+        return { marker: targetMarker, index: markerIndex };
     }
 
     // 마커 수정
