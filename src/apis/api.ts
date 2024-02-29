@@ -26,14 +26,28 @@ const API = axios.create({
     withCredentials: true,
 });
 
+/**
+ * Audy 백엔드 서버로부터 온 요청인지를 판별하는 Type Guard 함수 isServerApiResponse
+ * Tmap API 서버로부터 온 응답의 경우를 걸러내기 위해 사용한다.
+ */
+const isServerApiResponse = (
+    response: unknown,
+): response is ApiResponseType<unknown> =>
+    typeof response === 'object' &&
+    response !== null &&
+    'code' in response &&
+    'data' in response &&
+    'message' in response;
+
 API.interceptors.response.use(
-    (response: AxiosResponse<ApiResponseType<unknown>>) => {
-        const { code, data, message } = response.data;
+    (response: AxiosResponse<unknown>) => {
+        if (isServerApiResponse(response.data)) {
+            const { code, data, message } = response.data;
 
-        if (code !== STATUS_CODE.OK) {
-            throw new ApiError({ code, data, message });
+            if (code !== STATUS_CODE.OK) {
+                throw new ApiError({ code, data, message });
+            }
         }
-
         return response;
     },
     (error: AxiosError | Error): Promise<ApiError> => {
