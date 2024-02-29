@@ -3,7 +3,6 @@ import ThreeDotIcon from '@/assets/icons/threeDot.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import PopOver from '@/components/pop-over';
 import { useModal } from '@/hooks/useModal';
-import { useGetUserInformation } from '@/query-hooks/user/query';
 
 import CourseRemoveModal from '../course-remove-modal/CourseRemoveModal';
 
