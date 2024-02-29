@@ -11,13 +11,21 @@ export const modalHeader = style({
     alignItems: 'center',
 });
 
-export const couseNameInput = style({
-    border: `1px solid ${COLOR.Gray200}`,
-    width: '100%',
-    flex: 1,
-    padding: '16px',
-    borderRadius: '6px',
-});
+export const couseNameInput = style([
+    sprinkles({ typography: 'Regular15' }),
+    {
+        border: `1px solid ${COLOR.Gray200}`,
+        width: '100%',
+        flex: 1,
+        padding: '8px 12px',
+        borderRadius: '6px',
+        color: COLOR.Gray900,
+
+        '::placeholder': {
+            color: COLOR.Gray400,
+        },
+    },
+]);
 
 export const editButton = recipe({
     base: [
