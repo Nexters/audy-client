@@ -13,10 +13,10 @@ import { useModal } from '@/hooks/useModal';
 import { useTmap } from '@/hooks/useTmap';
 import { usePostSaveCourse } from '@/query-hooks/course/mutation';
 import { useGetUserInformation } from '@/query-hooks/user/query';
+import { COLOR } from '@/styles/foundation';
 import { CourseTabType } from '@/types';
 
 import * as S from './MainPage.css';
-import { COLOR } from '@/styles/foundation';
 
 const MainPage = () => {
     const { mapContainerRef } = useTmap();
@@ -37,8 +37,8 @@ const MainPage = () => {
 
     const handleMakeNewCourse = async () => {
         openModal(<MakeNewCourseModal />);
-        const response = await makeNewCourse('새로운 코스');
-        navigate(`/course/${response.data.courseId}`);
+        const { courseId } = await makeNewCourse('새로운 코스');
+        navigate(`/course/${courseId}`);
     };
 
     return (

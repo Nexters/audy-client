@@ -50,10 +50,13 @@ export const TmapProvider = ({
         return () => {
             tmapModuleRef.current = null;
         };
-    }, [height, lat, lng, mapId, width, zoom, pathname]);
+    }, [height, lat, lng, mapId, width, zoom]);
 
     return (
-        <TmapContext.Provider value={{ mapContainerRef, tmapModuleRef }}>
+        <TmapContext.Provider
+            value={{ mapContainerRef, tmapModuleRef }}
+            key={pathname}
+        >
             {children}
         </TmapContext.Provider>
     );
