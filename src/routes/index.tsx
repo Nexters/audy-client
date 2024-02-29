@@ -8,6 +8,8 @@ import { Outlet, createBrowserRouter } from 'react-router-dom';
 import AppPortal from '@/components/app-portal';
 import FeedbacksStacks from '@/components/feedbacks-stack';
 import { CoursePage, coursePageLoader } from '@/pages/course';
+import InvitePage from '@/pages/invite/InvitePage';
+import { invitePageLoader } from '@/pages/invite/InvitePage.loader';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
 import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
@@ -70,6 +72,11 @@ export const router = createBrowserRouter([
                 path: '/course/:courseId',
                 loader: coursePageLoader(queryClient),
                 element: <CoursePage />,
+            },
+            {
+                path: '/invite/:invitationCode',
+                loader: invitePageLoader,
+                element: <InvitePage />,
             },
         ],
     },

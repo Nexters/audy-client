@@ -1,7 +1,10 @@
-import AddIcon from '@/assets/icons/add.svg?react';
-import { COLOR } from '@/styles/foundation';
+import { useParams } from 'react-router-dom';
 
-import EditorProfile from '../editor-profile';
+import AddIcon from '@/assets/icons/add.svg?react';
+import EditorInviteModal from '@/features/user/editor-invite-modal';
+import EditorProfile from '@/features/user/editor-profile';
+import { useModal } from '@/hooks/useModal';
+import { COLOR } from '@/styles/foundation';
 
 import * as S from './EditorList.css';
 
@@ -28,6 +31,14 @@ const tempArr = [
 ];
 
 const EditorList = () => {
+    const { openModal } = useModal();
+    const { courseId } = useParams();
+
+    const handleInvitationButtonClick = () => {
+        if (!courseId) return;
+        openModal(<EditorInviteModal courseId={Number(courseId)} />);
+    };
+
     return (
         <div className={S.layout}>
             {tempArr.map(({ profileImageUrl, isOnline, editorName }, index) => {
@@ -42,7 +53,10 @@ const EditorList = () => {
             })}
 
             {tempArr.length < 5 && (
-                <button className={S.editorInviteButton}>
+                <button
+                    className={S.editorInviteButton}
+                    onClick={handleInvitationButtonClick}
+                >
                     <AddIcon fill={COLOR.MonoWhite} width={20} height={20} />
                 </button>
             )}

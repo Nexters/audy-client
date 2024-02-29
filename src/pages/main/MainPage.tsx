@@ -9,6 +9,7 @@ import CoursesContainer from '@/features/course/courses-container';
 import MakeNewCourseModal from '@/features/course/make-new-course-modal';
 import { useModal } from '@/hooks/useModal';
 import { useTmap } from '@/hooks/useTmap';
+import { COLOR } from '@/styles/foundation';
 import { CourseTabType } from '@/types';
 
 import * as S from './MainPage.css';
@@ -43,7 +44,11 @@ const MainPage = () => {
                         className={S.addNewCourseButton}
                         onClick={handleMakeNewCourse}
                     >
-                        <AddIcon fill="#000000" width={20} height={20} />
+                        <AddIcon
+                            fill={COLOR.MonoBlack}
+                            width={20}
+                            height={20}
+                        />
                         <p className={S.addNewCourseButtonText}>
                             새로운 코스 만들기
                         </p>

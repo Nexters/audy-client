@@ -66,12 +66,13 @@ export const CourseRepository = {
     async postInviteCourseAsync({
         courseId,
     }: CourseRequestParamType['postInviteCourse']) {
-        return postAsync<
+        const response = await postAsync<
             ApiResponseType<CourseResponseType['postInviteCourse']>,
             CourseRequestParamType['postInviteCourse']
         >('/v1/courses/invite', {
             courseId,
         });
+        return response.data
     },
 
     async patchUpdateCourseAsync({

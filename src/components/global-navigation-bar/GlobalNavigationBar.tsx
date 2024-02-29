@@ -5,13 +5,16 @@ import SettingIcon from '@/assets/icons/setting.svg?react';
 import PopOver from '@/components/pop-over';
 import SignOutModal from '@/features/auth/sign-out-modal';
 import WithdrawModal from '@/features/auth/withdraw-modal';
-import { useModal } from '@/hooks/useModal';
 import EditorList from '@/features/user/editor-list';
+import { useModal } from '@/hooks/useModal';
 
 import * as S from './GlobalNavigationBar.css';
 
 const GlobalNavigationBar = () => {
+    const { pathname } = useLocation();
     const { openModal } = useModal();
+
+    const isCoursePage = pathname.split('/')[1] === 'course';
 
     const handleSignOutButtonClick = () => {
         openModal(<SignOutModal />);
@@ -20,9 +23,6 @@ const GlobalNavigationBar = () => {
     const handleWithdrawButtonClick = () => {
         openModal(<WithdrawModal />);
     };
-
-    const { pathname } = useLocation();
-    const isCoursePage = pathname.split('/')[1] === 'course';
 
     return (
         <div className={S.wrapper}>
