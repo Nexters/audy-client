@@ -12,17 +12,9 @@ import { USER_QUERY_KEY } from './key';
 export const useGetUserInformation = ({
     ...options
 }: {
-    options?: UseSuspenseQueryOptions<
-        UserType,
-        AxiosError,
-        UserType
-    >;
+    options?: UseSuspenseQueryOptions<UserType, AxiosError, UserType>;
 }) => {
-    return useSuspenseQuery<
-        UserType,
-        AxiosError,
-        UserType
-    >({
+    return useSuspenseQuery<UserType, AxiosError, UserType>({
         ...options,
         queryFn: () => UserRepository.getInformationAsync(),
         queryKey: USER_QUERY_KEY.info(),

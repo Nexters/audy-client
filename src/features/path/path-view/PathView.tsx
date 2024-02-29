@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { SearchContextValue } from '@/features/search/search-context';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
+import { useSocket } from '@/hooks/useSocket';
 import { useTmap } from '@/hooks/useTmap';
 import { useGetCourseDetail } from '@/query-hooks/course/query';
 import type { MarkerType } from '@/types/map';
@@ -14,7 +15,6 @@ import PathItem from '../path-item';
 
 import * as S from './PathView.css';
 import PathViewContextProvider from './PathViewContextProvider';
-import { useSocket } from '@/hooks/useSocket';
 
 const REORDER_DELAY = 330;
 

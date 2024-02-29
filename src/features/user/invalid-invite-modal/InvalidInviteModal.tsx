@@ -1,8 +1,9 @@
+import { useNavigate } from 'react-router-dom';
+
 import Modal from '@/components/modal';
 import { useModal } from '@/hooks/useModal';
 
 import * as S from './InvalidInviteModal.css';
-import { useNavigate } from 'react-router-dom';
 
 const InvalidInviteModal = () => {
     const { closeModal } = useModal();
@@ -11,14 +12,14 @@ const InvalidInviteModal = () => {
     const handleConfirmButtonClick = () => {
         navigate('/');
         closeModal();
-    }
+    };
 
     return (
         <Modal>
             <Modal.Title>유효하지 않은 링크입니다</Modal.Title>
             <Modal.Content>
                 <p className={S.infoText}>
-                    더 이상 새로운 게스트가 참여할 수 없어요. 
+                    더 이상 새로운 게스트가 참여할 수 없어요.
                 </p>
             </Modal.Content>
             <Modal.Footer>

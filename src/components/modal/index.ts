@@ -1,3 +1,3 @@
-import Dialog from "./Modal";
+import Dialog from './Modal';
 
-export default Dialog
+export default Dialog;

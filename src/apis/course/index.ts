@@ -72,7 +72,7 @@ export const CourseRepository = {
         >('/v1/courses/invite', {
             courseId,
         });
-        return response.data
+        return response.data;
     },
 
     async patchUpdateCourseAsync({

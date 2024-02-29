@@ -47,7 +47,7 @@ const SearchBar = () => {
 
     const handleSearchInputBlur = () => {
         if (!searchInputValue) setIsSearchMode(false);
-    }
+    };
 
     return (
         <div className={S.searchBox}>

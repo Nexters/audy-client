@@ -1,3 +1,3 @@
-import EditorInviteModal from "./EditorInviteModal";
+import EditorInviteModal from './EditorInviteModal';
 
 export default EditorInviteModal;

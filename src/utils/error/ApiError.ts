@@ -1,4 +1,4 @@
-import type { ApiResponseType } from "@/apis/api";
+import type { ApiResponseType } from '@/apis/api';
 
 /**
  * 서버와의 Api 요청에서 발생한 에러를 관리하는 객체 ApiError
@@ -19,4 +19,4 @@ export class ApiError extends Error {
 // 해당 에러가 ApiError 인지 아닌지를 판별하기 위한 Type Narrow 함수 isApiError
 export const isApiError = (error: unknown): error is ApiError => {
     return error instanceof Error && error.name === 'ApiError';
-}
+};

@@ -1,3 +1,3 @@
-import { AppPortal } from "./AppPortal";
+import { AppPortal } from './AppPortal';
 
 export default AppPortal;

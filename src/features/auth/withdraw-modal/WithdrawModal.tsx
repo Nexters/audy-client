@@ -19,7 +19,7 @@ const WithdrawModal = () => {
             <Modal.Title>모든 정보가 지워져요</Modal.Title>
             <Modal.Content>
                 <p className={S.infoText}>
-                탈퇴 후 삭제된 코스와 핀은 복구할 수 없어요
+                    탈퇴 후 삭제된 코스와 핀은 복구할 수 없어요
                 </p>
             </Modal.Content>
             <Modal.Footer>

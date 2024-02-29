@@ -1,6 +1,7 @@
+import { style } from '@vanilla-extract/css';
+
 import { COLOR } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
-import { style } from '@vanilla-extract/css';
 
 export const threeDotButton = style({
     padding: '10px',

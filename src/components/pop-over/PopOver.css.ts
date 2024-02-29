@@ -23,12 +23,12 @@ export const content = style({
     zIndex: Z_INDEX.popOver,
     bottom: '4px',
     right: '0',
-    
+
     backgroundColor: COLOR.MonoWhite,
     border: `1px solid ${COLOR.Gray200}`,
     borderRadius: '15px',
     boxShadow: `0px 10px 20px 0px rgba(0, 0, 0, 0.12)`,
-    transform: 'translate(0, 100%)'
+    transform: 'translate(0, 100%)',
 });
 
 export const item = style({

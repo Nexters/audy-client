@@ -1,3 +1,3 @@
-import WithdrawModal from "./WithdrawModal";
+import WithdrawModal from './WithdrawModal';
 
 export default WithdrawModal;

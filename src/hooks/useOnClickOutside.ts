@@ -26,5 +26,5 @@ export const useOnClickOutside = <T extends HTMLElement = HTMLDivElement>({
         return () => document.removeEventListener('pointerdown', eventListener);
     }, [onClickOutside, targetRef]);
 
-    return { targetRef }
+    return { targetRef };
 };

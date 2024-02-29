@@ -16,7 +16,7 @@ export const footer = style({
 
     display: 'flex',
     gap: '20px',
-})
+});
 
 export const footerButton = recipe({
     base: [

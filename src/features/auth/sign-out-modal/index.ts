@@ -1,3 +1,3 @@
-import SignOutModal from "./SignOutModal";
+import SignOutModal from './SignOutModal';
 
 export default SignOutModal;

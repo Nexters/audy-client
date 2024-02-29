@@ -1,8 +1,4 @@
-import {
-    type ComponentProps,
-    type PropsWithChildren,
-    Suspense,
-} from 'react';
+import { type ComponentProps, type PropsWithChildren, Suspense } from 'react';
 
 import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 

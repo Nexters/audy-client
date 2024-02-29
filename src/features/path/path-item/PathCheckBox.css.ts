@@ -1,4 +1,5 @@
 import { style } from '@vanilla-extract/css';
+
 import { COLOR } from '@/styles/foundation';
 import { sprinkles } from '@/styles/sprinkle.css';
 

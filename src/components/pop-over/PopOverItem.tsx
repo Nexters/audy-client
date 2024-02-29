@@ -1,4 +1,4 @@
-import type { MouseEvent, ComponentProps } from 'react';
+import type { ComponentProps, MouseEvent } from 'react';
 
 import clsx from 'clsx';
 
@@ -16,7 +16,7 @@ const PopOverItem = ({
     const handlePopOverItem = (event: MouseEvent<HTMLButtonElement>) => {
         onClick?.(event);
         closePopOver();
-    }
+    };
 
     return (
         <button

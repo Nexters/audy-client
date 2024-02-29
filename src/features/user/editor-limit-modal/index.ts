@@ -1,3 +1,3 @@
-import EditorLimitModal from "./EditorLimitModal";
+import EditorLimitModal from './EditorLimitModal';
 
 export default EditorLimitModal;

@@ -15,10 +15,7 @@ const EditorLimitModal = () => {
                 </p>
             </Modal.Content>
             <Modal.Footer>
-                <button
-                    className={S.footerButton}
-                    onClick={closeModal}
-                >
+                <button className={S.footerButton} onClick={closeModal}>
                     확인
                 </button>
             </Modal.Footer>

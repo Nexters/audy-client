@@ -1,3 +1,3 @@
-import PopOver from "./PopOver";
+import PopOver from './PopOver';
 
 export default PopOver;

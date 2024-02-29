@@ -33,8 +33,8 @@ export const loginContainer = style({
         [MEDIA_QUERY.mobile]: {
             width: 'calc(100% - 40px)',
             padding: '40px 20px 20px 20px',
-        }
-    }
+        },
+    },
 });
 
 export const introduceBox = style({

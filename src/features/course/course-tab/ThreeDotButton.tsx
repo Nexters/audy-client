@@ -10,15 +10,14 @@ interface PropsType {
 }
 
 const ThreeDotButton = ({ courseId }: PropsType) => {
-
     // TODO : 모달 컴포넌트 개발 이후 수정 모달 추가 필요
     const handleCourseEditIconClick = () => {
         console.log(courseId);
-    }
+    };
 
     const handleRemoveCourseIconClick = () => {
         console.log(courseId);
-    }
+    };
 
     return (
         <PopOver>

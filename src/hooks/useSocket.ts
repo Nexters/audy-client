@@ -97,7 +97,7 @@ export const useSocket = (courseId: number) => {
                         }: CourseSocketSubType['modificationName'] = JSON.parse(
                             message.body,
                         );
-                        console.log(pinId, pinName);  // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
+                        console.log(pinId, pinName); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
                     },
                 );
                 stomp.subscribe(
@@ -107,9 +107,8 @@ export const useSocket = (courseId: number) => {
                         const {
                             pinId,
                             sequence,
-                        }: CourseSocketSubType['modificationOrder'] = JSON.parse(
-                            message.body,
-                        );
+                        }: CourseSocketSubType['modificationOrder'] =
+                            JSON.parse(message.body);
                         console.log(pinId, sequence); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
                     },
                 );
