@@ -6,15 +6,13 @@ import { Provider as JotaiAtomProvider } from 'jotai';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
 import AppPortal from '@/components/app-portal';
-import SnackBar from '@/components/snack-bar';
-import Toast from '@/components/toast';
+import FeedbacksStacks from '@/components/feedbacks-stack';
 import { CoursePage, coursePageLoader } from '@/pages/course';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
 import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
+import { FeedbacksProvider } from '@/utils/ui/FeedBacksProvider';
 import { ModalProvider } from '@/utils/ui/ModalProvider';
-import { SnackBarProvider } from '@/utils/ui/SnackBarProvider';
-import { ToastProvider } from '@/utils/ui/ToastProvider';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -27,32 +25,31 @@ const queryClient = new QueryClient({
 
 const UIProvider = ({ children }: PropsWithChildren) => (
     <AppPortal.Provider>
-        <ToastProvider>
-            <SnackBarProvider>
-                <ModalProvider />
-                <Toast />
-                <SnackBar />
-                {children}
-            </SnackBarProvider>
-        </ToastProvider>
+        <FeedbacksProvider>
+            <ModalProvider />
+            <FeedbacksStacks />
+            {children}
+        </FeedbacksProvider>
     </AppPortal.Provider>
 );
 
 const InitializedRouter = () => (
     <QueryClientProvider client={queryClient}>
-        <JotaiAtomProvider>
-            <UIProvider>
-                <TmapProvider
-                    width="100%"
-                    height="calc(100vh - 64px)"
-                    lat={37.5652045}
-                    lng={126.98702028}
-                >
-                    <ReactQueryDevtools />
-                    <Outlet />
-                </TmapProvider>
-            </UIProvider>
-        </JotaiAtomProvider>
+        <AppPortal.Provider>
+            <JotaiAtomProvider>
+                <UIProvider>
+                    <TmapProvider
+                        width="100%"
+                        height="calc(100vh - 64px)"
+                        lat={37.5652045}
+                        lng={126.98702028}
+                    >
+                        <ReactQueryDevtools />
+                        <Outlet />
+                    </TmapProvider>
+                </UIProvider>
+            </JotaiAtomProvider>
+        </AppPortal.Provider>
     </QueryClientProvider>
 );
 
