@@ -7,16 +7,12 @@ import * as S from './CourseRemoveModal.css';
 
 interface PropsType {
     courseId: number;
-    userId: number;
 }
 
-const CourseRemoveModal = ({ courseId, userId }: PropsType) => {
+const CourseRemoveModal = ({ courseId }: PropsType) => {
     const { closeModal } = useModal();
     const { setToast } = useToast();
-    const { mutate: deleteCourse } = useDeleteCourse({
-        courseId,
-        userId: userId,
-    });
+    const { mutate: deleteCourse } = useDeleteCourse({ courseId });
 
     const handleRemoveButtonClick = () => {
         deleteCourse();

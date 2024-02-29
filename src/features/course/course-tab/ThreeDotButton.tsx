@@ -15,18 +15,12 @@ interface PropsType {
 
 const ThreeDotButton = ({ courseId }: PropsType) => {
     const { openModal } = useModal();
-    const { data: userInformation } = useGetUserInformation({});
 
     // TODO : 모달 컴포넌트 개발 이후 수정 모달 추가 필요
     const handleCourseEditIconClick = () => {};
 
     const handleRemoveCourseIconClick = () => {
-        openModal(
-            <CourseRemoveModal
-                courseId={courseId}
-                userId={userInformation.userId}
-            />,
-        );
+        openModal(<CourseRemoveModal courseId={courseId} />);
     };
 
     return (

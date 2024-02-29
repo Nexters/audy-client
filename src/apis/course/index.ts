@@ -101,14 +101,12 @@ export const CourseRepository = {
     },
 
     async deleteCourseAsync({
-        userId,
         courseId,
     }: CourseRequestParamType['deleteCourse']) {
         await deleteAsync<
             ApiResponseType<void>,
             CourseRequestParamType['deleteCourse']
         >('/v1/courses', {
-            userId,
             courseId,
         });
     },

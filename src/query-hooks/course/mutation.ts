@@ -12,7 +12,6 @@ import { COURSE_QUERY_KEY } from './key';
 
 // 특정 코스를 삭제하는 Hook useDeleteCourse
 export const useDeleteCourse = ({
-    userId,
     courseId,
     ...options
 }: CourseRequestParamType['deleteCourse'] &
@@ -20,8 +19,7 @@ export const useDeleteCourse = ({
     const queryClient = useQueryClient();
     return useMutation({
         ...options,
-        mutationFn: () =>
-            CourseRepository.deleteCourseAsync({ userId, courseId }),
+        mutationFn: () => CourseRepository.deleteCourseAsync({ courseId }),
         onSuccess: () => {
             queryClient.removeQueries({
                 queryKey: COURSE_QUERY_KEY.detail(courseId),
