@@ -59,7 +59,8 @@ const CourseTab = ({
                     </div>
                 </div>
             </div>
-            <ThreeDotButton courseId={courseId} />
+
+            {isMyCourse && <ThreeDotButton courseId={courseId} />}
         </div>
     );
 };
