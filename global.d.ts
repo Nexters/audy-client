@@ -9,7 +9,7 @@ declare global {
     }
 
     interface CustomEventMap {
-        'marker:create': CustomEvent<MarkerType>;
+        'marker:create': CustomEvent<{ marker: MarkerType; index: number }>;
         'marker:remove': CustomEvent<string>;
     }
 

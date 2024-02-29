@@ -161,7 +161,7 @@ export class TMapModule {
 
         window.dispatchEvent(
             new CustomEvent('marker:create', {
-                detail: newMarker,
+                detail: { marker: newMarker, index },
             }),
         );
 

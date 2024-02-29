@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { SearchContextValue } from '@/features/search/search-context';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useEventListeners } from '@/hooks/useEventListeners';
+import { useSocket } from '@/hooks/useSocket';
 import { useTmap } from '@/hooks/useTmap';
 import { useGetCourseDetail } from '@/query-hooks/course/query';
 import type { MarkerType } from '@/types/map';
@@ -14,7 +15,6 @@ import PathItem from '../path-item';
 
 import * as S from './PathView.css';
 import PathViewContextProvider from './PathViewContextProvider';
-import { useSocket } from '@/hooks/useSocket';
 
 const REORDER_DELAY = 330;
 
@@ -31,17 +31,23 @@ const PathView = () => {
     const [markers, setMarkers] = useState<MarkerType[]>([]);
     const { isSearchMode } = useContext(SearchContextValue);
 
-    useEventListeners('marker:create', (event) => {
+    useEventListeners('marker:create', ({ detail: { marker, index } }) => {
         if (!courseId) return;
-        setMarkers((previous) => [...previous, event.detail]);
+
+        setMarkers((previous) => [
+            ...previous.slice(0, index),
+            marker,
+            ...previous.slice(index),
+        ]);
+
         stompClient.addPin({
-            pinName: event.detail.name,
-            originName: event.detail.originName,
+            pinName: marker.name,
+            originName: marker.originName,
             courseId: Number(courseId),
-            latitude: Number(event.detail.lat),
-            longitude: Number(event.detail.lng),
-            address: event.detail.address,
-            sequence: 1, // TODO : TmapModule 구현체 로직 변경 필요
+            latitude: Number(marker.lat),
+            longitude: Number(marker.lng),
+            address: marker.address,
+            sequence: index, // TODO : TmapModule 구현체 로직 변경 필요
         });
     });
 
