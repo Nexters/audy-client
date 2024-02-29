@@ -1,11 +1,7 @@
-import axios, {
-    type AxiosError,
-    type AxiosRequestConfig,
-    type AxiosResponse,
-} from 'axios';
+import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios'; // type AxiosError,
 
-import { STATUS_CODE } from '@/constants/status';
-import { ApiError } from '@/utils/error/ApiError';
+// import { STATUS_CODE } from '@/constants/status';
+// import { ApiError } from '@/utils/error/ApiError';
 
 /**
  * 백엔드로부터 인계 받은 응답의 기본 Interface ApiResponseType
