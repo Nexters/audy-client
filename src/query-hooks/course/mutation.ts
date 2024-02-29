@@ -27,6 +27,9 @@ export const useDeleteCourse = ({
             queryClient.invalidateQueries({
                 queryKey: COURSE_QUERY_KEY.list(),
             });
+            queryClient.invalidateQueries({
+                queryKey: COURSE_QUERY_KEY.owned(),
+            });
         },
         throwOnError: true,
     });
