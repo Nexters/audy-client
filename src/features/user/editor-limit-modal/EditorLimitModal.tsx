@@ -8,10 +8,10 @@ const EditorLimitModal = () => {
 
     return (
         <Modal>
-            <Modal.Title>더이상 초대할 수 없어요</Modal.Title>
+            <Modal.Title>더 이상 초대할 수 없어요</Modal.Title>
             <Modal.Content>
                 <p className={S.infoText}>
-                    5명의 친구가 이미 참여중이에요.새로운 코스를 만들어보세요
+                    5명의 친구가 이미 참여중이에요. 새로운 코스를 만들어보세요
                 </p>
             </Modal.Content>
             <Modal.Footer>
