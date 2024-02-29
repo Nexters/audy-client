@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import EditIcon from '@/assets/icons/edit.svg?react';
 import EyeClosedIcon from '@/assets/icons/eyeClosed.svg?react';
 import EyeOpenedIcon from '@/assets/icons/eyeOpened.svg?react';
@@ -9,7 +7,6 @@ import PopOver from '@/components/pop-over';
 import { useDisclosure } from '@/hooks/useDisclosure';
 import { useSnackBar } from '@/hooks/useSnackBar';
 import { useTmap } from '@/hooks/useTmap';
-import { MarkerType } from '@/types';
 
 import * as S from './ThreeDotButton.css';
 
@@ -33,50 +30,29 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
         togglePinHided();
     };
 
-    const [removedPin, setRemovedPin] = useState({
-        marker: {} as MarkerType,
-        index: 0,
-    });
-
-    const handleRecreateRemovedPin = ({
-        marker: { name, originName, address, lat, lng, id },
-        index,
-    }: {
-        marker: MarkerType;
-        index: number;
-    }) => {
-        tmapModuleRef.current?.createMarker({
-            name: name,
-            originName: originName,
-            address: address,
-            lat: lat,
-            lng: lng,
-            id: id,
-            index,
-        });
-    };
-
     const handleRemovePin = () => {
         if (!tmapModuleRef.current) return;
 
-        const { marker, index } = tmapModuleRef.current.removeMarker(markerId);
-        setRemovedPin({ marker, index });
+        const {
+            marker: { name, originName, address, lat, lng, id },
+            index,
+        } = tmapModuleRef.current.removeMarker(markerId);
 
-        // setSnackBar({
-        //     message: '핀이 삭제되었어요',
-        //     undoFunction: () => handleRecreateRemovedPin({ ...removedPin }),
-        // });
+        setSnackBar({
+            message: '핀이 삭제되었어요',
+            undoFunction: () => {
+                tmapModuleRef.current?.createMarker({
+                    name: name,
+                    originName: originName,
+                    address: address,
+                    lat: lat,
+                    lng: lng,
+                    id: id,
+                    index,
+                });
+            },
+        });
     };
-
-    useEffect(() => {
-        console.log(removedPin);
-        if (removedPin.marker.id) {
-            setSnackBar({
-                message: '핀이 삭제되었어요',
-                undoFunction: () => handleRecreateRemovedPin({ ...removedPin }),
-            });
-        }
-    }, [removedPin, setSnackBar, handleRecreateRemovedPin, setRemovedPin]);
 
     return (
         <PopOver>
