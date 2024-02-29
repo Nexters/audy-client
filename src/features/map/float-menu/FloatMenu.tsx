@@ -6,6 +6,7 @@ import { useDisclosure } from '@/hooks/useDisclosure';
 import { useEventListeners } from '@/hooks/useEventListeners';
 import { useTmap } from '@/hooks/useTmap';
 import type { PathModeType } from '@/types/map';
+import dayjs from '@/utils/dayjs';
 
 import * as S from './FloatMenu.css';
 
@@ -27,6 +28,10 @@ const FloatMenu = () => {
         toggleShowPath();
         tmapModuleRef.current.togglePathVisibility();
     };
+
+    useEventListeners('duration:update', (event) =>
+        setCurrentDuration(event.detail),
+    );
 
     return (
         <div className={S.wrapper}>
@@ -81,7 +86,7 @@ const FloatMenu = () => {
             <div className={S.pathDurationBox}>
                 <p
                     className={S.durationText}
-                >{`총 소요 시간 : ${currentDuration}`}</p>
+                >{`총 소요 시간 : ${dayjs.duration(currentDuration ?? 0, 'seconds').format('HH 시간 mm 분 ss 초')}`}</p>
             </div>
         </div>
     );
