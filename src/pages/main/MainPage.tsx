@@ -61,7 +61,11 @@ const MainPage = () => {
                     </AsyncBoundary>
                 </SidePanel>
 
-                <div className={S.map} ref={mapContainerRef} />
+                <div
+                    className={S.map}
+                    ref={mapContainerRef}
+                    onClickCapture={(event) => event.stopPropagation()}
+                />
             </div>
         </>
     );
