@@ -1,10 +1,10 @@
 import Modal from '@/components/modal';
 import { useModal } from '@/hooks/useModal';
 
-import * as S from './InvalidLinkModal.css';
+import * as S from './InvalidInviteModal.css';
 import { useNavigate } from 'react-router-dom';
 
-const InvalidLinkModal = () => {
+const InvalidInviteModal = () => {
     const { closeModal } = useModal();
     const navigate = useNavigate();
 
@@ -33,4 +33,4 @@ const InvalidLinkModal = () => {
     );
 };
 
-export default InvalidLinkModal;
+export default InvalidInviteModal;

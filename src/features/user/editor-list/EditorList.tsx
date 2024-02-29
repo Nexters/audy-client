@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 
 import AddIcon from '@/assets/icons/add.svg?react';
-import CourseInviteModal from '@/features/course/course-invite-modal';
+import EditorInviteModal from '@/features/user/editor-invite-modal';
 import EditorProfile from '@/features/user/editor-profile';
 import { useModal } from '@/hooks/useModal';
 import { COLOR } from '@/styles/foundation';
@@ -36,7 +36,7 @@ const EditorList = () => {
 
     const handleInvitationButtonClick = () => {
         if (!courseId) return;
-        openModal(<CourseInviteModal courseId={Number(courseId)} />);
+        openModal(<EditorInviteModal courseId={Number(courseId)} />);
     };
 
     return (

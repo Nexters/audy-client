@@ -1,9 +1,9 @@
 import Modal from '@/components/modal';
 import { useModal } from '@/hooks/useModal';
 
-import * as S from './MemberLimitModal.css';
+import * as S from './EditorLimitModal.css';
 
-const MemberLimitModal = () => {
+const EditorLimitModal = () => {
     const { closeModal } = useModal();
 
     return (
@@ -26,4 +26,4 @@ const MemberLimitModal = () => {
     );
 };
 
-export default MemberLimitModal;
+export default EditorLimitModal;

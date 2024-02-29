@@ -3,13 +3,13 @@ import Modal from '@/components/modal';
 import { useModal } from '@/hooks/useModal';
 import { useToast } from '@/hooks/useToast';
 
-import * as S from './CourseInviteModal.css';
+import * as S from './EditorInviteModal.css';
 
 interface PropsType {
     courseId: number;
 }
 
-const CourseInviteModal = ({ courseId }: PropsType) => {
+const EditorInviteModal = ({ courseId }: PropsType) => {
     const { closeModal } = useModal();
     const { setToast } = useToast();
 
@@ -19,7 +19,7 @@ const CourseInviteModal = ({ courseId }: PropsType) => {
                 courseId,
             });
             window.navigator.clipboard.writeText(url);
-            setToast('초대 링크 복사가 완료되었습니다!');
+            setToast('초대 링크 복사가 완료되었어요!');
         } catch (error) {
             setToast('유저 초대에 실패했습니다.');
         }
@@ -46,4 +46,4 @@ const CourseInviteModal = ({ courseId }: PropsType) => {
     );
 };
 
-export default CourseInviteModal;
+export default EditorInviteModal;
