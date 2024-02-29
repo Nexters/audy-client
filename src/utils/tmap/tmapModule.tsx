@@ -166,6 +166,7 @@ export class TMapModule {
         );
 
         this.drawPathBetweenMarkers();
+        this.modifyMarker(this.#markers);
         this.clusterMarkers();
 
         return newMarker;
@@ -179,6 +180,7 @@ export class TMapModule {
 
         const targetMarker = this.#markers.splice(markerIndex, 1)[0];
         targetMarker.marker.setMap(null);
+        this.modifyMarker(this.#markers);
 
         window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
 
@@ -374,8 +376,6 @@ export class TMapModule {
         const handleUnPinButtonClick = () => {
             this.removeMarker(id);
             this.removeInfoWindow();
-
-            this.modifyMarker(this.#markers);
         };
 
         document
