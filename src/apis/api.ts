@@ -1,4 +1,11 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, {
+    type AxiosError,
+    type AxiosRequestConfig,
+    type AxiosResponse,
+} from 'axios';
+
+import { STATUS_CODE } from '@/constants/status';
+import { ApiError } from '@/utils/error/ApiError';
 
 /**
  * 백엔드로부터 인계 받은 응답의 기본 Interface ApiResponseType
@@ -18,6 +25,36 @@ const API = axios.create({
     baseURL: import.meta.env.VITE_SERVER_URL,
     withCredentials: true,
 });
+
+API.interceptors.response.use(
+    (response: AxiosResponse<ApiResponseType<unknown>>) => {
+        const { code, data, message } = response.data;
+
+        if (code !== STATUS_CODE.OK) {
+            throw new ApiError({ code, data, message });
+        }
+
+        return response;
+    },
+    (error: AxiosError | Error): Promise<ApiError> => {
+        if (axios.isAxiosError(error)) {
+            if (error.response) {
+                throw new ApiError({
+                    code: STATUS_CODE.NETWORK_ERROR,
+                    data: null,
+                    message:
+                        error.response?.data ??
+                        '알 수 없는 에러가 발생했습니다',
+                });
+            }
+        }
+        throw new ApiError({
+            code: STATUS_CODE.NETWORK_ERROR,
+            data: null,
+            message: '알 수 없는 에러가 발생했습니다',
+        });
+    },
+);
 
 /**
  * GET 요청을 처리하는 유틸 API 함수 getAsync
