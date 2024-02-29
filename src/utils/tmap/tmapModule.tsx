@@ -291,6 +291,12 @@ export class TMapModule {
         });
 
         this.#duration = totalDuration;
+
+        window.dispatchEvent(
+            new CustomEvent('duration:update', {
+                detail: totalDuration,
+            }),
+        );
     }
 
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility

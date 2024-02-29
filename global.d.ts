@@ -11,6 +11,7 @@ declare global {
     interface CustomEventMap {
         'marker:create': CustomEvent<MarkerType>;
         'marker:remove': CustomEvent<string>;
+        'duration:update': CustomEvent<number>
     }
 
     interface WindowEventMap extends CustomEventMap {}
