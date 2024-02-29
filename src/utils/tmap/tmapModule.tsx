@@ -116,6 +116,7 @@ export class TMapModule {
         iconHTML = renderToString(
             <Marker order={this.#markers.length + 1} isHidden={false} />,
         ),
+        index = this.#markers.length,
     }: {
         name: string;
         originName: string;
@@ -124,6 +125,7 @@ export class TMapModule {
         lat: string;
         lng: string;
         iconHTML?: string;
+        index?: number;
     }) {
         if (this.#markers.length >= this.#maxMarkerCount) return;
 
@@ -155,7 +157,7 @@ export class TMapModule {
 
         newMarker.marker.on('Click', handleMarkerClick);
 
-        this.#markers.push(newMarker);
+        this.#markers.splice(index, 0, newMarker);
 
         window.dispatchEvent(
             new CustomEvent('marker:create', {
