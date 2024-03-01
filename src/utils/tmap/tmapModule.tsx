@@ -32,6 +32,7 @@ export class TMapModule {
 
     #isPathVisible = true;
     #pathMode: PathModeType = 'Vehicle';
+    #duration = 0;
 
     #infoWindow: typeof Tmapv3.InfoWindow = null;
 
@@ -156,15 +157,14 @@ export class TMapModule {
         newMarker.marker.on('Click', handleMarkerClick);
 
         this.#markers.push(newMarker);
+        this.drawPathBetweenMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:create', {
                 detail: newMarker,
             }),
         );
-
-        this.drawPathBetweenMarkers();
-        this.clusterMarkers();
 
         return newMarker;
     }
@@ -225,6 +225,7 @@ export class TMapModule {
         const path: (typeof window.Tmapv3.LatLng)[] = [];
         const endIndex = notHiddenMarkers.length - 1;
         const MAX_POINTS = 6;
+        let totalDuration = 0;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
         for (let index = 0; index <= endIndex; index += MAX_POINTS) {
@@ -263,6 +264,9 @@ export class TMapModule {
                 passList,
             });
 
+            // NOTE : 총 경로 시간은 시작점 Point 에서만 반환된다.
+            totalDuration += features[0].properties.totalTime;
+
             features.forEach((feature) => {
                 if (feature.geometry.type === 'LineString') {
                     feature.geometry.coordinates.forEach(([lng, lat]) =>
@@ -285,6 +289,14 @@ export class TMapModule {
             strokeOpacity: 5,
             map: this.#mapInstance,
         });
+
+        this.#duration = totalDuration;
+
+        window.dispatchEvent(
+            new CustomEvent('duration:update', {
+                detail: totalDuration,
+            }),
+        );
     }
 
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
@@ -439,6 +451,11 @@ export class TMapModule {
     getMarkerInfoFromId(id: string) {
         const targetMarker = this.#markers.find((marker) => marker.id === id);
         return targetMarker;
+    }
+
+    // 현재 그려진 경로의 소요 시간을 반환하는 함수 getCurrentPathDuration
+    getCurrentPathDuration() {
+        return this.#markers.length > 1 ? this.#duration : null;
     }
 
     // 현재 지도 상의 모든 마커의 클러스터링을 수행하고, 클러스터링 결과를 업데이트

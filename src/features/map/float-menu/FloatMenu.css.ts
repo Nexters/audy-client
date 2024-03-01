@@ -6,6 +6,19 @@ import { sprinkles } from '@/styles/sprinkle.css';
 
 export const wrapper = style([
     sprinkles({ zIndex: 'mapFloatMenu' }),
+    {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '4px 0',
+
+        position: 'absolute',
+        right: '16px',
+        top: '16px',
+    },
+]);
+
+export const pathModeBox = style([
+    sprinkles({ zIndex: 'mapFloatMenu' }),
 
     {
         width: 'max-content',
@@ -15,10 +28,6 @@ export const wrapper = style([
         justifyContent: 'center',
         alignItems: 'center',
         columnGap: '10px',
-
-        position: 'absolute',
-        right: '16px',
-        top: '16px',
 
         backgroundColor: COLOR.MonoWhite,
         borderRadius: '6px',
@@ -107,3 +116,26 @@ export const toggleButton = recipe({
         },
     },
 });
+
+export const pathDurationBox = style({
+    width: 'fit-content',
+    height: '42px',
+    padding: '0 20px',
+    marginLeft: 'auto',
+
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+
+    backgroundColor: COLOR.MonoWhite,
+    borderRadius: '6px',
+    border: `1px solid ${COLOR.Gray300}`,
+    boxShadow: '2px 2px 4px 0px rgba(0, 0, 0, 0.12)',
+});
+
+export const durationText = style([
+    sprinkles({ typography: 'Bold15' }),
+    {
+        color: COLOR.Gray900,
+    },
+]);
