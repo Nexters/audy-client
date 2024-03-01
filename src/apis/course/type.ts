@@ -49,15 +49,15 @@ export interface CourseSocketPubType {
         latitude: number;
         longitude: number;
         address: string;
-        sequence: number;
+        sequence: string;
     };
-    modificationName: {
+    modifyName: {
         pinId: string;
         pinName: string;
     };
-    modificationOrder: {
+    modifySequence: {
         pinId: string;
-        sequence: number;
+        sequence: string;
     };
     removal: {
         pinId: string;
@@ -73,15 +73,15 @@ export interface CourseSocketSubType {
         latitude: number;
         longitude: number;
         address: string;
-        sequence: number;
+        sequence: string;
     };
-    modificationName: {
+    modifyName: {
         pinId: string;
         pinName: string;
     };
-    modificationOrder: {
+    modifySequence: {
         pinId: string;
-        sequence: number;
+        sequence: string;
     };
     removal: {
         pinId: string;

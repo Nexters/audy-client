@@ -1,3 +1,4 @@
+import type { EditorType } from './editor';
 import type { PinType } from './map';
 
 export interface CourseInformationType {
@@ -19,7 +20,10 @@ export interface CourseType {
 export interface CourseDetailType {
     courseId: number;
     courseName: string;
-    pinList: PinType[];
+    editorCnt: number;
+    editorGetResList: EditorType[],
+    pinCnt: number;
+    pinResList: PinType[];
 }
 
 export type CourseTabType = 'allCourse' | 'myCourse' | 'invitedCourse';

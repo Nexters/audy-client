@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 import { Client as StompClient } from '@stomp/stompjs';
 
+import type { ApiResponseType } from '@/apis/api';
 import type {
     CourseSocketPubType,
     CourseSocketSubType,
@@ -10,12 +11,12 @@ import { useTmap } from '@/hooks/useTmap';
 
 export const useSocket = (courseId: number) => {
     const stompClient = useRef<StompClient | null>(null);
-    const { tmapModuleRef } = useTmap();
+    const { tmapModule } = useTmap();
 
     const modifyPinName = ({
         pinId,
         pinName,
-    }: CourseSocketPubType['modificationName']) => {
+    }: CourseSocketPubType['modifyName']) => {
         stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/modification/name`,
             body: JSON.stringify({
@@ -25,12 +26,12 @@ export const useSocket = (courseId: number) => {
         });
     };
 
-    const modifyPinOrder = ({
+    const modifyPinSequence = ({
         pinId,
         sequence,
-    }: CourseSocketPubType['modificationOrder']) => {
+    }: CourseSocketPubType['modifySequence']) => {
         stompClient.current?.publish({
-            destination: `/pub/${courseId}/pin/modification/order`,
+            destination: `/pub/${courseId}/pin/modification/sequence`,
             body: JSON.stringify({
                 pinId,
                 sequence,
@@ -45,6 +46,7 @@ export const useSocket = (courseId: number) => {
         latitude,
         longitude,
         sequence,
+        address,
     }: CourseSocketPubType['addition']) => {
         stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/addition`,
@@ -55,6 +57,7 @@ export const useSocket = (courseId: number) => {
                 latitude,
                 longitude,
                 sequence,
+                address,
             }),
         });
     };
@@ -74,11 +77,14 @@ export const useSocket = (courseId: number) => {
             brokerURL: `wss://api.audy-gakka.com/course/${courseId}`,
             onConnect: () => {
                 console.log('Connected to the broker');
+
                 stomp.subscribe(`/sub/${courseId}/pin/addition`, (message) => {
-                    if (!tmapModuleRef.current) return;
-                    const newMarker: CourseSocketSubType['addition'] =
+                    const {
+                        data: newMarker,
+                    }: ApiResponseType<CourseSocketSubType['addition']> =
                         JSON.parse(message.body);
-                    tmapModuleRef.current.createMarker({
+
+                    tmapModule?.createMarker({
                         id: newMarker.pinId,
                         name: newMarker.pinName,
                         originName: newMarker.originName,
@@ -87,36 +93,38 @@ export const useSocket = (courseId: number) => {
                         lng: String(newMarker.longitude),
                     });
                 });
+
                 stomp.subscribe(
                     `/sub/${courseId}/pin/modification/name`,
                     (message) => {
-                        if (!tmapModuleRef.current) return;
+                        if (!tmapModule) return;
                         const {
-                            pinId,
-                            pinName,
-                        }: CourseSocketSubType['modificationName'] = JSON.parse(
-                            message.body,
-                        );
+                            data: { pinId, pinName },
+                        }: ApiResponseType<CourseSocketSubType['modifyName']> =
+                            JSON.parse(message.body);
                         console.log(pinId, pinName); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
                     },
                 );
+
                 stomp.subscribe(
-                    `/sub/${courseId}/pin/modification/order`,
+                    `/sub/${courseId}/pin/modification/sequence`,
                     (message) => {
-                        if (!tmapModuleRef.current) return;
+                        if (!tmapModule) return;
                         const {
-                            pinId,
-                            sequence,
-                        }: CourseSocketSubType['modificationOrder'] =
-                            JSON.parse(message.body);
+                            data: { pinId, sequence },
+                        }: ApiResponseType<
+                            CourseSocketSubType['modifySequence']
+                        > = JSON.parse(message.body);
                         console.log(pinId, sequence); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
                     },
                 );
+
                 stomp.subscribe(`/sub/${courseId}/pin/removal`, (message) => {
-                    if (!tmapModuleRef.current) return;
+                    if (!tmapModule) return;
+                    console.log('remove from socket', message.body);
                     const { pinId }: CourseSocketSubType['removal'] =
                         JSON.parse(message.body);
-                    tmapModuleRef.current.removeMarker(pinId);
+                    tmapModule.removeMarker(pinId);
                 });
             },
             onDisconnect: () => {
@@ -135,11 +143,11 @@ export const useSocket = (courseId: number) => {
         return () => {
             stompClient.current?.deactivate();
         };
-    }, [courseId, tmapModuleRef]);
+    }, [courseId, tmapModule]);
 
     return {
         modifyPinName,
-        modifyPinOrder,
+        modifyPinSequence,
         addPin,
         removePin,
     };
