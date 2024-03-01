@@ -60,9 +60,3 @@ export const pinButton = style({
         color: COLOR.Gray700,
     },
 });
-
-export const alreadyPinned = style({
-    ':hover': {
-        backgroundColor: COLOR.MonoWhite,
-    },
-});

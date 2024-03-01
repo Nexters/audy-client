@@ -1,10 +1,8 @@
 import { useState } from 'react';
 
-import clsx from 'clsx';
-
 import AddIcon from '@/assets/icons/add.svg?react';
-import CheckIcon from '@/assets/icons/check.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
+import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import { useEventListeners } from '@/hooks/useEventListeners';
 import { useTmap } from '@/hooks/useTmap';
 import { COLOR } from '@/styles/foundation';
@@ -30,6 +28,13 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
     useEventListeners('marker:remove', (event) => {
         if (event.detail === id) setIsPinned(false);
     });
+
+    const handleUnPinButtonClick = () => {
+        if (!tmapModule) return;
+
+        tmapModule.removeMarker(id);
+        setIsPinned(false);
+    };
 
     const handlePinButtonClick = (event: React.MouseEvent) => {
         if (!tmapModule) return;
@@ -82,15 +87,14 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
                 </div>
             </div>
 
-            {isPinned ? (
-                <button className={clsx(S.pinButton, S.alreadyPinned)} disabled>
-                    <CheckIcon fill={COLOR.IndigoPrimary} />
-                </button>
-            ) : (
-                <button className={S.pinButton} onClick={handlePinButtonClick}>
-                    <AddIcon />
-                </button>
-            )}
+            <button
+                className={S.pinButton}
+                onClick={
+                    isPinned ? handleUnPinButtonClick : handlePinButtonClick
+                }
+            >
+                {isPinned ? <TrashCanIcon /> : <AddIcon />}
+            </button>
         </div>
     );
 };
