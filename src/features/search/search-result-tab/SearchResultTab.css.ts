@@ -53,9 +53,11 @@ export const pinButton = style({
     borderRadius: '10px',
     padding: '6px',
     margin: '0 0 0 12px',
+    color: COLOR.Gray400,
 
     ':hover': {
         backgroundColor: 'rgba(0, 0, 0, 0.03);',
+        color: COLOR.Gray700,
     },
 });
 

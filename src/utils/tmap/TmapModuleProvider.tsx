@@ -50,7 +50,7 @@ export const TmapProvider = ({
         return () => {
             tmapModuleRef.current = null;
         };
-    }, [height, lat, lng, mapId, width, zoom]);
+    }, [height, lat, lng, mapId, width, zoom, pathname]);
 
     return (
         <TmapContext.Provider
