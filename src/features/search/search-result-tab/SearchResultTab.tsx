@@ -21,9 +21,9 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
     const { tmapModuleRef } = useTmap();
 
     const tmapModule = tmapModuleRef.current;
-    const pinState = tmapModule?.checkIsAlreadyPinned(id);
+    const initialPinState = !!tmapModule?.getMarkerById(id);
 
-    const [isPinned, setIsPinned] = useState(pinState);
+    const [isPinned, setIsPinned] = useState(initialPinState);
 
     useEventListeners('marker:remove', (event) => {
         if (event.detail === id) setIsPinned(false);

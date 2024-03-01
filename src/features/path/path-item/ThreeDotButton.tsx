@@ -17,7 +17,7 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
     const { tmapModuleRef } = useTmap();
 
     const initPinHided =
-        !!tmapModuleRef.current?.getMarkerInfoFromId(markerId)?.isHidden;
+        !!tmapModuleRef.current?.getMarkerById(markerId)?.isHidden;
 
     const { value: isPinHided, toggle: togglePinHided } =
         useDisclosure(initPinHided);

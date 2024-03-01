@@ -2,9 +2,10 @@
 export type PathModeType = 'Pedestrian' | 'Vehicle';
 
 export interface MarkerType {
-    marker: typeof window.Tmapv3.Marker;
+    instance: typeof window.Tmapv3.Marker;
     name: string;
     originName: string;
+    sequence: number;
     address: string;
     id: string;
     lat: string;

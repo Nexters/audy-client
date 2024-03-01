@@ -106,6 +106,16 @@ export class TMapModule {
         });
     }
 
+    // 특정 위경도로 줌인
+    zoomIn({ lat, lng }: Pick<MarkerType, 'lat' | 'lng'>) {
+        this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
+        this.#mapInstance.setZoom(this.#zoomLevel);
+    }
+
+    /**
+     * Marker Method List
+     */
+
     // 마커 생성
     createMarker({
         name,
@@ -114,9 +124,7 @@ export class TMapModule {
         id,
         lat,
         lng,
-        iconHTML = renderToString(
-            <Marker order={this.#markers.length + 1} isHidden={false} />,
-        ),
+        sequence,
     }: {
         name: string;
         originName: string;
@@ -124,18 +132,23 @@ export class TMapModule {
         id: string;
         lat: string;
         lng: string;
-        iconHTML?: string;
+        sequence?: number;
     }) {
-        if (this.#markers.length >= this.#maxMarkerCount) return;
+        const currentMarkerAmount = this.#markers.length;
+        if (currentMarkerAmount >= this.#maxMarkerCount) return;
+
+        const latestSequence = this.#markers.at(-1)?.sequence ?? -1;
+        const currentSequence = sequence ?? latestSequence + 1;
 
         const newMarker: MarkerType = {
-            marker: new Tmapv3.Marker({
+            instance: new Tmapv3.Marker({
                 position: new Tmapv3.LatLng(lat, lng),
-                iconHTML,
+                iconHTML: <Marker order={currentSequence} isHidden={false} />,
                 map: this.#mapInstance,
             }),
             name,
             originName,
+            sequence: currentSequence,
             address,
             id,
             lat,
@@ -143,7 +156,7 @@ export class TMapModule {
             isHidden: false,
         };
 
-        const handleMarkerClick = () => {
+        newMarker.instance.on('Click', () =>
             this.createInfoWindow({
                 lat,
                 lng,
@@ -151,12 +164,11 @@ export class TMapModule {
                 address,
                 id,
                 isPinned: true,
-            });
-        };
-
-        newMarker.marker.on('Click', handleMarkerClick);
+            }),
+        );
 
         this.#markers.push(newMarker);
+        this.#drawMarkers();
         this.drawPathBetweenMarkers();
         this.clusterMarkers();
 
@@ -175,35 +187,53 @@ export class TMapModule {
             (marker) => marker.id === id,
         );
 
-        const [{ marker: targetMarker }] = this.#markers.splice(markerIndex, 1);
-        targetMarker.setMap(null);
+        if (markerIndex === -1) return;
+
+        const [removedMarker] = this.#markers.splice(markerIndex, 1);
+        removedMarker.instance.setMap(null);
+
+        this.#drawMarkers();
+        this.drawPathBetweenMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
     }
 
-    // 마커 수정
-    modifyMarker(modifiedMarkers: MarkerType[]) {
-        // 기존의 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
-        this.#markers.forEach(({ marker }) => marker.setMap(null));
+    // 현재 맵 위에 떠 있는 마커 목록을 반환하는 메서드 getMarkers
+    getMarkers() {
+        return this.#markers;
+    }
 
-        this.#markers = modifiedMarkers.map(
-            ({ marker, lat, lng, isHidden, ...rest }, index) => {
-                marker.setMap(null);
-                const updatedIconHTML = renderToString(
-                    <Marker order={index + 1} isHidden={isHidden} />,
-                );
+    // 마커 ID 를 기반으로 특정 마커를 반환하는 메서드 getMarkerById
+    getMarkerById(id: string) {
+        return this.#markers.find((marker) => marker.id === id);
+    }
 
-                const updatedMarker = new Tmapv3.Marker({
-                    position: new Tmapv3.LatLng(lat, lng),
-                    iconHTML: updatedIconHTML,
-                    map: this.#mapInstance,
-                });
+    // 마커의 숨김 여부를 전환하는 메서드 toggleMarkerHiddenState
+    toggleMarkerHiddenState(id: string) {
+        const targetMarker = this.#markers.find((marker) => marker.id === id);
 
-                return { lat, lng, marker: updatedMarker, isHidden, ...rest };
-            },
+        if (!targetMarker) return;
+
+        const { isHidden, lat, lng } = targetMarker;
+        targetMarker.isHidden = !isHidden;
+
+        const targetMarkerOrder =
+            this.#markers.findIndex((marker) => marker.id === id) + 1;
+        const updatedIconHTML = renderToString(
+            <Marker order={targetMarkerOrder} isHidden={!isHidden} />,
         );
 
+        targetMarker.instance.setMap(null);
+        targetMarker.instance = new Tmapv3.Marker({
+            position: new Tmapv3.LatLng(lat, lng),
+            iconHTML: updatedIconHTML,
+            map: this.#mapInstance,
+        });
+
         this.drawPathBetweenMarkers();
+
+        return !isHidden;
     }
 
     // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 getMarkerPosition
@@ -212,31 +242,62 @@ export class TMapModule {
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
 
+    // 현재 마커 배열을 기준으로 맵 위에 마커를 재구성하는 private 메서드 modifyMarker
+    #drawMarkers() {
+        this.#markers.sort((a, b) => a.sequence - b.sequence);
+        this.#markers.map(
+            ({ instance, lat, lng, isHidden, sequence, ...rest }) => {
+                instance.setMap(null);
+                const updatedIconHTML = renderToString(
+                    <Marker order={sequence} isHidden={isHidden} />,
+                );
+
+                const markerInstance = new Tmapv3.Marker({
+                    position: new Tmapv3.LatLng(lat, lng),
+                    iconHTML: updatedIconHTML,
+                    map: this.#mapInstance,
+                });
+
+                return {
+                    ...rest,
+                    lat,
+                    lng,
+                    isHidden,
+                    sequence,
+                    instance: markerInstance,
+                };
+            },
+        );
+    }
+
+    /**
+     * Path Method List
+     */
+
     // 맵에 찍힌 마커들을 잇는 경로를 그리는 메서드 drawPathBetweenMarkers
     async drawPathBetweenMarkers() {
-        this.#removePath();
+        this.#removePathBetweenMarkers();
 
-        const notHiddenMarkers = this.#markers.filter(
+        const visibleMarkers = this.#markers.filter(
             ({ isHidden }) => !isHidden,
         );
 
-        if (notHiddenMarkers.length < 2) return;
+        if (visibleMarkers.length < 2) return;
 
         const path: (typeof window.Tmapv3.LatLng)[] = [];
-        const endIndex = notHiddenMarkers.length - 1;
+        const endIndex = visibleMarkers.length - 1;
         const MAX_POINTS = 6;
         let totalDuration = 0;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
         for (let index = 0; index <= endIndex; index += MAX_POINTS) {
-            // NOTE : 시작점이 아니라면, 바로 직전의 종점도 포함하여 경로를 그려야 한다.
             const currentStartIndex = index === 0 ? index : index - 1;
             const currentEndIndex =
                 endIndex <= index + MAX_POINTS ? endIndex : index + MAX_POINTS;
 
-            const [startMarker, ...passMarkers] = notHiddenMarkers
+            const [startMarker, ...passMarkers] = visibleMarkers
                 .slice(currentStartIndex, currentEndIndex + 1)
-                .map(({ marker }) => marker);
+                .map(({ instance }) => instance);
 
             const endMarker = passMarkers.pop();
 
@@ -281,6 +342,7 @@ export class TMapModule {
             });
         }
 
+        this.#duration = totalDuration;
         this.#polyline = new Tmapv3.Polyline({
             path,
             fillColor: '#FF0000',
@@ -290,8 +352,6 @@ export class TMapModule {
             map: this.#mapInstance,
         });
 
-        this.#duration = totalDuration;
-
         window.dispatchEvent(
             new CustomEvent('duration:update', {
                 detail: totalDuration,
@@ -299,11 +359,18 @@ export class TMapModule {
         );
     }
 
+    // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 private 메서드 removePathBetweenMarkers
+    #removePathBetweenMarkers() {
+        if (!this.#polyline) return;
+        this.#polyline.setMap(null);
+        this.#polyline = null;
+    }
+
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
     togglePathVisibility() {
-        const updatedVisible = !this.#isPathVisible;
-        this.#polyline.setMap(updatedVisible ? this.#mapInstance : null);
-        this.#isPathVisible = updatedVisible;
+        const updatedVisibility = !this.#isPathVisible;
+        this.#polyline.setMap(updatedVisibility ? this.#mapInstance : null);
+        this.#isPathVisible = updatedVisibility;
     }
 
     // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
@@ -312,12 +379,9 @@ export class TMapModule {
         await this.drawPathBetweenMarkers();
     }
 
-    // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
-    #removePath() {
-        if (!this.#polyline) return;
-        this.#polyline.setMap(null);
-        this.#polyline = null;
-    }
+    /**
+     * InfoWindow Method
+     */
 
     // 인포창 생성
     createInfoWindow({
@@ -337,13 +401,13 @@ export class TMapModule {
     }) {
         if (this.#infoWindow) this.removeInfoWindow();
 
-        const infoWindowLatLng = new Tmapv3.LatLng(lat, lng);
+        const infoWindowPosition = new Tmapv3.LatLng(lat, lng);
         const content = renderToString(
             <InfoWindow name={name} address={address} isPinned={isPinned} />,
         );
 
         const infoWindow = new Tmapv3.InfoWindow({
-            position: infoWindowLatLng,
+            position: infoWindowPosition,
             content,
             type: 2,
             border: '0px',
@@ -354,7 +418,7 @@ export class TMapModule {
         infoWindow.setMap(this.#mapInstance);
         this.#infoWindow = infoWindow;
 
-        this.#mapInstance.setCenter(infoWindowLatLng);
+        this.#mapInstance.setCenter(infoWindowPosition);
         this.#mapInstance.setZoom(this.#zoomLevel);
 
         const handlePinButtonClick = () => {
@@ -382,8 +446,6 @@ export class TMapModule {
         const handleUnPinButtonClick = () => {
             this.removeMarker(id);
             this.removeInfoWindow();
-
-            this.modifyMarker(this.#markers);
         };
 
         document
@@ -405,64 +467,15 @@ export class TMapModule {
         this.#infoWindow = null;
     }
 
-    // 특정 위경도로 줌인
-    zoomIn({ lat, lng }: { lat: string; lng: string }) {
-        this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
-        this.#mapInstance.setZoom(this.#zoomLevel);
-    }
-
-    // 이미 존재하는 핀인지 확인
-    checkIsAlreadyPinned(id: string) {
-        return this.#markers.some((marker) => marker.id === id);
-    }
-
-    // 핀의 경로에서 숨김 여부를 전환
-    toggleMarkerHiddenState(id: string) {
-        const targetMarker = this.#markers.find((marker) => marker.id === id);
-
-        if (!targetMarker) return;
-
-        const { isHidden } = targetMarker;
-        targetMarker.isHidden = !isHidden;
-
-        const updatedIconHTML = renderToString(
-            <Marker
-                order={
-                    this.#markers.findIndex((marker) => marker.id === id) + 1
-                }
-                isHidden={!isHidden}
-            />,
-        );
-
-        targetMarker.marker.setMap(null);
-
-        targetMarker.marker = new Tmapv3.Marker({
-            position: new Tmapv3.LatLng(targetMarker.lat, targetMarker.lng),
-            iconHTML: updatedIconHTML,
-            map: this.#mapInstance,
-        });
-
-        this.drawPathBetweenMarkers();
-
-        return !isHidden;
-    }
-
-    // 핀의 id를 받아서 핀의 다른 속성 반환
-    getMarkerInfoFromId(id: string) {
-        const targetMarker = this.#markers.find((marker) => marker.id === id);
-        return targetMarker;
-    }
-
-    // 현재 그려진 경로의 소요 시간을 반환하는 함수 getCurrentPathDuration
-    getCurrentPathDuration() {
-        return this.#markers.length > 1 ? this.#duration : null;
-    }
+    /**
+     * Cluster Method
+     */
 
     // 현재 지도 상의 모든 마커의 클러스터링을 수행하고, 클러스터링 결과를 업데이트
     clusterMarkers() {
         this.#clusters.forEach((cluster) => {
-            cluster.markers.forEach(({ marker }) => {
-                marker.setMap(null);
+            cluster.markers.forEach(({ instance }) => {
+                instance.setMap(null);
             });
             if (cluster.clusterMarker) cluster.clusterMarker.setMap(null);
         });
@@ -520,8 +533,8 @@ export class TMapModule {
             const iconHTML = renderToString(<Cluster count={size} />);
 
             if (cluster.markers.length < 2) {
-                cluster.markers.forEach(({ marker }) => {
-                    marker.setMap(this.#mapInstance);
+                cluster.markers.forEach(({ instance }) => {
+                    instance.setMap(this.#mapInstance);
                 });
 
                 return;
