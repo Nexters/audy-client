@@ -8,10 +8,11 @@ export const wrapper = style([
     {
         width: '100%',
         height: '64px',
-        padding: '0 30px',
+        padding: '0 16px 0 30px',
 
         display: 'flex',
         alignItems: 'center',
+        justifyContent: 'space-between',
 
         position: 'sticky',
         top: 0,
@@ -21,16 +22,22 @@ export const wrapper = style([
     },
 ]);
 
-export const savingStatus = style([
-    sprinkles({ typography: 'Regular15' }),
-    {
-        margin: '0 auto 0 4px',
-    },
-]);
+export const leftContainer = style({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '20px',
+});
 
-export const settingIcon = style({
-    color: COLOR.Gray500,
-    margin: '0 0 0 26px',
+export const rightContainer = style({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '16px',
+});
+
+export const savingStatus = style([sprinkles({ typography: 'Regular15' })]);
+
+export const settingButton = style({
+    padding: '10px',
 });
 
 export const settingContent = style({
@@ -40,14 +47,10 @@ export const settingContent = style({
 
 export const logoutText = style([
     sprinkles({ typography: 'Regular15' }),
-    {
-        color: COLOR.Gray950,
-    },
+    { color: COLOR.Gray950 },
 ]);
 
 export const withdrawText = style([
     sprinkles({ typography: 'Regular15' }),
-    {
-        color: COLOR.Red500,
-    },
+    { color: COLOR.Red500 },
 ]);
