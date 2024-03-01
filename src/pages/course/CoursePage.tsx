@@ -7,6 +7,7 @@ import SearchBar from '@/features/search/search-bar';
 import { SearchContextProvider } from '@/features/search/search-context';
 import SearchResultsContainer from '@/features/search/search-results-container';
 import { useTmap } from '@/hooks/useTmap';
+import { StompProvider } from '@/utils/socket/StompClientProvider';
 
 import * as S from './CoursePage.css';
 
@@ -14,7 +15,7 @@ function CoursePage() {
     const { mapContainerRef } = useTmap();
 
     return (
-        <>
+        <StompProvider>
             <GlobalNavigationBar />
 
             <div className={S.wrapper}>
@@ -31,7 +32,7 @@ function CoursePage() {
                     <FloatMenu />
                 </div>
             </div>
-        </>
+        </StompProvider>
     );
 }
 
