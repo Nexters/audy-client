@@ -21,13 +21,13 @@ export const useSocket = (courseId: number) => {
 
     const modifyPinSequence = ({
         pinId,
-        sequence,
+        order,
     }: CourseSocketPubType['modifySequence']) => {
         stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/modification/sequence`,
             body: JSON.stringify({
                 pinId,
-                sequence,
+                order,
             }),
         });
     };

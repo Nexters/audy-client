@@ -165,8 +165,6 @@ export class TMapModule {
         };
 
         this.#markers.push(newMarker);
-
-        // this.#markers.push(newMarker);
         this.#drawMarkers();
         // this.drawPathBetweenMarkers();
         // this.clusterMarkers();
@@ -246,14 +244,25 @@ export class TMapModule {
     }
 
     // 마커 위경도 를 기반으로 특정 마커를 반환하는 메서드 getMarkerByPKey
-    getMarkerByLatLng({ latitude, longitude }: Pick<MarkerType, 'latitude' | 'longitude'>) {
-        return this.#markers.find((marker) => marker.latitude === latitude && marker.longitude === longitude);
+    getMarkerByLatLng({
+        latitude,
+        longitude,
+    }: Pick<MarkerType, 'latitude' | 'longitude'>) {
+        return this.#markers.find(
+            (marker) =>
+                marker.latitude === latitude && marker.longitude === longitude,
+        );
     }
 
-    // 마커의 순서가 변경되었을 경우 이를 지도에 반영하는 메서드 reorderMarkers
-    reorderMarkers(reorderedMarkers: MarkerType[]) {
-        this.#markers = reorderedMarkers;
-        this.#sortMarkers();
+    // 특정 마커의 순서를 변경하는 메서드 setMarkerSequence
+    setMarkerSequence({
+        pinId,
+        sequence,
+    }: Pick<MarkerType, 'pinId' | 'sequence'>) {
+        const modifiedMarker = this.getMarkerById(pinId);
+        if (!modifiedMarker) return;
+
+        modifiedMarker.sequence = sequence;
         this.#drawMarkers();
         // this.drawPathBetweenMarkers();
     }
@@ -264,6 +273,22 @@ export class TMapModule {
 
         renamedMarker.pinName = pinName;
         this.#drawMarkers();
+
+        window.dispatchEvent(
+            new CustomEvent('marker:rename', { detail: { pinId, pinName } }),
+        );
+    }
+
+    reorderMarker({ pinId, sequence }: Pick<MarkerType, 'pinId' | 'sequence'>) {
+        const renamedMarker = this.getMarkerById(pinId);
+        if (!renamedMarker) return;
+
+        renamedMarker.sequence = sequence;
+        this.#drawMarkers();
+
+        window.dispatchEvent(
+            new CustomEvent('marker:reorder', { detail: { pinId, sequence } }),
+        );
     }
 
     // 마커의 숨김 여부를 전환하는 메서드 toggleMarkerHiddenState
@@ -290,7 +315,6 @@ export class TMapModule {
         });
 
         this.#markerInstanceMap.set(pinId, updatedMarkerInstance);
-
         // this.drawPathBetweenMarkers();
 
         return !isHidden;
@@ -306,19 +330,10 @@ export class TMapModule {
     #drawMarkers() {
         this.#sortMarkers();
 
+        console.log(this.#markers.map((marker) => ({ sequence: marker.sequence, name: marker.pinName })));
+
         this.#markers.map(
-            (
-                {
-                    latitude,
-                    longitude,
-                    isHidden,
-                    pinName,
-                    address,
-                    pinId,
-                    sequence,
-                },
-                index,
-            ) => {
+            ({ latitude, longitude, isHidden, pinId, ...rest }, index) => {
                 const oldMarkerInstance = this.#markerInstanceMap.get(pinId);
                 if (oldMarkerInstance) oldMarkerInstance.setMap(null);
 
@@ -334,11 +349,9 @@ export class TMapModule {
                     this.createInfoWindow({
                         latitude,
                         longitude,
-                        pinName,
                         pinId,
-                        address,
-                        sequence,
                         isPinned: true,
+                        ...rest,
                     }),
                 );
 
@@ -349,12 +362,6 @@ export class TMapModule {
 
     // lexoRank 알고리즘을 기반으로 Marker 를 정렬하는 private 메서드 sortMarkers
     #sortMarkers() {
-        this.#markers.sort((a, b) => {
-            const aSequence = LexoRank.parse(a.sequence);
-            const bSequence = LexoRank.parse(b.sequence);
-            return aSequence.compareTo(bSequence);
-        });
-
         this.#markers.sort((a, b) => {
             const aSequence = LexoRank.parse(a.sequence);
             const bSequence = LexoRank.parse(b.sequence);

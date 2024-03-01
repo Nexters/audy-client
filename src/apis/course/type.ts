@@ -57,7 +57,7 @@ export interface CourseSocketPubType {
     };
     modifySequence: {
         pinId: string;
-        sequence: string;
+        order: number;
     };
     removal: {
         pinId: string;

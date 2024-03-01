@@ -1,46 +1,48 @@
 import { useState } from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import CloseIcon from '@/assets/icons/close.svg?react';
 import Modal from '@/components/modal/Modal';
 import { useModal } from '@/hooks/useModal';
+import { useSocket } from '@/hooks/useSocket';
 import { useToast } from '@/hooks/useToast';
-import { usePostSaveCourse } from '@/query-hooks/course/mutation';
 
-import * as S from './MakeNewCourseModal.css';
+import * as S from './PathNameEditModal.css';
 
-const MakeNewCourseModal = () => {
-    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-    const [courseName, setCourseName] = useState('새로운 코스');
+interface PropsType {
+    pinId: string;
+    pinName: string;
+}
 
+const PathNameEditModal = ({ pinId, pinName }: PropsType) => {
     const { closeModal } = useModal();
     const { setToast } = useToast();
-    const { mutateAsync: makeNewCourse } = usePostSaveCourse({});
+    const { courseId } = useParams();
+    const stompClient = useSocket(Number(courseId));
 
-    const navigate = useNavigate();
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    const [newPathName, setNewPathName] = useState(pinName);
 
-    const handleSaveButtonClick = async () => {
-        const { courseId } = await makeNewCourse(courseName);
-
+    const handleEditButtonClick = () => {
+        stompClient.modifyPinName({ pinId, pinName: newPathName });
         closeModal();
-        setToast('새 코스가 만들어졌어요');
-        navigate(`/course/${courseId}`);
+        setToast('코스 이름이 변경되었어요');
     };
 
-    const handleNewCourseNameChange = ({
+    const handleNewPathNameChange = ({
         target,
     }: React.ChangeEvent<HTMLInputElement>) => {
         if (!target.value) setIsButtonDisabled(true);
         else setIsButtonDisabled(false);
 
-        setCourseName(target.value);
+        setNewPathName(target.value);
     };
 
     return (
         <Modal>
             <div className={S.modalHeader}>
-                <Modal.Title>새 코스 추가</Modal.Title>
+                <Modal.Title>코스명 수정</Modal.Title>
                 <button className={S.modalCloseButton} onClick={closeModal}>
                     <CloseIcon width={28} height={28} />
                 </button>
@@ -49,22 +51,22 @@ const MakeNewCourseModal = () => {
             <Modal.Content>
                 <input
                     className={S.couseNameInput}
-                    value={courseName}
-                    onChange={handleNewCourseNameChange}
+                    value={newPathName}
+                    onChange={handleNewPathNameChange}
                 />
             </Modal.Content>
 
             <Modal.Footer>
                 <button
-                    className={S.saveButton({ isButtonDisabled })}
-                    onClick={handleSaveButtonClick}
+                    className={S.editButton({ isButtonDisabled })}
+                    onClick={handleEditButtonClick}
                     disabled={isButtonDisabled}
                 >
-                    저장
+                    수정
                 </button>
             </Modal.Footer>
         </Modal>
     );
 };
 
-export default MakeNewCourseModal;
+export default PathNameEditModal;

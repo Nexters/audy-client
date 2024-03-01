@@ -60,7 +60,8 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                         }: ApiResponseType<
                             CourseSocketSubType['modifySequence']
                         > = JSON.parse(message.body);
-                        console.log(pinId, sequence); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
+                        
+                        tmapModule?.setMarkerSequence({ pinId, sequence: sequence })
                     },
                 );
 
