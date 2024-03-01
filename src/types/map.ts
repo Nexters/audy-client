@@ -5,7 +5,7 @@ export interface MarkerType {
     instance: typeof window.Tmapv3.Marker;
     name: string;
     originName: string;
-    sequence: number;
+    sequence: string;
     address: string;
     id: string;
     lat: string;
@@ -20,5 +20,5 @@ export interface PinType {
     latitude: number;
     longitude: number;
     address: string;
-    sequence: number;
+    sequence: string;
 }
