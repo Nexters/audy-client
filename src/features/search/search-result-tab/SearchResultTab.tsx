@@ -18,9 +18,8 @@ interface PropsType {
 }
 
 const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
-    const { tmapModuleRef } = useTmap();
+    const { tmapModule } = useTmap();
 
-    const tmapModule = tmapModuleRef.current;
     const initialPinState = !!tmapModule?.getMarkerById(id);
 
     const [isPinned, setIsPinned] = useState(initialPinState);

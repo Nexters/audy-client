@@ -14,19 +14,23 @@ interface PropsType {
 }
 
 const ThreeDotButton = ({ markerId }: PropsType) => {
-    const { tmapModuleRef } = useTmap();
+    const { tmapModule } = useTmap();
 
     const initPinHided =
-        !!tmapModuleRef.current?.getMarkerById(markerId)?.isHidden;
+        !!tmapModule?.getMarkerById(markerId)?.isHidden;
 
     const { value: isPinHided, toggle: togglePinHided } =
         useDisclosure(initPinHided);
 
     const handlePinHide = () => {
-        if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.toggleMarkerHiddenState(markerId);
+        if (!tmapModule) return;
+        tmapModule.toggleMarkerHiddenState(markerId);
         togglePinHided();
     };
+
+    const handlePinRemove = () => {
+        tmapModule?.removeMarker(markerId);
+    }
 
     return (
         <PopOver>
@@ -51,7 +55,7 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
                     <p className={S.text}>장소명 수정</p>
                 </PopOver.Item>
 
-                <PopOver.Item>
+                <PopOver.Item onClick={handlePinRemove}>
                     <TrashCanIcon />
                     <p className={S.text}>장소 삭제</p>
                 </PopOver.Item>

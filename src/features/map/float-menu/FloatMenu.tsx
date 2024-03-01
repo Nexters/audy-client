@@ -11,22 +11,22 @@ import dayjs from '@/utils/dayjs';
 import * as S from './FloatMenu.css';
 
 const FloatMenu = () => {
-    const { tmapModuleRef } = useTmap();
+    const { tmapModule } = useTmap();
     const { value: isShowPath, toggle: toggleShowPath } = useDisclosure(true);
 
     const [pathType, setPathType] = useState<PathModeType>('Vehicle');
     const [currentDuration, setCurrentDuration] = useState<number | null>(null);
 
     const handleChangePathMode = async (updatedMode: PathModeType) => {
-        if (!tmapModuleRef.current) return;
+        if (!tmapModule) return;
         setPathType(updatedMode);
-        await tmapModuleRef.current.togglePathMode(updatedMode);
+        await tmapModule.togglePathMode(updatedMode);
     };
 
     const handleToggleShowPath = () => {
-        if (!tmapModuleRef.current) return;
+        if (!tmapModule) return;
         toggleShowPath();
-        tmapModuleRef.current.togglePathVisibility();
+        tmapModule.togglePathVisibility();
     };
 
     useEventListeners('duration:update', (event) =>

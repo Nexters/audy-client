@@ -1,5 +1,5 @@
 import type { MutableRefObject, PropsWithChildren } from 'react';
-import { createContext, useEffect, useRef } from 'react';
+import { createContext, useEffect, useRef, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
@@ -7,7 +7,8 @@ import { TMapModule, type TmapConstructorType } from './tmapModule';
 
 interface TmapProviderType {
     mapContainerRef: MutableRefObject<HTMLDivElement | null>;
-    tmapModuleRef: MutableRefObject<TMapModule | null>;
+    tmapModule: TMapModule | null;
+    isMapLoaded: boolean;
 }
 
 export const TmapContext = createContext<TmapProviderType>(
@@ -28,8 +29,10 @@ export const TmapProvider = ({
     lng,
     children,
 }: PropsType) => {
+    const [isMapLoaded, setIsMapLoaded] = useState(false);
+    const [tmapModule, setTmapModule] = useState<TMapModule | null>(null);
+
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    const tmapModuleRef = useRef<TMapModule | null>(null);
 
     const { pathname } = useLocation();
 
@@ -37,8 +40,7 @@ export const TmapProvider = ({
         if (!mapContainerRef.current) return;
 
         mapContainerRef.current.id = mapId;
-
-        tmapModuleRef.current = new TMapModule({
+        const tmapModuleInstance = new TMapModule({
             mapId,
             width,
             height,
@@ -47,14 +49,26 @@ export const TmapProvider = ({
             lng,
         });
 
+        setTmapModule(tmapModuleInstance);
+        setIsMapLoaded(true);
+
         return () => {
-            tmapModuleRef.current = null;
+            setTmapModule(null);
+            setIsMapLoaded(false);
         };
-    }, [height, lat, lng, mapId, width, zoom, pathname]);
+    }, [
+        height,
+        lat,
+        lng,
+        mapId,
+        width,
+        zoom,
+        isMapLoaded,
+    ]);
 
     return (
         <TmapContext.Provider
-            value={{ mapContainerRef, tmapModuleRef }}
+            value={{ isMapLoaded, tmapModule, mapContainerRef }}
             key={pathname}
         >
             {children}

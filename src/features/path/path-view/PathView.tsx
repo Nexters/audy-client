@@ -21,57 +21,67 @@ const REORDER_DELAY = 330;
 const PathView = () => {
     const { courseId } = useParams();
     const { debounce } = useDebounce();
-    const { tmapModuleRef } = useTmap();
+    const { isMapLoaded, tmapModule } = useTmap();
     const stompClient = useSocket(Number(courseId));
 
     const {
-        data: { pinList = [] },
+        data: { pinResList = [] },
     } = useGetCourseDetail({ courseId: Number(courseId) });
 
     const [markers, setMarkers] = useState<MarkerType[]>([]);
     const { isSearchMode } = useContext(SearchContextValue);
 
+    useEventListeners('infoWindow:confirm', (event) => {
+        if (!courseId) return;
+        console.log('created InfoWindow', event.detail);
+        stompClient.addPin({
+            courseId: Number(courseId),
+            ...event.detail,
+        });
+    });
+
     useEventListeners('marker:create', (event) => {
         if (!courseId) return;
-        setMarkers((previous) => [...previous, event.detail]);
-        stompClient.addPin({
-            pinName: event.detail.name,
-            originName: event.detail.originName,
-            courseId: Number(courseId),
-            latitude: Number(event.detail.lat),
-            longitude: Number(event.detail.lng),
-            address: event.detail.address,
-            sequence: 1, // TODO : TmapModule 구현체 로직 변경 필요
-        });
+        const updatedMarkers = [...markers, event.detail];
+        updatedMarkers.sort((a, b) => a.sequence - b.sequence);
+        setMarkers(updatedMarkers);
     });
 
     useEventListeners('marker:remove', (event) => {
         if (!courseId) return;
-        setMarkers(markers.filter((marker) => marker.id !== event.detail));
+        console.log(event.detail, 'remove');
         stompClient.removePin({ pinId: event.detail });
     });
 
     useEffect(() => {
-        if (!tmapModuleRef.current) return;
-        const initMarkerList: MarkerType[] = pinList
-            .map(({ pinName, pinId, address, latitude, longitude }) =>
-                tmapModuleRef.current?.createMarker({
+        if (!tmapModule) return;
+
+        const initMarkerList: MarkerType[] = pinResList
+            .map(({ pinName, pinId, address, latitude, longitude, sequence }) =>
+                tmapModule.createMarker({
                     name: pinName,
                     originName: pinName,
                     address,
                     id: pinId,
                     lat: String(latitude),
                     lng: String(longitude),
+                    sequence,
                 }),
             )
             .filter((marker): marker is MarkerType => !!marker);
         setMarkers(initMarkerList);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [pinResList, tmapModule, isMapLoaded]);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
-        if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.modifyMarker(newOrder);
+        if (!tmapModule) return;
+
+        const modifiedMarkers = newOrder.map((marker, index) => ({
+            ...marker,
+            sequence: markers[index].sequence,
+        }));
+
+        tmapModule.reorderMarkers(modifiedMarkers);
+        setMarkers(modifiedMarkers);
     }, REORDER_DELAY);
 
     const handleReorderMarker = (newOrder: MarkerType[]) => {
