@@ -80,9 +80,6 @@ const PathView = () => {
         setMarkers(updatedMarkers);
     });
     
-
-    console.log('re - render', markers.map(({ pinName }) => pinName))
-
     useEffect(() => {
         if (!tmapModule) return;
 
