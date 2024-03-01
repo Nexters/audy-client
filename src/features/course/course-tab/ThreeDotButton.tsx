@@ -2,6 +2,9 @@ import EditIcon from '@/assets/icons/edit.svg?react';
 import ThreeDotIcon from '@/assets/icons/threeDot.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import PopOver from '@/components/pop-over';
+import { useModal } from '@/hooks/useModal';
+
+import CourseRemoveModal from '../course-remove-modal/CourseRemoveModal';
 
 import * as S from './ThreeDotButton.css';
 
@@ -10,13 +13,13 @@ interface PropsType {
 }
 
 const ThreeDotButton = ({ courseId }: PropsType) => {
+    const { openModal } = useModal();
+
     // TODO : 모달 컴포넌트 개발 이후 수정 모달 추가 필요
-    const handleCourseEditIconClick = () => {
-        console.log(courseId);
-    };
+    const handleCourseEditIconClick = () => {};
 
     const handleRemoveCourseIconClick = () => {
-        console.log(courseId);
+        openModal(<CourseRemoveModal courseId={courseId} />);
     };
 
     return (
@@ -27,12 +30,12 @@ const ThreeDotButton = ({ courseId }: PropsType) => {
             <PopOver.Content>
                 <PopOver.Item onClick={handleCourseEditIconClick}>
                     <EditIcon />
-                    <p className={S.text}>장소명 수정</p>
+                    <p className={S.text}>코스명 수정</p>
                 </PopOver.Item>
 
                 <PopOver.Item onClick={handleRemoveCourseIconClick}>
                     <TrashCanIcon />
-                    <p className={S.text}>장소 삭제</p>
+                    <p className={S.text}>코스 삭제</p>
                 </PopOver.Item>
             </PopOver.Content>
         </PopOver>
