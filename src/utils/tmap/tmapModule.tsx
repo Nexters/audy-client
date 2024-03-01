@@ -131,7 +131,6 @@ export class TMapModule {
         latitude,
         longitude,
         sequence,
-        pKey,
     }: {
         pinId: string;
         pinName: string;
@@ -140,7 +139,6 @@ export class TMapModule {
         latitude: string;
         longitude: string;
         sequence?: string;
-        pKey?: string;
     }) {
         const currentMarkerAmount = this.#markers.length;
         if (currentMarkerAmount >= this.#maxMarkerCount) return;
@@ -163,7 +161,6 @@ export class TMapModule {
             latitude,
             longitude,
             sequence: currentSequence,
-            pKey,
             isHidden: false,
         };
 
@@ -248,9 +245,9 @@ export class TMapModule {
         return this.#markers.find((marker) => marker.sequence === sequence);
     }
 
-    // 마커 pKey 를 기반으로 특정 마커를 반환하는 메서드 getMarkerByPKey
-    getMarkerByPkey(pKey: string) {
-        return this.#markers.find((marker) => marker.pKey === pKey);
+    // 마커 위경도 를 기반으로 특정 마커를 반환하는 메서드 getMarkerByPKey
+    getMarkerByLatLng({ latitude, longitude }: Pick<MarkerType, 'latitude' | 'longitude'>) {
+        return this.#markers.find((marker) => marker.latitude === latitude && marker.longitude === longitude);
     }
 
     // 마커의 순서가 변경되었을 경우 이를 지도에 반영하는 메서드 reorderMarkers

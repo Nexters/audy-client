@@ -13,5 +13,4 @@ export interface PinType {
 
 export interface MarkerType extends PinType {
     isHidden: boolean;
-    pKey?: string; // NOTE : 검색으로 찾은 장소를 식별하기 위한 값
 }

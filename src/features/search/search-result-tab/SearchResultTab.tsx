@@ -32,17 +32,27 @@ const SearchResultTab = ({
     const { tmapModule } = useTmap();
     const stompClient = useSocket(Number(courseId));
 
-    const initialPinState = !!tmapModule?.getMarkerByPkey(pKey);
+    const initialPinState = !!tmapModule?.getMarkerByLatLng({
+        latitude,
+        longitude,
+    });
 
     const [isPinned, setIsPinned] = useState(initialPinState);
 
     useEventListeners('marker:remove', (event) => {
         const removedMarker = tmapModule?.getMarkerById(event.detail);
-        if (removedMarker?.pKey === pKey) setIsPinned(false);
+        if (
+            removedMarker?.latitude === latitude &&
+            removedMarker?.longitude === longitude
+        )
+            setIsPinned(false);
     });
 
     const handleUnPinButtonClick = () => {
-        const removedMarker = tmapModule?.getMarkerByPkey(pKey);
+        const removedMarker = tmapModule?.getMarkerByLatLng({
+            latitude,
+            longitude,
+        });
         if (!removedMarker) return;
 
         stompClient.removePin({ pinId: removedMarker.pinId });
@@ -67,6 +77,16 @@ const SearchResultTab = ({
             address,
             sequence: currentSequence,
         });
+
+        tmapModule.createInfoWindow({
+            latitude,
+            longitude,
+            pinId: pKey, // FIXME : 검색 결과로 들어온 ID 는 실제 서버에서 발급한 pinId 와 관련이 없음, 개선 필요
+            pinName: name,
+            address,
+            isPinned: true,
+        });
+
 
         setIsPinned(true);
     };
