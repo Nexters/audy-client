@@ -1,3 +1,4 @@
+import type { CourseSocketPubType } from '@/apis/course/type';
 import type { MarkerType } from '@/types/map';
 
 // T-MAP API NameSpace
@@ -11,7 +12,10 @@ declare global {
     interface CustomEventMap {
         'marker:create': CustomEvent<MarkerType>;
         'marker:remove': CustomEvent<string>;
-        'duration:update': CustomEvent<number>
+        'infoWindow:confirm': CustomEvent<
+            Omit<CourseSocketPubType['addition'], 'courseId'>
+        >;
+        'duration:update': CustomEvent<number>;
     }
 
     interface WindowEventMap extends CustomEventMap {}
