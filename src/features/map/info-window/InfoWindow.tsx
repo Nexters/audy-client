@@ -39,11 +39,7 @@ const InfoWindow = ({ name, address, isPinned }: PropsType) => {
                     className={S.pinButton}
                     id={isPinned ? 'unPinButton' : 'pinButton'}
                 >
-                    {isPinned ? (
-                        <TrashCanIcon fill={COLOR.Gray400} />
-                    ) : (
-                        <AddIcon fill={COLOR.Gray400} />
-                    )}
+                    {isPinned ? <TrashCanIcon /> : <AddIcon />}
                 </button>
             </div>
         </div>
