@@ -1,3 +1,4 @@
+import { LexoRank } from 'lexorank';
 import { renderToString } from 'react-dom/server';
 
 import { TmapRepository } from '@/apis/tmap';
@@ -132,18 +133,24 @@ export class TMapModule {
         id: string;
         lat: string;
         lng: string;
-        sequence?: number;
+        sequence?: string;
     }) {
         const currentMarkerAmount = this.#markers.length;
         if (currentMarkerAmount >= this.#maxMarkerCount) return;
 
-        const latestSequence = this.#markers.at(-1)?.sequence ?? -1;
-        const currentSequence = sequence ?? latestSequence + 1;
+        const latestSequence = this.#markers.at(-1)?.sequence;
+        const currentSequence =
+            sequence ??
+            (latestSequence
+                ? LexoRank.parse(latestSequence).genNext().toString()
+                : LexoRank.min().toString());
 
         const newMarker: MarkerType = {
             instance: new Tmapv3.Marker({
                 position: new Tmapv3.LatLng(lat, lng),
-                iconHTML: <Marker order={currentSequence} isHidden={false} />,
+                iconHTML: renderToString(
+                    <Marker order={currentSequence + 1} isHidden={false} />,
+                ),
                 map: this.#mapInstance,
             }),
             name,
@@ -187,6 +194,8 @@ export class TMapModule {
             (marker) => marker.id === id,
         );
 
+        console.log(this.#markers, markerIndex);
+
         if (markerIndex === -1) return;
 
         const [removedMarker] = this.#markers.splice(markerIndex, 1);
@@ -195,6 +204,8 @@ export class TMapModule {
         this.#drawMarkers();
         this.drawPathBetweenMarkers();
         this.clusterMarkers();
+
+        console.log('removed');
 
         window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
     }
@@ -207,6 +218,14 @@ export class TMapModule {
     // 마커 ID 를 기반으로 특정 마커를 반환하는 메서드 getMarkerById
     getMarkerById(id: string) {
         return this.#markers.find((marker) => marker.id === id);
+    }
+
+    // 마커의 순서가 변경되었을 경우 이를 지도에 반영하는 메서드 reorderMarkers
+    reorderMarkers(reorderedMarkers: MarkerType[]) {
+        reorderedMarkers.sort((a, b) => a.sequence - b.sequence);
+        this.#markers = reorderedMarkers;
+        this.#drawMarkers();
+        this.drawPathBetweenMarkers();
     }
 
     // 마커의 숨김 여부를 전환하는 메서드 toggleMarkerHiddenState
@@ -379,6 +398,11 @@ export class TMapModule {
         await this.drawPathBetweenMarkers();
     }
 
+    // 지도 내 경로를 이동하는데 걸리는 시간을 반환하는 메서드 getPathDuration
+    getPathDuration() {
+        return this.#markers.length < 2 ? undefined : this.#duration;
+    }
+
     /**
      * InfoWindow Method
      */
@@ -424,14 +448,20 @@ export class TMapModule {
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
 
-            this.createMarker({
-                name,
-                originName: name,
-                address,
-                id,
-                lat,
-                lng,
-            });
+            const latestSequence = this.#markers.at(-1)?.sequence ?? 0;
+
+            window.dispatchEvent(
+                new CustomEvent('infoWindow:confirm', {
+                    detail: {
+                        pinName: name,
+                        originName: name,
+                        latitude: lat,
+                        longitude: lng,
+                        address,
+                        sequence: latestSequence + 1,
+                    },
+                }),
+            );
 
             this.createInfoWindow({
                 lat,

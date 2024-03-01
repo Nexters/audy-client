@@ -8,7 +8,6 @@ import { TMapModule, type TmapConstructorType } from './tmapModule';
 interface TmapProviderType {
     mapContainerRef: MutableRefObject<HTMLDivElement | null>;
     tmapModule: TMapModule | null;
-    isMapLoaded: boolean;
 }
 
 export const TmapContext = createContext<TmapProviderType>(
@@ -29,7 +28,6 @@ export const TmapProvider = ({
     lng,
     children,
 }: PropsType) => {
-    const [isMapLoaded, setIsMapLoaded] = useState(false);
     const [tmapModule, setTmapModule] = useState<TMapModule | null>(null);
 
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
@@ -50,25 +48,13 @@ export const TmapProvider = ({
         });
 
         setTmapModule(tmapModuleInstance);
-        setIsMapLoaded(true);
 
-        return () => {
-            setTmapModule(null);
-            setIsMapLoaded(false);
-        };
-    }, [
-        height,
-        lat,
-        lng,
-        mapId,
-        width,
-        zoom,
-        isMapLoaded,
-    ]);
+        return () => setTmapModule(null);
+    }, [height, lat, lng, mapId, width, zoom, pathname]);
 
     return (
         <TmapContext.Provider
-            value={{ isMapLoaded, tmapModule, mapContainerRef }}
+            value={{ tmapModule, mapContainerRef }}
             key={pathname}
         >
             {children}

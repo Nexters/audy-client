@@ -21,7 +21,7 @@ const REORDER_DELAY = 330;
 const PathView = () => {
     const { courseId } = useParams();
     const { debounce } = useDebounce();
-    const { isMapLoaded, tmapModule } = useTmap();
+    const { tmapModule } = useTmap();
     const stompClient = useSocket(Number(courseId));
 
     const {
@@ -43,13 +43,11 @@ const PathView = () => {
     useEventListeners('marker:create', (event) => {
         if (!courseId) return;
         const updatedMarkers = [...markers, event.detail];
-        updatedMarkers.sort((a, b) => a.sequence - b.sequence);
         setMarkers(updatedMarkers);
     });
 
     useEventListeners('marker:remove', (event) => {
         if (!courseId) return;
-        console.log(event.detail, 'remove');
         stompClient.removePin({ pinId: event.detail });
     });
 
@@ -70,7 +68,7 @@ const PathView = () => {
             )
             .filter((marker): marker is MarkerType => !!marker);
         setMarkers(initMarkerList);
-    }, [pinResList, tmapModule, isMapLoaded]);
+    }, [pinResList, tmapModule]);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModule) return;
