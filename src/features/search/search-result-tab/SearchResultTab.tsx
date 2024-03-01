@@ -88,7 +88,7 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
                 </button>
             ) : (
                 <button className={S.pinButton} onClick={handlePinButtonClick}>
-                    <AddIcon fill={COLOR.Gray400} />
+                    <AddIcon />
                 </button>
             )}
         </div>
