@@ -49,6 +49,9 @@ export const usePatchCourseName = ({
             queryClient.invalidateQueries({
                 queryKey: COURSE_QUERY_KEY.detail(courseId),
             });
+            queryClient.invalidateQueries({
+                queryKey: COURSE_QUERY_KEY.list(),
+            });
         },
         throwOnError: true,
     });

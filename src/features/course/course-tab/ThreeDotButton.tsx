@@ -4,19 +4,24 @@ import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import PopOver from '@/components/pop-over';
 import { useModal } from '@/hooks/useModal';
 
+import CourseNameEditModal from '../course-name-edit-modal';
 import CourseRemoveModal from '../course-remove-modal/CourseRemoveModal';
 
 import * as S from './ThreeDotButton.css';
 
 interface PropsType {
     courseId: number;
+    courseName: string;
 }
 
-const ThreeDotButton = ({ courseId }: PropsType) => {
+const ThreeDotButton = ({ courseId, courseName }: PropsType) => {
     const { openModal } = useModal();
 
-    // TODO : 모달 컴포넌트 개발 이후 수정 모달 추가 필요
-    const handleCourseEditIconClick = () => {};
+    const handleCourseEditIconClick = () => {
+        openModal(
+            <CourseNameEditModal courseId={courseId} courseName={courseName} />,
+        );
+    };
 
     const handleRemoveCourseIconClick = () => {
         openModal(<CourseRemoveModal courseId={courseId} />);

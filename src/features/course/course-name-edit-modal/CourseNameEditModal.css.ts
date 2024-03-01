@@ -27,7 +27,7 @@ export const couseNameInput = style([
     },
 ]);
 
-export const saveButton = recipe({
+export const editButton = recipe({
     base: [
         sprinkles({ typography: 'Bold17' }),
         {
