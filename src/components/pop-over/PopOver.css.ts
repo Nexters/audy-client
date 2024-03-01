@@ -9,6 +9,7 @@ export const wrapper = style({
 export const trigger = style({
     width: 'fit-content',
     height: 'fit-content',
+    cursor: 'pointer',
 });
 
 export const content = style({
