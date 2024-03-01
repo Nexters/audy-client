@@ -145,11 +145,13 @@ export class TMapModule {
                 ? LexoRank.parse(latestSequence).genNext().toString()
                 : LexoRank.min().toString());
 
+        const currentIndex = this.#getMarkerIndexBySequence(currentSequence);
+
         const newMarker: MarkerType = {
             instance: new Tmapv3.Marker({
                 position: new Tmapv3.LatLng(lat, lng),
                 iconHTML: renderToString(
-                    <Marker order={currentSequence + 1} isHidden={false} />,
+                    <Marker order={currentIndex + 1} isHidden={false} />,
                 ),
                 map: this.#mapInstance,
             }),
@@ -205,8 +207,6 @@ export class TMapModule {
         this.drawPathBetweenMarkers();
         this.clusterMarkers();
 
-        console.log('removed');
-
         window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
     }
 
@@ -222,8 +222,8 @@ export class TMapModule {
 
     // 마커의 순서가 변경되었을 경우 이를 지도에 반영하는 메서드 reorderMarkers
     reorderMarkers(reorderedMarkers: MarkerType[]) {
-        reorderedMarkers.sort((a, b) => a.sequence - b.sequence);
         this.#markers = reorderedMarkers;
+        this.#sortMarkers();
         this.#drawMarkers();
         this.drawPathBetweenMarkers();
     }
@@ -263,12 +263,12 @@ export class TMapModule {
 
     // 현재 마커 배열을 기준으로 맵 위에 마커를 재구성하는 private 메서드 modifyMarker
     #drawMarkers() {
-        this.#markers.sort((a, b) => a.sequence - b.sequence);
+        this.#sortMarkers();
         this.#markers.map(
-            ({ instance, lat, lng, isHidden, sequence, ...rest }) => {
+            ({ instance, lat, lng, isHidden, sequence, ...rest }, index) => {
                 instance.setMap(null);
                 const updatedIconHTML = renderToString(
-                    <Marker order={sequence} isHidden={isHidden} />,
+                    <Marker order={index + 1} isHidden={isHidden} />,
                 );
 
                 const markerInstance = new Tmapv3.Marker({
@@ -286,6 +286,27 @@ export class TMapModule {
                     instance: markerInstance,
                 };
             },
+        );
+    }
+
+    // lexoRank 알고리즘을 기반으로 Marker 를 정렬하는 private 메서드 sortMarkers
+    #sortMarkers() {
+        this.#markers.sort((a, b) => {
+            const aSequence = LexoRank.parse(a.sequence);
+            const bSequence = LexoRank.parse(b.sequence);
+            return aSequence.compareTo(bSequence);
+        });
+    }
+
+    // 현재 Sequence 를 기반으로 전체 마커 중 몇 번째 순서인지를 파악하는 private 메서드 getMarkerIndexBySequence
+    #getMarkerIndexBySequence(markerSequence: string) {
+        const sequenceList = this.getMarkers().map(({ sequence }) => sequence);
+        sequenceList.push(markerSequence);
+        sequenceList.sort((a, b) =>
+            LexoRank.parse(a).compareTo(LexoRank.parse(b)),
+        );
+        return sequenceList.findIndex(
+            (sequence) => sequence === markerSequence,
         );
     }
 
@@ -448,7 +469,10 @@ export class TMapModule {
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
 
-            const latestSequence = this.#markers.at(-1)?.sequence ?? 0;
+            const latestSequence = this.#markers.at(-1)?.sequence;
+            const sequence = latestSequence
+                ? LexoRank.parse(latestSequence).genNext().toString()
+                : LexoRank.min().toString();
 
             window.dispatchEvent(
                 new CustomEvent('infoWindow:confirm', {
@@ -458,7 +482,7 @@ export class TMapModule {
                         latitude: lat,
                         longitude: lng,
                         address,
-                        sequence: latestSequence + 1,
+                        sequence,
                     },
                 }),
             );
@@ -474,8 +498,13 @@ export class TMapModule {
         };
 
         const handleUnPinButtonClick = () => {
-            this.removeMarker(id);
             this.removeInfoWindow();
+
+            window.dispatchEvent(
+                new CustomEvent('infoWindow:revert', {
+                    detail: id,
+                }),
+            );
         };
 
         document

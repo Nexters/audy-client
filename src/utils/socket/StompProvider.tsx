@@ -1,17 +1,15 @@
-import type { PropsWithChildren } from 'react';
-import { useEffect, useState, createContext } from 'react';
+import type { PropsWithChildren, MutableRefObject } from 'react';
+import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 
 import { Client as StompClient } from '@stomp/stompjs';
-
-import type { ApiResponseType } from '@/apis/api';
-import type {
-    CourseSocketSubType,
-} from '@/apis/course/type';
-import { useTmap } from '@/hooks/useTmap';
 import { useParams } from 'react-router-dom';
 
+import type { ApiResponseType } from '@/apis/api';
+import type { CourseSocketSubType } from '@/apis/course/type';
+import { TmapContext } from '@/utils/tmap/TmapModuleProvider';
+
 interface StompProviderType {
-    stompClient: StompClient | null;
+    stompClient: MutableRefObject<StompClient | null>;
 }
 
 export const StompContext = createContext<StompProviderType>(
@@ -21,13 +19,13 @@ export const StompContext = createContext<StompProviderType>(
 /**
  * StompClient 를 생성하여 주입하는 Provider StompProvider
  */
-export const StompProvider = ({children}: PropsWithChildren) => {
-    const [stompClient, setStompClient] = useState<StompClient | null>(null);
+export const StompProvider = ({ children }: PropsWithChildren) => {
+    const stompClient = useRef<StompClient | null>(null);
     const { courseId } = useParams();
-    const { tmapModule } = useTmap();
+    const { tmapModule } = useContext(TmapContext);
 
     useEffect(() => {
-        if (stompClient || !courseId) return;
+        if (stompClient.current) return;
 
         const stomp = new StompClient({
             brokerURL: `wss://api.audy-gakka.com/course/${courseId}`,
@@ -92,14 +90,22 @@ export const StompProvider = ({children}: PropsWithChildren) => {
         });
 
         stomp.activate();
-        setStompClient(stomp);
+        stompClient.current = stomp;
+
+        return () => {
+            stompClient.current?.deactivate();
+            stompClient.current = null;
+        };
     }, [courseId, stompClient, tmapModule]);
 
+    const value = useMemo(
+        () => ({
+            stompClient,
+        }),
+        [stompClient],
+    );
+
     return (
-        <StompContext.Provider
-            value={{ stompClient }}
-        >
-            {children}
-        </StompContext.Provider>
+        <StompContext.Provider value={value}>{children}</StompContext.Provider>
     );
 };

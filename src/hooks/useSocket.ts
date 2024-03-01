@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import type { CourseSocketPubType } from '@/apis/course/type';
-import { StompContext } from '@/utils/socket/StompClientProvider';
+import { StompContext } from '@/utils/socket/StompProvider';
 
 export const useSocket = (courseId: number) => {
     const { stompClient } = useContext(StompContext);
@@ -10,7 +10,7 @@ export const useSocket = (courseId: number) => {
         pinId,
         pinName,
     }: CourseSocketPubType['modifyName']) => {
-        stompClient?.publish({
+        stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/modification/name`,
             body: JSON.stringify({
                 pinId,
@@ -23,7 +23,7 @@ export const useSocket = (courseId: number) => {
         pinId,
         sequence,
     }: CourseSocketPubType['modifySequence']) => {
-        stompClient?.publish({
+        stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/modification/sequence`,
             body: JSON.stringify({
                 pinId,
@@ -41,7 +41,7 @@ export const useSocket = (courseId: number) => {
         sequence,
         address,
     }: CourseSocketPubType['addition']) => {
-        stompClient?.publish({
+        stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/addition`,
             body: JSON.stringify({
                 courseId,
@@ -56,7 +56,7 @@ export const useSocket = (courseId: number) => {
     };
 
     const removePin = ({ pinId }: CourseSocketPubType['removal']) => {
-        stompClient?.publish({
+        stompClient.current?.publish({
             destination: `/pub/${courseId}/pin/removal`,
             body: JSON.stringify({
                 pinId,

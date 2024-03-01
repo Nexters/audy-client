@@ -1,5 +1,5 @@
 import type { MutableRefObject, PropsWithChildren } from 'react';
-import { createContext, useEffect, useRef, useState } from 'react';
+import { createContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
@@ -47,16 +47,22 @@ export const TmapProvider = ({
             lng,
         });
 
+        console.log(mapContainerRef.current);
         setTmapModule(tmapModuleInstance);
 
         return () => setTmapModule(null);
     }, [height, lat, lng, mapId, width, zoom, pathname]);
 
+    const value = useMemo(
+        () => ({
+            tmapModule,
+            mapContainerRef,
+        }),
+        [tmapModule],
+    );
+
     return (
-        <TmapContext.Provider
-            value={{ tmapModule, mapContainerRef }}
-            key={pathname}
-        >
+        <TmapContext.Provider value={value} key={pathname}>
             {children}
         </TmapContext.Provider>
     );

@@ -40,15 +40,20 @@ const PathView = () => {
         });
     });
 
+    useEventListeners('infoWindow:revert', (event) => {
+        stompClient.removePin({ pinId: event.detail });
+    });
+
     useEventListeners('marker:create', (event) => {
-        if (!courseId) return;
         const updatedMarkers = [...markers, event.detail];
         setMarkers(updatedMarkers);
     });
 
     useEventListeners('marker:remove', (event) => {
-        if (!courseId) return;
-        stompClient.removePin({ pinId: event.detail });
+        const updatedMarkers = markers.filter(
+            (marker) => marker.id !== event.detail,
+        );
+        setMarkers(updatedMarkers);
     });
 
     useEffect(() => {
