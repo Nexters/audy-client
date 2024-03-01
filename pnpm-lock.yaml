@@ -35,6 +35,9 @@ dependencies:
   jotai:
     specifier: ^2.6.5
     version: 2.6.5(@types/react@18.2.47)(react@18.2.0)
+  lexorank:
+    specifier: ^1.0.5
+    version: 1.0.5
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -2556,6 +2559,10 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
+
+  /lexorank@1.0.5:
+    resolution: {integrity: sha512-K1B/Yr/gIU0wm68hk/yB0p/mv6xM3ShD5aci42vOwcjof8slG8Kpo3Q7+1WTv7DaRHKWRgLPqrFDt+4GtuFAtA==}
+    dev: false
 
   /lilconfig@3.0.0:
     resolution: {integrity: sha512-K2U4W2Ff5ibV7j7ydLr+zLAkIg5JJ4lPn1Ltsdt+Tz/IjQ8buJ55pZAxoP34lqIiwtF9iAvtLv3JGv7CAyAg+g==}
