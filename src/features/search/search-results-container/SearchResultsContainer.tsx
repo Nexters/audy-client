@@ -41,13 +41,13 @@ const SearchResultsContainer = () => {
                     ({ pkey, name, newAddressList, noorLat, noorLon }) => (
                         <SearchResultTab
                             key={pkey}
-                            id={pkey}
+                            pKey={pkey}
                             name={name}
                             address={
                                 newAddressList.newAddress[0].fullAddressRoad
                             }
-                            lat={noorLat}
-                            lng={noorLon}
+                            latitude={noorLat}
+                            longitude={noorLon}
                         />
                     ),
                 )

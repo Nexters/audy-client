@@ -13,28 +13,28 @@ import { useTmap } from '@/hooks/useTmap';
 import * as S from './ThreeDotButton.css';
 
 interface PropsType {
-    markerId: string;
+    pinId: string;
 }
 
-const ThreeDotButton = ({ markerId }: PropsType) => {
+const ThreeDotButton = ({ pinId }: PropsType) => {
     const { courseId } = useParams();
     const { tmapModule } = useTmap();
 
     const stompClient = useSocket(Number(courseId));
 
-    const initPinHided = !!tmapModule?.getMarkerById(markerId)?.isHidden;
+    const initPinHided = !!tmapModule?.getMarkerById(pinId)?.isHidden;
 
     const { value: isPinHided, toggle: togglePinHided } =
         useDisclosure(initPinHided);
 
     const handlePinHide = () => {
         if (!tmapModule) return;
-        tmapModule.toggleMarkerHiddenState(markerId);
+        tmapModule.toggleMarkerHiddenState(pinId);
         togglePinHided();
     };
 
     const handlePinRemove = () => {
-        stompClient.removePin({ pinId: markerId })
+        stompClient.removePin({ pinId })
     };
 
     return (

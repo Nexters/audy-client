@@ -25,7 +25,7 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
     const { tmapModule } = useContext(TmapContext);
 
     useEffect(() => {
-        if (stompClient.current) return;
+        if (stompClient.current || !tmapModule) return;
 
         const stomp = new StompClient({
             brokerURL: `wss://api.audy-gakka.com/course/${courseId}`,
@@ -38,14 +38,7 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                     }: ApiResponseType<CourseSocketSubType['addition']> =
                         JSON.parse(message.body);
 
-                    tmapModule?.createMarker({
-                        id: newMarker.pinId,
-                        name: newMarker.pinName,
-                        originName: newMarker.originName,
-                        address: newMarker.address,
-                        lat: String(newMarker.latitude),
-                        lng: String(newMarker.longitude),
-                    });
+                    tmapModule?.createMarker(newMarker);
                 });
 
                 stomp.subscribe(

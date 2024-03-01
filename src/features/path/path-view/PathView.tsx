@@ -40,9 +40,11 @@ const PathView = () => {
     });
 
     useEventListeners('infoWindow:revert', (event) => {
+        console.log(event.detail);
         const removedMarker = tmapModule?.getMarkerBySequence(event.detail);
+        console.log(removedMarker);
         if (!removedMarker) return;
-        stompClient.removePin({ pinId: removedMarker.id });
+        stompClient.removePin({ pinId: removedMarker.pinId });
     });
 
     useEventListeners('marker:create', (event) => {
@@ -52,7 +54,7 @@ const PathView = () => {
 
     useEventListeners('marker:remove', (event) => {
         const updatedMarkers = markers.filter(
-            (marker) => marker.id !== event.detail,
+            (marker) => marker.pinId !== event.detail,
         );
         setMarkers(updatedMarkers);
     });
@@ -60,19 +62,10 @@ const PathView = () => {
     useEffect(() => {
         if (!tmapModule) return;
 
-        const initMarkerList: MarkerType[] = pinResList
-            .map(({ pinName, pinId, address, latitude, longitude, sequence }) =>
-                tmapModule.createMarker({
-                    name: pinName,
-                    originName: pinName,
-                    address,
-                    id: pinId,
-                    lat: String(latitude),
-                    lng: String(longitude),
-                    sequence,
-                }),
-            )
+        const initMarkerList = pinResList
+            .map((pin) => tmapModule.createMarker(pin))
             .filter((marker): marker is MarkerType => !!marker);
+            
         setMarkers(initMarkerList);
     }, [pinResList, tmapModule]);
 
@@ -107,7 +100,7 @@ const PathView = () => {
             >
                 {markers.map((marker, index) => (
                     <PathItem
-                        key={marker.id}
+                        key={marker.pinId}
                         marker={marker}
                         order={index + 1}
                     />

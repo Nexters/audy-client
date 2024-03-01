@@ -46,8 +46,8 @@ export interface CourseSocketPubType {
         courseId: number;
         pinName: string;
         originName: string;
-        latitude: number;
-        longitude: number;
+        latitude: string;
+        longitude: string;
         address: string;
         sequence: string;
     };
@@ -70,8 +70,8 @@ export interface CourseSocketSubType {
         pinId: string;
         pinName: string;
         originName: string;
-        latitude: number;
-        longitude: number;
+        latitude: string;
+        longitude: string;
         address: string;
         sequence: string;
     };

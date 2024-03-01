@@ -1,9 +1,13 @@
 import { useState } from 'react';
 
+import { LexoRank } from 'lexorank';
+import { useParams } from 'react-router-dom';
+
 import AddIcon from '@/assets/icons/add.svg?react';
 import LocationIcon from '@/assets/icons/location.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import { useEventListeners } from '@/hooks/useEventListeners';
+import { useSocket } from '@/hooks/useSocket';
 import { useTmap } from '@/hooks/useTmap';
 import { COLOR } from '@/styles/foundation';
 
@@ -12,50 +16,56 @@ import * as S from './SearchResultTab.css';
 interface PropsType {
     name: string;
     address: string;
-    lat: string;
-    lng: string;
-    id: string;
+    latitude: string;
+    longitude: string;
+    pKey: string;
 }
 
-const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
+const SearchResultTab = ({
+    name,
+    address,
+    latitude,
+    longitude,
+    pKey,
+}: PropsType) => {
+    const { courseId } = useParams();
     const { tmapModule } = useTmap();
+    const stompClient = useSocket(Number(courseId));
 
-    const initialPinState = !!tmapModule?.getMarkerById(id);
+    const initialPinState = !!tmapModule?.getMarkerByPkey(pKey);
 
     const [isPinned, setIsPinned] = useState(initialPinState);
 
     useEventListeners('marker:remove', (event) => {
-        if (event.detail === id) setIsPinned(false);
+        const removedMarker = tmapModule?.getMarkerById(event.detail);
+        if (removedMarker?.pKey === pKey) setIsPinned(false);
     });
 
     const handleUnPinButtonClick = () => {
-        if (!tmapModule) return;
+        const removedMarker = tmapModule?.getMarkerByPkey(pKey);
+        if (!removedMarker) return;
 
-        tmapModule.removeMarker(id);
+        stompClient.removePin({ pinId: removedMarker.pinId });
         setIsPinned(false);
     };
 
     const handlePinButtonClick = (event: React.MouseEvent) => {
-        if (!tmapModule) return;
-
+        if (!tmapModule || !courseId) return;
         event.stopPropagation();
 
-        tmapModule.createMarker({
-            name,
-            originName: name,
-            address,
-            id,
-            lat,
-            lng,
-        });
+        const latestSequence = tmapModule.getMarkers().at(-1)?.sequence;
+        const currentSequence = latestSequence
+            ? LexoRank.parse(latestSequence).genNext().toString()
+            : LexoRank.min().toString();
 
-        tmapModule.createInfoWindow({
-            lat,
-            lng,
-            name,
+        stompClient.addPin({
+            courseId: Number(courseId),
+            pinName: name,
+            originName: name,
+            latitude,
+            longitude,
             address,
-            id,
-            isPinned: true,
+            sequence: currentSequence,
         });
 
         setIsPinned(true);
@@ -65,15 +75,15 @@ const SearchResultTab = ({ name, address, lat, lng, id }: PropsType) => {
         if (!tmapModule) return;
 
         tmapModule.createInfoWindow({
-            lat,
-            lng,
-            name,
+            latitude,
+            longitude,
+            pinId: pKey, // FIXME : 검색 결과로 들어온 ID 는 실제 서버에서 발급한 pinId 와 관련이 없음, 개선 필요
+            pinName: name,
             address,
-            id,
             isPinned: false,
         });
 
-        tmapModule.zoomIn({ lat, lng });
+        tmapModule.zoomIn({ latitude, longitude });
     };
 
     return (
