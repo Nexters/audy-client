@@ -1,23 +1,17 @@
 /** 지도에서 나타내는 경로의 타입 (보행자 | 자동차) */
 export type PathModeType = 'Pedestrian' | 'Vehicle';
 
-export interface MarkerType {
-    marker: typeof window.Tmapv3.Marker;
-    name: string;
-    originName: string;
-    address: string;
-    id: string;
-    lat: string;
-    lng: string;
-    isHidden: boolean;
-}
-
 export interface PinType {
     pinId: string;
     pinName: string;
     originName: string;
-    latitude: number;
-    longitude: number;
+    latitude: string;
+    longitude: string;
     address: string;
-    sequence: number;
+    sequence: string;
+}
+
+export interface MarkerType extends PinType {
+    isHidden: boolean;
+    pKey?: string; // NOTE : 검색으로 찾은 장소를 식별하기 위한 값
 }

@@ -1,5 +1,5 @@
 import type { MutableRefObject, PropsWithChildren } from 'react';
-import { createContext, useEffect, useRef } from 'react';
+import { createContext, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
@@ -7,7 +7,7 @@ import { TMapModule, type TmapConstructorType } from './tmapModule';
 
 interface TmapProviderType {
     mapContainerRef: MutableRefObject<HTMLDivElement | null>;
-    tmapModuleRef: MutableRefObject<TMapModule | null>;
+    tmapModule: TMapModule | null;
 }
 
 export const TmapContext = createContext<TmapProviderType>(
@@ -28,8 +28,9 @@ export const TmapProvider = ({
     lng,
     children,
 }: PropsType) => {
+    const [tmapModule, setTmapModule] = useState<TMapModule | null>(null);
+
     const mapContainerRef = useRef<HTMLDivElement | null>(null);
-    const tmapModuleRef = useRef<TMapModule | null>(null);
 
     const { pathname } = useLocation();
 
@@ -37,8 +38,7 @@ export const TmapProvider = ({
         if (!mapContainerRef.current) return;
 
         mapContainerRef.current.id = mapId;
-
-        tmapModuleRef.current = new TMapModule({
+        const tmapModuleInstance = new TMapModule({
             mapId,
             width,
             height,
@@ -47,16 +47,21 @@ export const TmapProvider = ({
             lng,
         });
 
-        return () => {
-            tmapModuleRef.current = null;
-        };
+        setTmapModule(tmapModuleInstance);
+
+        return () => setTmapModule(null);
     }, [height, lat, lng, mapId, width, zoom, pathname]);
 
+    const value = useMemo(
+        () => ({
+            tmapModule,
+            mapContainerRef,
+        }),
+        [tmapModule],
+    );
+
     return (
-        <TmapContext.Provider
-            value={{ mapContainerRef, tmapModuleRef }}
-            key={pathname}
-        >
+        <TmapContext.Provider value={value} key={pathname}>
             {children}
         </TmapContext.Provider>
     );

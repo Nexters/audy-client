@@ -1,3 +1,4 @@
+import { LexoRank } from 'lexorank';
 import { renderToString } from 'react-dom/server';
 
 import { TmapRepository } from '@/apis/tmap';
@@ -27,8 +28,10 @@ const { Tmapv3 } = window;
 
 export class TMapModule {
     #mapInstance: typeof Tmapv3.Map;
-    #markers: MarkerType[] = [];
     #polyline: typeof Tmapv3.Polyline;
+
+    #markers: MarkerType[] = [];
+    #markerInstanceMap: Map<string, typeof Tmapv3.Marker> = new Map();
 
     #isPathVisible = true;
     #pathMode: PathModeType = 'Vehicle';
@@ -82,83 +85,94 @@ export class TMapModule {
                 });
 
             this.createInfoWindow({
-                lat,
-                lng,
-                name: buildingName || '정보 미등록 장소',
+                latitude: lat,
+                longitude: lng,
+                pinName: buildingName || '정보 미등록 장소',
                 address: fullAddress,
-                id: roadAddressKey,
+                pinId: roadAddressKey,
                 isPinned: false,
             });
         };
 
         this.#mapInstance.on('Click', handleMapClick);
 
-        let throttleTimeout: NodeJS.Timeout | null = null;
-        const THROTTLE_TIME = 800;
+        // let throttleTimeout: NodeJS.Timeout | null = null;
+        // const THROTTLE_TIME = 800;
 
-        this.#mapInstance.on('Zoom', () => {
-            if (!throttleTimeout) {
-                throttleTimeout = setTimeout(() => {
-                    this.clusterMarkers();
-                    throttleTimeout = null;
-                }, THROTTLE_TIME);
-            }
-        });
+        // this.#mapInstance.on('Zoom', () => {
+        //     if (!throttleTimeout) {
+        //         throttleTimeout = setTimeout(() => {
+        //             this.clusterMarkers();
+        //             throttleTimeout = null;
+        //         }, THROTTLE_TIME);
+        //     }
+        // });
     }
+
+    // 특정 위경도로 줌인
+    zoomIn({
+        latitude,
+        longitude,
+    }: Pick<MarkerType, 'latitude' | 'longitude'>) {
+        this.#mapInstance.setCenter(new Tmapv3.LatLng(latitude, longitude));
+        this.#mapInstance.setZoom(this.#zoomLevel);
+    }
+
+    /**
+     * Marker Method List
+     */
 
     // 마커 생성
     createMarker({
-        name,
+        pinId,
+        pinName,
         originName,
         address,
-        id,
-        lat,
-        lng,
-        iconHTML = renderToString(
-            <Marker order={this.#markers.length + 1} isHidden={false} />,
-        ),
+        latitude,
+        longitude,
+        sequence,
+        pKey,
     }: {
-        name: string;
+        pinId: string;
+        pinName: string;
         originName: string;
         address: string;
-        id: string;
-        lat: string;
-        lng: string;
-        iconHTML?: string;
+        latitude: string;
+        longitude: string;
+        sequence?: string;
+        pKey?: string;
     }) {
-        if (this.#markers.length >= this.#maxMarkerCount) return;
+        const currentMarkerAmount = this.#markers.length;
+        if (currentMarkerAmount >= this.#maxMarkerCount) return;
+
+        const isMarkerExists = this.getMarkerById(pinId);
+        if (isMarkerExists) return;
+
+        const latestSequence = this.#markers.at(-1)?.sequence;
+        const currentSequence =
+            sequence ??
+            (latestSequence
+                ? LexoRank.parse(latestSequence).genNext().toString()
+                : LexoRank.min().toString());
 
         const newMarker: MarkerType = {
-            marker: new Tmapv3.Marker({
-                position: new Tmapv3.LatLng(lat, lng),
-                iconHTML,
-                map: this.#mapInstance,
-            }),
-            name,
+            pinId,
+            pinName,
             originName,
             address,
-            id,
-            lat,
-            lng,
+            latitude,
+            longitude,
+            sequence: currentSequence,
+            pKey,
             isHidden: false,
         };
 
-        const handleMarkerClick = () => {
-            this.createInfoWindow({
-                lat,
-                lng,
-                name,
-                address,
-                id,
-                isPinned: true,
-            });
-        };
-
-        newMarker.marker.on('Click', handleMarkerClick);
-
         this.#markers.push(newMarker);
-        this.drawPathBetweenMarkers();
-        this.clusterMarkers();
+
+        // this.#markers.push(newMarker);
+        this.#drawMarkers();
+        // this.drawPathBetweenMarkers();
+        // this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:create', {
@@ -170,40 +184,119 @@ export class TMapModule {
     }
 
     // 마커 삭제
-    removeMarker(id: string) {
+    removeMarker(pinId: string) {
         const markerIndex = this.#markers.findIndex(
-            (marker) => marker.id === id,
+            (marker) => marker.pinId === pinId,
         );
 
-        const [{ marker: targetMarker }] = this.#markers.splice(markerIndex, 1);
-        targetMarker.setMap(null);
+        if (markerIndex === -1) return;
 
-        window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
+        const [{ pinId: removedMarkerId }] = this.#markers.splice(
+            markerIndex,
+            1,
+        );
+        const removedMarkerInstance =
+            this.#markerInstanceMap.get(removedMarkerId);
+        removedMarkerInstance.setMap(null);
+
+        this.#drawMarkers();
+        // this.drawPathBetweenMarkers();
+        // this.clusterMarkers();
+
+        window.dispatchEvent(
+            new CustomEvent('marker:remove', { detail: removedMarkerId }),
+        );
     }
 
-    // 마커 수정
-    modifyMarker(modifiedMarkers: MarkerType[]) {
-        // 기존의 핀을 모두 삭제한 후, 새로운 마커 목록을 기반으로 재구성
-        this.#markers.forEach(({ marker }) => marker.setMap(null));
-
-        this.#markers = modifiedMarkers.map(
-            ({ marker, lat, lng, isHidden, ...rest }, index) => {
-                marker.setMap(null);
-                const updatedIconHTML = renderToString(
-                    <Marker order={index + 1} isHidden={isHidden} />,
-                );
-
-                const updatedMarker = new Tmapv3.Marker({
-                    position: new Tmapv3.LatLng(lat, lng),
-                    iconHTML: updatedIconHTML,
-                    map: this.#mapInstance,
-                });
-
-                return { lat, lng, marker: updatedMarker, isHidden, ...rest };
-            },
+    removeMarkerBySequence(sequence: string) {
+        const markerIndex = this.#markers.findIndex(
+            (marker) => marker.sequence === sequence,
         );
 
-        this.drawPathBetweenMarkers();
+        if (markerIndex === -1) return;
+
+        const [{ pinId: removedMarkerId }] = this.#markers.splice(
+            markerIndex,
+            1,
+        );
+        const removedMarkerInstance =
+            this.#markerInstanceMap.get(removedMarkerId);
+        removedMarkerInstance.setMap(null);
+
+        this.#drawMarkers();
+        // this.drawPathBetweenMarkers();
+        // this.clusterMarkers();
+
+        window.dispatchEvent(
+            new CustomEvent('marker:remove', { detail: removedMarkerId }),
+        );
+    }
+
+    // 현재 맵 위에 떠 있는 마커 목록을 반환하는 메서드 getMarkers
+    getMarkers() {
+        return this.#markers;
+    }
+
+    // 마커 ID 를 기반으로 특정 마커를 반환하는 메서드 getMarkerById
+    getMarkerById(pinId: string) {
+        return this.#markers.find((marker) => marker.pinId === pinId);
+    }
+
+    // 마커 Sequence 를 기반으로 특정 마커를 반환하는 메서드 getMarkerBySequence
+    getMarkerBySequence(sequence: string) {
+        console.log(this.#markers);
+        return this.#markers.find((marker) => marker.sequence === sequence);
+    }
+
+    // 마커 pKey 를 기반으로 특정 마커를 반환하는 메서드 getMarkerByPKey
+    getMarkerByPkey(pKey: string) {
+        return this.#markers.find((marker) => marker.pKey === pKey);
+    }
+
+    // 마커의 순서가 변경되었을 경우 이를 지도에 반영하는 메서드 reorderMarkers
+    reorderMarkers(reorderedMarkers: MarkerType[]) {
+        this.#markers = reorderedMarkers;
+        this.#sortMarkers();
+        this.#drawMarkers();
+        // this.drawPathBetweenMarkers();
+    }
+
+    renameMarker({ pinId, pinName }: Pick<MarkerType, 'pinId' | 'pinName'>) {
+        const renamedMarker = this.getMarkerById(pinId);
+        if (!renamedMarker) return;
+
+        renamedMarker.pinName = pinName;
+        this.#drawMarkers();
+    }
+
+    // 마커의 숨김 여부를 전환하는 메서드 toggleMarkerHiddenState
+    toggleMarkerHiddenState(pinId: string) {
+        const targetMarker = this.#markers.find(
+            (marker) => marker.pinId === pinId,
+        );
+
+        if (!targetMarker) return;
+
+        const { isHidden, latitude, longitude, sequence } = targetMarker;
+        targetMarker.isHidden = !isHidden;
+
+        const targetMarkerOrder = this.#getMarkerIndexBySequence(sequence);
+        const targetMarkerInstance = this.#markerInstanceMap.get(pinId);
+
+        targetMarkerInstance.setMap(null);
+        const updatedMarkerInstance = new Tmapv3.Marker({
+            position: new Tmapv3.LatLng(latitude, longitude),
+            iconHTML: renderToString(
+                <Marker order={targetMarkerOrder} isHidden={!isHidden} />,
+            ),
+            map: this.#mapInstance,
+        });
+
+        this.#markerInstanceMap.set(pinId, updatedMarkerInstance);
+
+        // this.drawPathBetweenMarkers();
+
+        return !isHidden;
     }
 
     // Marker 객체로부터 위경도 값을 추출하여 반환하는 private 메서드 getMarkerPosition
@@ -212,41 +305,120 @@ export class TMapModule {
         return [markerLatLng.lng(), markerLatLng.lat()];
     }
 
+    // 현재 마커 배열을 기준으로 맵 위에 마커를 재구성하는 private 메서드 modifyMarker
+    #drawMarkers() {
+        this.#sortMarkers();
+
+        this.#markers.map(
+            (
+                {
+                    latitude,
+                    longitude,
+                    isHidden,
+                    pinName,
+                    address,
+                    pinId,
+                    sequence,
+                },
+                index,
+            ) => {
+                const oldMarkerInstance = this.#markerInstanceMap.get(pinId);
+                if (oldMarkerInstance) oldMarkerInstance.setMap(null);
+
+                const updatedMarker = new Tmapv3.Marker({
+                    position: new Tmapv3.LatLng(latitude, longitude),
+                    map: this.#mapInstance,
+                    iconHTML: renderToString(
+                        <Marker order={index + 1} isHidden={isHidden} />,
+                    ),
+                });
+
+                updatedMarker.on('Click', () =>
+                    this.createInfoWindow({
+                        latitude,
+                        longitude,
+                        pinName,
+                        pinId,
+                        address,
+                        sequence,
+                        isPinned: true,
+                    }),
+                );
+
+                this.#markerInstanceMap.set(pinId, updatedMarker);
+            },
+        );
+    }
+
+    // lexoRank 알고리즘을 기반으로 Marker 를 정렬하는 private 메서드 sortMarkers
+    #sortMarkers() {
+        this.#markers.sort((a, b) => {
+            const aSequence = LexoRank.parse(a.sequence);
+            const bSequence = LexoRank.parse(b.sequence);
+            return aSequence.compareTo(bSequence);
+        });
+
+        this.#markers.sort((a, b) => {
+            const aSequence = LexoRank.parse(a.sequence);
+            const bSequence = LexoRank.parse(b.sequence);
+            return aSequence.compareTo(bSequence);
+        });
+    }
+
+    // 현재 Sequence 를 기반으로 전체 마커 중 몇 번째 순서인지를 파악하는 private 메서드 getMarkerIndexBySequence
+    #getMarkerIndexBySequence(markerSequence: string) {
+        const sequenceList = this.getMarkers().map(({ sequence }) => sequence);
+        sequenceList.push(markerSequence);
+        sequenceList.sort((a, b) =>
+            LexoRank.parse(a).compareTo(LexoRank.parse(b)),
+        );
+        return sequenceList.findIndex(
+            (sequence) => sequence === markerSequence,
+        );
+    }
+
+    /**
+     * Path Method List
+     */
+
     // 맵에 찍힌 마커들을 잇는 경로를 그리는 메서드 drawPathBetweenMarkers
     async drawPathBetweenMarkers() {
-        this.#removePath();
+        this.#removePathBetweenMarkers();
 
-        const notHiddenMarkers = this.#markers.filter(
-            ({ isHidden }) => !isHidden,
-        );
+        const visiblePins = this.#markers.filter(({ isHidden }) => !isHidden);
 
-        if (notHiddenMarkers.length < 2) return;
+        if (visiblePins.length < 2) return;
 
         const path: (typeof window.Tmapv3.LatLng)[] = [];
-        const endIndex = notHiddenMarkers.length - 1;
+        const endIndex = visiblePins.length - 1;
         const MAX_POINTS = 6;
         let totalDuration = 0;
 
         // NOTE : 한번에 그릴 수 있는 경유지는 최대 5개이므로 API 가 허용되는 단위로 끊는다.
         for (let index = 0; index <= endIndex; index += MAX_POINTS) {
-            // NOTE : 시작점이 아니라면, 바로 직전의 종점도 포함하여 경로를 그려야 한다.
             const currentStartIndex = index === 0 ? index : index - 1;
             const currentEndIndex =
                 endIndex <= index + MAX_POINTS ? endIndex : index + MAX_POINTS;
 
-            const [startMarker, ...passMarkers] = notHiddenMarkers
+            const [startMarkerId, ...passMarkerIds] = visiblePins
                 .slice(currentStartIndex, currentEndIndex + 1)
-                .map(({ marker }) => marker);
+                .map(({ pinId }) => pinId);
 
-            const endMarker = passMarkers.pop();
+            const endMarkerId = passMarkerIds.pop();
 
-            const [startX, startY] = this.#getMarkerPosition(startMarker);
-            const [endX, endY] = this.#getMarkerPosition(endMarker);
+            const [startX, startY] = this.#getMarkerPosition(
+                this.#markerInstanceMap.get(startMarkerId),
+            );
+            const [endX, endY] = this.#getMarkerPosition(
+                this.#markerInstanceMap.get(endMarkerId!),
+            );
 
-            const passList = passMarkers.length
-                ? passMarkers
-                      .map((markers) =>
-                          this.#getMarkerPosition(markers).join(','),
+            const passList = passMarkerIds.length
+                ? passMarkerIds
+                      .map((pinId) =>
+                          this.#getMarkerPosition(
+                              this.#markerInstanceMap.get(pinId),
+                          ).join(','),
                       )
                       .join('_')
                 : undefined;
@@ -281,6 +453,7 @@ export class TMapModule {
             });
         }
 
+        this.#duration = totalDuration;
         this.#polyline = new Tmapv3.Polyline({
             path,
             fillColor: '#FF0000',
@@ -290,8 +463,6 @@ export class TMapModule {
             map: this.#mapInstance,
         });
 
-        this.#duration = totalDuration;
-
         window.dispatchEvent(
             new CustomEvent('duration:update', {
                 detail: totalDuration,
@@ -299,51 +470,62 @@ export class TMapModule {
         );
     }
 
-    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
-    togglePathVisibility() {
-        const updatedVisible = !this.#isPathVisible;
-        this.#polyline.setMap(updatedVisible ? this.#mapInstance : null);
-        this.#isPathVisible = updatedVisible;
-    }
-
-    // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
-    async togglePathMode(pathType: PathModeType) {
-        this.#pathMode = pathType;
-        await this.drawPathBetweenMarkers();
-    }
-
-    // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 메서드 removePath
-    #removePath() {
+    // Map 상에 존재하는 polyline 을 지우고 경로를 삭제하는 private 메서드 removePathBetweenMarkers
+    #removePathBetweenMarkers() {
         if (!this.#polyline) return;
         this.#polyline.setMap(null);
         this.#polyline = null;
     }
 
+    // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
+    togglePathVisibility() {
+        const updatedVisibility = !this.#isPathVisible;
+        this.#polyline.setMap(updatedVisibility ? this.#mapInstance : null);
+        this.#isPathVisible = updatedVisibility;
+    }
+
+    // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
+    async togglePathMode(pathType: PathModeType) {
+        this.#pathMode = pathType;
+        // await this.drawPathBetweenMarkers();
+    }
+
+    // 지도 내 경로를 이동하는데 걸리는 시간을 반환하는 메서드 getPathDuration
+    getPathDuration() {
+        return this.#markers.length < 2 ? undefined : this.#duration;
+    }
+
+    /**
+     * InfoWindow Method
+     */
+
     // 인포창 생성
     createInfoWindow({
-        lat,
-        lng,
-        name,
+        latitude,
+        longitude,
+        pinName,
+        pinId,
         address,
-        id,
         isPinned,
+        sequence,
     }: {
-        lat: string;
-        lng: string;
-        name: string;
+        latitude: string;
+        longitude: string;
+        pinName: string;
+        pinId: string;
         address: string;
-        id: string;
         isPinned: boolean;
+        sequence?: string;
     }) {
         if (this.#infoWindow) this.removeInfoWindow();
 
-        const infoWindowLatLng = new Tmapv3.LatLng(lat, lng);
+        const infoWindowPosition = new Tmapv3.LatLng(latitude, longitude);
         const content = renderToString(
-            <InfoWindow name={name} address={address} isPinned={isPinned} />,
+            <InfoWindow name={pinName} address={address} isPinned={isPinned} />,
         );
 
         const infoWindow = new Tmapv3.InfoWindow({
-            position: infoWindowLatLng,
+            position: infoWindowPosition,
             content,
             type: 2,
             border: '0px',
@@ -354,36 +536,51 @@ export class TMapModule {
         infoWindow.setMap(this.#mapInstance);
         this.#infoWindow = infoWindow;
 
-        this.#mapInstance.setCenter(infoWindowLatLng);
+        this.#mapInstance.setCenter(infoWindowPosition);
         this.#mapInstance.setZoom(this.#zoomLevel);
+
+        const latestSequence = this.#markers.at(-1)?.sequence;
+        const currentSequence =
+            sequence ??
+            (latestSequence
+                ? LexoRank.parse(latestSequence).genNext().toString()
+                : LexoRank.min().toString());
 
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
 
-            this.createMarker({
-                name,
-                originName: name,
-                address,
-                id,
-                lat,
-                lng,
-            });
+            window.dispatchEvent(
+                new CustomEvent('infoWindow:confirm', {
+                    detail: {
+                        pinName,
+                        originName: pinName,
+                        latitude,
+                        longitude,
+                        address,
+                        sequence: currentSequence,
+                    },
+                }),
+            );
 
             this.createInfoWindow({
-                lat,
-                lng,
-                name,
+                latitude,
+                longitude,
+                pinId,
+                pinName,
                 address,
-                id,
+                sequence: currentSequence,
                 isPinned: true,
             });
         };
 
         const handleUnPinButtonClick = () => {
-            this.removeMarker(id);
             this.removeInfoWindow();
 
-            this.modifyMarker(this.#markers);
+            window.dispatchEvent(
+                new CustomEvent('infoWindow:revert', {
+                    detail: currentSequence,
+                }),
+            );
         };
 
         document
@@ -405,64 +602,16 @@ export class TMapModule {
         this.#infoWindow = null;
     }
 
-    // 특정 위경도로 줌인
-    zoomIn({ lat, lng }: { lat: string; lng: string }) {
-        this.#mapInstance.setCenter(new Tmapv3.LatLng(lat, lng));
-        this.#mapInstance.setZoom(this.#zoomLevel);
-    }
-
-    // 이미 존재하는 핀인지 확인
-    checkIsAlreadyPinned(id: string) {
-        return this.#markers.some((marker) => marker.id === id);
-    }
-
-    // 핀의 경로에서 숨김 여부를 전환
-    toggleMarkerHiddenState(id: string) {
-        const targetMarker = this.#markers.find((marker) => marker.id === id);
-
-        if (!targetMarker) return;
-
-        const { isHidden } = targetMarker;
-        targetMarker.isHidden = !isHidden;
-
-        const updatedIconHTML = renderToString(
-            <Marker
-                order={
-                    this.#markers.findIndex((marker) => marker.id === id) + 1
-                }
-                isHidden={!isHidden}
-            />,
-        );
-
-        targetMarker.marker.setMap(null);
-
-        targetMarker.marker = new Tmapv3.Marker({
-            position: new Tmapv3.LatLng(targetMarker.lat, targetMarker.lng),
-            iconHTML: updatedIconHTML,
-            map: this.#mapInstance,
-        });
-
-        this.drawPathBetweenMarkers();
-
-        return !isHidden;
-    }
-
-    // 핀의 id를 받아서 핀의 다른 속성 반환
-    getMarkerInfoFromId(id: string) {
-        const targetMarker = this.#markers.find((marker) => marker.id === id);
-        return targetMarker;
-    }
-
-    // 현재 그려진 경로의 소요 시간을 반환하는 함수 getCurrentPathDuration
-    getCurrentPathDuration() {
-        return this.#markers.length > 1 ? this.#duration : null;
-    }
+    /**
+     * Cluster Method
+     */
 
     // 현재 지도 상의 모든 마커의 클러스터링을 수행하고, 클러스터링 결과를 업데이트
     clusterMarkers() {
         this.#clusters.forEach((cluster) => {
-            cluster.markers.forEach(({ marker }) => {
-                marker.setMap(null);
+            cluster.markers.forEach(({ pinId }) => {
+                const markerInstance = this.#markerInstanceMap.get(pinId);
+                markerInstance.setMap(null);
             });
             if (cluster.clusterMarker) cluster.clusterMarker.setMap(null);
         });
@@ -497,8 +646,8 @@ export class TMapModule {
             );
             const markerPoint = this.#mapInstance.realToScreen(
                 new Tmapv3.LatLng(
-                    parseFloat(marker.lat),
-                    parseFloat(marker.lng),
+                    parseFloat(marker.latitude),
+                    parseFloat(marker.longitude),
                 ),
             );
 
@@ -520,8 +669,9 @@ export class TMapModule {
             const iconHTML = renderToString(<Cluster count={size} />);
 
             if (cluster.markers.length < 2) {
-                cluster.markers.forEach(({ marker }) => {
-                    marker.setMap(this.#mapInstance);
+                cluster.markers.forEach(({ pinId }) => {
+                    const markerInstance = this.#markerInstanceMap.get(pinId);
+                    markerInstance.setMap(this.#mapInstance);
                 });
 
                 return;

@@ -21,57 +21,64 @@ const REORDER_DELAY = 330;
 const PathView = () => {
     const { courseId } = useParams();
     const { debounce } = useDebounce();
-    const { tmapModuleRef } = useTmap();
+    const { tmapModule } = useTmap();
     const stompClient = useSocket(Number(courseId));
 
     const {
-        data: { pinList = [] },
+        data: { pinResList = [] },
     } = useGetCourseDetail({ courseId: Number(courseId) });
 
     const [markers, setMarkers] = useState<MarkerType[]>([]);
     const { isSearchMode } = useContext(SearchContextValue);
 
-    useEventListeners('marker:create', (event) => {
+    useEventListeners('infoWindow:confirm', (event) => {
         if (!courseId) return;
-        setMarkers((previous) => [...previous, event.detail]);
         stompClient.addPin({
-            pinName: event.detail.name,
-            originName: event.detail.originName,
             courseId: Number(courseId),
-            latitude: Number(event.detail.lat),
-            longitude: Number(event.detail.lng),
-            address: event.detail.address,
-            sequence: 1, // TODO : TmapModule 구현체 로직 변경 필요
+            ...event.detail,
         });
     });
 
+    useEventListeners('infoWindow:revert', (event) => {
+        console.log(event.detail);
+        const removedMarker = tmapModule?.getMarkerBySequence(event.detail);
+        console.log(removedMarker);
+        if (!removedMarker) return;
+        stompClient.removePin({ pinId: removedMarker.pinId });
+    });
+
+    useEventListeners('marker:create', (event) => {
+        const updatedMarkers = [...markers, event.detail];
+        setMarkers(updatedMarkers);
+    });
+
     useEventListeners('marker:remove', (event) => {
-        if (!courseId) return;
-        setMarkers(markers.filter((marker) => marker.id !== event.detail));
-        stompClient.removePin({ pinId: event.detail });
+        const updatedMarkers = markers.filter(
+            (marker) => marker.pinId !== event.detail,
+        );
+        setMarkers(updatedMarkers);
     });
 
     useEffect(() => {
-        if (!tmapModuleRef.current) return;
-        const initMarkerList: MarkerType[] = pinList
-            .map(({ pinName, pinId, address, latitude, longitude }) =>
-                tmapModuleRef.current?.createMarker({
-                    name: pinName,
-                    originName: pinName,
-                    address,
-                    id: pinId,
-                    lat: String(latitude),
-                    lng: String(longitude),
-                }),
-            )
+        if (!tmapModule) return;
+
+        const initMarkerList = pinResList
+            .map((pin) => tmapModule.createMarker(pin))
             .filter((marker): marker is MarkerType => !!marker);
+            
         setMarkers(initMarkerList);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [pinResList, tmapModule]);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
-        if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.modifyMarker(newOrder);
+        if (!tmapModule) return;
+
+        const modifiedMarkers = newOrder.map((marker, index) => ({
+            ...marker,
+            sequence: markers[index].sequence,
+        }));
+
+        tmapModule.reorderMarkers(modifiedMarkers);
+        setMarkers(modifiedMarkers);
     }, REORDER_DELAY);
 
     const handleReorderMarker = (newOrder: MarkerType[]) => {
@@ -93,7 +100,7 @@ const PathView = () => {
             >
                 {markers.map((marker, index) => (
                     <PathItem
-                        key={marker.id}
+                        key={marker.pinId}
                         marker={marker}
                         order={index + 1}
                     />

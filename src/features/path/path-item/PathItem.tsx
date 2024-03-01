@@ -33,7 +33,7 @@ const PathItem = ({ marker, order }: PropsType) => {
     const controls = useDragControls();
     const y = useMotionValue(0);
 
-    const isSelected = selectedId === marker.id;
+    const isSelected = selectedId === marker.pinId;
 
     const handleToggleHover = (updatedStatus: boolean) => {
         if (selectedId === null) setIsHover(updatedStatus);
@@ -78,11 +78,11 @@ const PathItem = ({ marker, order }: PropsType) => {
             <div className={S.orderBox}>{order}</div>
 
             <PathControlBox
-                id={marker.id}
-                name={marker.name}
+                id={marker.pinId}
+                name={marker.pinName}
                 address={marker.address}
             />
-            <ThreeDotButton markerId={marker.id} />
+            <ThreeDotButton pinId={marker.pinId} />
         </Reorder.Item>
     );
 };

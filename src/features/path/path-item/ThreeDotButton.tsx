@@ -1,3 +1,5 @@
+import { useParams } from 'react-router-dom';
+
 import EditIcon from '@/assets/icons/edit.svg?react';
 import EyeClosedIcon from '@/assets/icons/eyeClosed.svg?react';
 import EyeOpenedIcon from '@/assets/icons/eyeOpened.svg?react';
@@ -5,27 +7,34 @@ import ThreeDotIcon from '@/assets/icons/threeDot.svg?react';
 import TrashCanIcon from '@/assets/icons/trashCan.svg?react';
 import PopOver from '@/components/pop-over';
 import { useDisclosure } from '@/hooks/useDisclosure';
+import { useSocket } from '@/hooks/useSocket';
 import { useTmap } from '@/hooks/useTmap';
 
 import * as S from './ThreeDotButton.css';
 
 interface PropsType {
-    markerId: string;
+    pinId: string;
 }
 
-const ThreeDotButton = ({ markerId }: PropsType) => {
-    const { tmapModuleRef } = useTmap();
+const ThreeDotButton = ({ pinId }: PropsType) => {
+    const { courseId } = useParams();
+    const { tmapModule } = useTmap();
 
-    const initPinHided =
-        !!tmapModuleRef.current?.getMarkerInfoFromId(markerId)?.isHidden;
+    const stompClient = useSocket(Number(courseId));
+
+    const initPinHided = !!tmapModule?.getMarkerById(pinId)?.isHidden;
 
     const { value: isPinHided, toggle: togglePinHided } =
         useDisclosure(initPinHided);
 
     const handlePinHide = () => {
-        if (!tmapModuleRef.current) return;
-        tmapModuleRef.current.toggleMarkerHiddenState(markerId);
+        if (!tmapModule) return;
+        tmapModule.toggleMarkerHiddenState(pinId);
         togglePinHided();
+    };
+
+    const handlePinRemove = () => {
+        stompClient.removePin({ pinId })
     };
 
     return (
@@ -51,7 +60,7 @@ const ThreeDotButton = ({ markerId }: PropsType) => {
                     <p className={S.text}>장소명 수정</p>
                 </PopOver.Item>
 
-                <PopOver.Item>
+                <PopOver.Item onClick={handlePinRemove}>
                     <TrashCanIcon />
                     <p className={S.text}>장소 삭제</p>
                 </PopOver.Item>

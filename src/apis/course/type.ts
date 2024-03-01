@@ -46,18 +46,18 @@ export interface CourseSocketPubType {
         courseId: number;
         pinName: string;
         originName: string;
-        latitude: number;
-        longitude: number;
+        latitude: string;
+        longitude: string;
         address: string;
-        sequence: number;
+        sequence: string;
     };
-    modificationName: {
+    modifyName: {
         pinId: string;
         pinName: string;
     };
-    modificationOrder: {
+    modifySequence: {
         pinId: string;
-        sequence: number;
+        sequence: string;
     };
     removal: {
         pinId: string;
@@ -70,18 +70,18 @@ export interface CourseSocketSubType {
         pinId: string;
         pinName: string;
         originName: string;
-        latitude: number;
-        longitude: number;
+        latitude: string;
+        longitude: string;
         address: string;
-        sequence: number;
+        sequence: string;
     };
-    modificationName: {
+    modifyName: {
         pinId: string;
         pinName: string;
     };
-    modificationOrder: {
+    modifySequence: {
         pinId: string;
-        sequence: number;
+        sequence: string;
     };
     removal: {
         pinId: string;
