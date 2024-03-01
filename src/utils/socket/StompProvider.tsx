@@ -1,4 +1,4 @@
-import type { PropsWithChildren, MutableRefObject } from 'react';
+import type { MutableRefObject, PropsWithChildren } from 'react';
 import { createContext, useContext, useEffect, useMemo, useRef } from 'react';
 
 import { Client as StompClient } from '@stomp/stompjs';
@@ -72,11 +72,12 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                 );
 
                 stomp.subscribe(`/sub/${courseId}/pin/removal`, (message) => {
-                    if (!tmapModule) return;
-                    console.log('remove from socket', message.body);
-                    const { pinId }: CourseSocketSubType['removal'] =
+                    const {
+                        data: { pinId },
+                    }: ApiResponseType<CourseSocketSubType['removal']> =
                         JSON.parse(message.body);
-                    tmapModule.removeMarker(pinId);
+
+                    tmapModule?.removeMarker(pinId);
                 });
             },
             onDisconnect: () => {

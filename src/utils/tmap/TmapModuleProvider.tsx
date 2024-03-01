@@ -47,7 +47,6 @@ export const TmapProvider = ({
             lng,
         });
 
-        console.log(mapContainerRef.current);
         setTmapModule(tmapModuleInstance);
 
         return () => setTmapModule(null);

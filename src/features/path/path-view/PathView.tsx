@@ -33,7 +33,6 @@ const PathView = () => {
 
     useEventListeners('infoWindow:confirm', (event) => {
         if (!courseId) return;
-        console.log('created InfoWindow', event.detail);
         stompClient.addPin({
             courseId: Number(courseId),
             ...event.detail,
@@ -41,7 +40,9 @@ const PathView = () => {
     });
 
     useEventListeners('infoWindow:revert', (event) => {
-        stompClient.removePin({ pinId: event.detail });
+        const removedMarker = tmapModule?.getMarkerBySequence(event.detail);
+        if (!removedMarker) return;
+        stompClient.removePin({ pinId: removedMarker.id });
     });
 
     useEventListeners('marker:create', (event) => {

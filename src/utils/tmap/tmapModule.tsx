@@ -196,8 +196,6 @@ export class TMapModule {
             (marker) => marker.id === id,
         );
 
-        console.log(this.#markers, markerIndex);
-
         if (markerIndex === -1) return;
 
         const [removedMarker] = this.#markers.splice(markerIndex, 1);
@@ -210,6 +208,27 @@ export class TMapModule {
         window.dispatchEvent(new CustomEvent('marker:remove', { detail: id }));
     }
 
+    removeMarkerBySequence(sequence: string) {
+        const markerIndex = this.#markers.findIndex(
+            (marker) => marker.sequence === sequence,
+        );
+
+        if (markerIndex === -1) return;
+
+        const [removedMarker] = this.#markers.splice(markerIndex, 1);
+        removedMarker.instance.setMap(null);
+
+        console.log(removedMarker.instance);
+
+        this.#drawMarkers();
+        this.drawPathBetweenMarkers();
+        this.clusterMarkers();
+
+        window.dispatchEvent(
+            new CustomEvent('marker:remove', { detail: removedMarker.id }),
+        );
+    }
+
     // 현재 맵 위에 떠 있는 마커 목록을 반환하는 메서드 getMarkers
     getMarkers() {
         return this.#markers;
@@ -220,12 +239,26 @@ export class TMapModule {
         return this.#markers.find((marker) => marker.id === id);
     }
 
+    // 마커 Sequence 를 기반으로 특정 마커를 반환하는 메서드 getMarkerBySequence
+    getMarkerBySequence(sequence: string) {
+        return this.#markers.find((marker) => marker.sequence === sequence);
+    }
+
     // 마커의 순서가 변경되었을 경우 이를 지도에 반영하는 메서드 reorderMarkers
     reorderMarkers(reorderedMarkers: MarkerType[]) {
         this.#markers = reorderedMarkers;
         this.#sortMarkers();
         this.#drawMarkers();
         this.drawPathBetweenMarkers();
+    }
+
+    renameMarker({ id, name }: Pick<MarkerType, 'id' | 'name'>) {
+        const renamedMarker = this.getMarkerById(id);
+
+        if (!renamedMarker) return;
+
+        renamedMarker.name = name;
+        this.#drawMarkers();
     }
 
     // 마커의 숨김 여부를 전환하는 메서드 toggleMarkerHiddenState
@@ -466,14 +499,14 @@ export class TMapModule {
         this.#mapInstance.setCenter(infoWindowPosition);
         this.#mapInstance.setZoom(this.#zoomLevel);
 
+        const latestSequence = this.#markers.at(-1)?.sequence;
+        const sequence = latestSequence
+            ? LexoRank.parse(latestSequence).genNext().toString()
+            : LexoRank.min().toString();
+
         const handlePinButtonClick = () => {
             if (this.#markers.length >= this.#maxMarkerCount) return;
-
-            const latestSequence = this.#markers.at(-1)?.sequence;
-            const sequence = latestSequence
-                ? LexoRank.parse(latestSequence).genNext().toString()
-                : LexoRank.min().toString();
-
+            1;
             window.dispatchEvent(
                 new CustomEvent('infoWindow:confirm', {
                     detail: {
@@ -502,7 +535,7 @@ export class TMapModule {
 
             window.dispatchEvent(
                 new CustomEvent('infoWindow:revert', {
-                    detail: id,
+                    detail: sequence,
                 }),
             );
         };

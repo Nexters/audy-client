@@ -15,6 +15,7 @@ declare global {
         'infoWindow:confirm': CustomEvent<
             Omit<CourseSocketPubType['addition'], 'courseId'>
         >;
+        'infoWindow:revert': CustomEvent<string>,
         'duration:update': CustomEvent<number>;
     }
 
