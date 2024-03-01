@@ -79,6 +79,9 @@ const PathView = () => {
         });
         setMarkers(updatedMarkers);
     });
+    
+
+    console.log('re - render', markers.map(({ pinName }) => pinName))
 
     useEffect(() => {
         if (!tmapModule) return;
@@ -108,7 +111,7 @@ const PathView = () => {
             const afterSequence =
                 index < newOrder.length - 1
                     ? LexoRank.parse(newOrder[index + 1].sequence)
-                    : LexoRank.max();
+                    : LexoRank.min();
 
             const currentSequence = LexoRank.parse(marker.sequence);
 
@@ -121,9 +124,17 @@ const PathView = () => {
                 currentSequence.compareTo(afterSequence) === -1;
 
             if (isBigEachSide || isSmallEachSide) {
+
+                const order =
+                index === 0
+                    ? index
+                    : index + 1;
+
+                console.log(marker.pinName, order);
+
                 stompClient.modifyPinSequence({
                     pinId: marker.pinId,
-                    order: index,
+                    order,
                 });
                 return true;
             }
@@ -149,7 +160,7 @@ const PathView = () => {
             >
                 {markers.map((marker, index) => (
                     <PathItem
-                        key={marker.pinId}
+                        key={`${marker.pinId}-${marker.pinName}`}
                         marker={marker}
                         order={index + 1}
                     />

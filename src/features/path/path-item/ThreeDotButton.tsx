@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { useParams } from 'react-router-dom';
 
 import EditIcon from '@/assets/icons/edit.svg?react';
@@ -42,7 +44,13 @@ const ThreeDotButton = ({ pinId, pinName }: PropsType) => {
     };
 
     const handleModifyPinName = () => {
-        openModal(<PathNameEditModal pinId={pinName} pinName={pinName} />);
+        openModal(
+            <PathNameEditModal
+                pinId={pinId}
+                pinName={pinName}
+                modifyPinName={stompClient.modifyPinName}
+            />,
+        );
     };
 
     return (

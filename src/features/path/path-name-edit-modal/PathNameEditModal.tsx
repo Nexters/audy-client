@@ -1,31 +1,28 @@
 import { useState } from 'react';
 
-import { useParams } from 'react-router-dom';
-
 import CloseIcon from '@/assets/icons/close.svg?react';
 import Modal from '@/components/modal/Modal';
 import { useModal } from '@/hooks/useModal';
-import { useSocket } from '@/hooks/useSocket';
 import { useToast } from '@/hooks/useToast';
+import type { MarkerType } from '@/types';
 
 import * as S from './PathNameEditModal.css';
 
 interface PropsType {
     pinId: string;
     pinName: string;
+    modifyPinName: (props: Pick<MarkerType, 'pinId' | 'pinName'>) => void;
 }
 
-const PathNameEditModal = ({ pinId, pinName }: PropsType) => {
+const PathNameEditModal = ({ pinId, pinName, modifyPinName }: PropsType) => {
     const { closeModal } = useModal();
     const { setToast } = useToast();
-    const { courseId } = useParams();
-    const stompClient = useSocket(Number(courseId));
 
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [newPathName, setNewPathName] = useState(pinName);
 
     const handleEditButtonClick = () => {
-        stompClient.modifyPinName({ pinId, pinName: newPathName });
+        modifyPinName({ pinId, pinName: newPathName });
         closeModal();
         setToast('코스 이름이 변경되었어요');
     };

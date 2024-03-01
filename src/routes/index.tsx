@@ -37,21 +37,19 @@ const UIProvider = ({ children }: PropsWithChildren) => (
 
 const InitializedRouter = () => (
     <QueryClientProvider client={queryClient}>
-        <AppPortal.Provider>
-            <JotaiAtomProvider>
-                <UIProvider>
-                    <TmapProvider
-                        width="100%"
-                        height="calc(100vh - 64px)"
-                        lat={37.5652045}
-                        lng={126.98702028}
-                    >
-                        <ReactQueryDevtools />
-                        <Outlet />
-                    </TmapProvider>
-                </UIProvider>
-            </JotaiAtomProvider>
-        </AppPortal.Provider>
+        <JotaiAtomProvider>
+            <UIProvider>
+                <TmapProvider
+                    width="100%"
+                    height="calc(100vh - 64px)"
+                    lat={37.5652045}
+                    lng={126.98702028}
+                >
+                    <ReactQueryDevtools />
+                    <Outlet />
+                </TmapProvider>
+            </UIProvider>
+        </JotaiAtomProvider>
     </QueryClientProvider>
 );
 

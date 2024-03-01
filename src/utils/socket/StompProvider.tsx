@@ -48,7 +48,7 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                             data: { pinId, pinName },
                         }: ApiResponseType<CourseSocketSubType['modifyName']> =
                             JSON.parse(message.body);
-                        console.log(pinId, pinName); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
+                        tmapModule?.renameMarker({ pinId, pinName });
                     },
                 );
 
@@ -60,8 +60,11 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                         }: ApiResponseType<
                             CourseSocketSubType['modifySequence']
                         > = JSON.parse(message.body);
-                        
-                        tmapModule?.setMarkerSequence({ pinId, sequence: sequence })
+
+                        tmapModule?.setMarkerSequence({
+                            pinId,
+                            sequence: sequence,
+                        });
                     },
                 );
 

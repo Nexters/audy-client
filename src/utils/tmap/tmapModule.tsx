@@ -329,9 +329,6 @@ export class TMapModule {
     // 현재 마커 배열을 기준으로 맵 위에 마커를 재구성하는 private 메서드 modifyMarker
     #drawMarkers() {
         this.#sortMarkers();
-
-        console.log(this.#markers.map((marker) => ({ sequence: marker.sequence, name: marker.pinName })));
-
         this.#markers.map(
             ({ latitude, longitude, isHidden, pinId, ...rest }, index) => {
                 const oldMarkerInstance = this.#markerInstanceMap.get(pinId);
