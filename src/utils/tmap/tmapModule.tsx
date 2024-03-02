@@ -96,17 +96,17 @@ export class TMapModule {
 
         this.#mapInstance.on('Click', handleMapClick);
 
-        // let throttleTimeout: NodeJS.Timeout | null = null;
-        // const THROTTLE_TIME = 800;
+        let throttleTimeout: NodeJS.Timeout | null = null;
+        const THROTTLE_TIME = 800;
 
-        // this.#mapInstance.on('Zoom', () => {
-        //     if (!throttleTimeout) {
-        //         throttleTimeout = setTimeout(() => {
-        //             this.clusterMarkers();
-        //             throttleTimeout = null;
-        //         }, THROTTLE_TIME);
-        //     }
-        // });
+        this.#mapInstance.on('Zoom', () => {
+            if (!throttleTimeout) {
+                throttleTimeout = setTimeout(() => {
+                    this.clusterMarkers();
+                    throttleTimeout = null;
+                }, THROTTLE_TIME);
+            }
+        });
     }
 
     // 특정 위경도로 줌인
@@ -167,7 +167,7 @@ export class TMapModule {
         this.#markers.push(newMarker);
         this.#drawMarkers();
         this.drawPathBetweenMarkers();
-        // this.clusterMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:create', {
@@ -196,7 +196,7 @@ export class TMapModule {
 
         this.#drawMarkers();
         this.drawPathBetweenMarkers();
-        // this.clusterMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:remove', { detail: removedMarkerId }),
@@ -220,7 +220,7 @@ export class TMapModule {
 
         this.#drawMarkers();
         this.drawPathBetweenMarkers();
-        // this.clusterMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:remove', { detail: removedMarkerId }),
@@ -263,7 +263,7 @@ export class TMapModule {
 
         modifiedMarker.sequence = sequence;
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
     }
 
     renameMarker({ pinId, pinName }: Pick<MarkerType, 'pinId' | 'pinName'>) {
@@ -286,6 +286,7 @@ export class TMapModule {
         renamedMarker.sequence = sequence;
         this.removeInfoWindow();
         this.#drawMarkers();
+        this.drawPathBetweenMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:reorder', { detail: { pinId, sequence } }),
@@ -316,7 +317,7 @@ export class TMapModule {
         });
 
         this.#markerInstanceMap.set(pinId, updatedMarkerInstance);
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
 
         return !isHidden;
     }
@@ -439,21 +440,16 @@ export class TMapModule {
 
             // NOTE : 총 경로 시간은 시작점 Point 에서만 반환된다.
             totalDuration += features[0].properties.totalTime;
-            const invalidPointTypes = ['B1', 'B2', 'B3'];
 
             features.slice(0, -1).forEach((feature) => {
-                if (feature.geometry.type === 'LineString') {
+                if (
+                    feature.geometry.type === 'LineString' &&
+                    feature.properties?.description !==
+                        '경유지와 연결된 가상의 라인입니다'
+                ) {
                     feature.geometry.coordinates.forEach(([lng, lat]) =>
                         path.push(new Tmapv3.LatLng(lat, lng)),
                     );
-                }
-
-                if (
-                    feature.geometry.type === 'Point' &&
-                    !invalidPointTypes.includes(feature.properties.pointType)
-                ) {
-                    const [lng, lat] = feature.geometry.coordinates;
-                    path.push(new Tmapv3.LatLng(lat, lng));
                 }
             });
         }
@@ -485,7 +481,7 @@ export class TMapModule {
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
     togglePathVisibility() {
         const updatedVisibility = !this.#isPathVisible;
-        this.#polyline.setMap(updatedVisibility ? this.#mapInstance : null);
+        this.#polyline?.setMap(updatedVisibility ? this.#mapInstance : null);
         this.#isPathVisible = updatedVisibility;
     }
 

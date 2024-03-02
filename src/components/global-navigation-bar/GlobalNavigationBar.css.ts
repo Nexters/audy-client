@@ -22,6 +22,10 @@ export const wrapper = style([
     },
 ]);
 
+export const audyLogo = style({
+    cursor: 'pointer',
+})
+
 export const leftContainer = style({
     display: 'flex',
     alignItems: 'center',

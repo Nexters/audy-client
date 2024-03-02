@@ -87,7 +87,6 @@ const SearchResultTab = ({
             isPinned: true,
         });
 
-
         setIsPinned(true);
     };
 

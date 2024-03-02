@@ -21,7 +21,7 @@ export interface CourseDetailType {
     courseId: number;
     courseName: string;
     editorCnt: number;
-    editorGetResList: EditorType[],
+    editorGetResList: EditorType[];
     pinCnt: number;
     pinResList: PinType[];
 }

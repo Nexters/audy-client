@@ -25,12 +25,14 @@ const PathView = () => {
     const { tmapModule } = useTmap();
     const stompClient = useSocket(Number(courseId));
 
+    const [orderedMarkerId, setOrderedMarkerId] = useState<string | null>(null);
+
     const {
         data: { pinResList = [] },
     } = useGetCourseDetail({ courseId: Number(courseId) });
 
     const [markers, setMarkers] = useState<MarkerType[]>([]);
-        const { isSearchMode } = useContext(SearchContextValue);
+    const { isSearchMode } = useContext(SearchContextValue);
 
     useEventListeners('infoWindow:confirm', (event) => {
         if (!courseId) return;
@@ -97,33 +99,18 @@ const PathView = () => {
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModule) return;
 
-        let sortingType = 0;
         newOrder.some((marker, index) => {
-            const originMarker = markers[index];
-            const currentSortingType = LexoRank.parse(
-                originMarker.sequence,
-            ).compareTo(LexoRank.parse(marker.sequence));
-
-            if (!sortingType) {
-                sortingType = currentSortingType
-                return false;
-            }
-
-            if (sortingType !== currentSortingType) {
-                let modifiedIndex = 1;
-                if (currentSortingType === -1) modifiedIndex = index - 1;
-                if (currentSortingType === 1) modifiedIndex = index;
-
+            if (marker.pinId === orderedMarkerId) {
+                const originIndex = markers.findIndex(
+                    (marker) => marker.pinId === orderedMarkerId,
+                );
                 stompClient.modifyPinSequence({
-                    pinId: newOrder[modifiedIndex].pinId,
-                    order: modifiedIndex,
+                    pinId: orderedMarkerId,
+                    order: index + (originIndex > index ? 0 : 1),
                 });
-                return true;
             }
+            return marker.pinId === orderedMarkerId;
         });
-
-
-
     }, REORDER_DELAY);
 
     const handleReorderMarker = (newOrder: MarkerType[]) => {
@@ -148,6 +135,7 @@ const PathView = () => {
                         key={`${marker.pinId}-${marker.pinName}`}
                         marker={marker}
                         order={index + 1}
+                        setOrderedMarkerId={setOrderedMarkerId}
                     />
                 ))}
             </Reorder.Group>

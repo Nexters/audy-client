@@ -1,4 +1,9 @@
-import { useContext, useState } from 'react';
+import {
+    type Dispatch,
+    type SetStateAction,
+    useContext,
+    useState,
+} from 'react';
 
 import {
     Reorder,
@@ -22,9 +27,10 @@ import ThreeDotButton from './ThreeDotButton';
 interface PropsType {
     marker: MarkerType;
     order: number;
+    setOrderedMarkerId: Dispatch<SetStateAction<string | null>>;
 }
 
-const PathItem = ({ marker, order }: PropsType) => {
+const PathItem = ({ marker, order, setOrderedMarkerId }: PropsType) => {
     const [isHover, setIsHover] = useState(false);
 
     const { selectedId } = useContext(PathViewContextValue);
@@ -53,6 +59,7 @@ const PathItem = ({ marker, order }: PropsType) => {
         event: React.PointerEvent<SVGSVGElement>,
     ) => {
         controls.start(event);
+        setOrderedMarkerId(marker.pinId);
     };
 
     return (
