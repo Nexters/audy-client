@@ -457,9 +457,9 @@ export class TMapModule {
         this.#duration = totalDuration;
         this.#polyline = new Tmapv3.Polyline({
             path,
-            fillColor: '#FF0000',
+            fillColor: '#FF4D86',
             fillOpacity: 1,
-            strokeColor: '#FF0000',
+            strokeColor: '#FF4D86',
             strokeOpacity: 5,
             map: this.#mapInstance,
         });
