@@ -3,4 +3,5 @@ export interface EditorType {
     role: "MEMBER" | "OWNER";
     userId: number;
     userName: string;
+    isOnline?: boolean;
 }

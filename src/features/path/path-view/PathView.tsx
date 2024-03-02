@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 
 import { Reorder } from 'framer-motion';
+import { LexoRank } from 'lexorank';
 import { useParams } from 'react-router-dom';
 
 import { SearchContextValue } from '@/features/search/search-context';
@@ -29,7 +30,7 @@ const PathView = () => {
     } = useGetCourseDetail({ courseId: Number(courseId) });
 
     const [markers, setMarkers] = useState<MarkerType[]>([]);
-    const { isSearchMode } = useContext(SearchContextValue);
+        const { isSearchMode } = useContext(SearchContextValue);
 
     useEventListeners('infoWindow:confirm', (event) => {
         if (!courseId) return;
@@ -40,9 +41,7 @@ const PathView = () => {
     });
 
     useEventListeners('infoWindow:revert', (event) => {
-        console.log(event.detail);
         const removedMarker = tmapModule?.getMarkerBySequence(event.detail);
-        console.log(removedMarker);
         if (!removedMarker) return;
         stompClient.removePin({ pinId: removedMarker.pinId });
     });
@@ -59,26 +58,72 @@ const PathView = () => {
         setMarkers(updatedMarkers);
     });
 
+    useEventListeners('marker:reorder', (event) => {
+        const { pinId: updatedPinId, sequence } = event.detail;
+        const updatedMarkers = markers.map(({ pinId, ...rest }) => {
+            return pinId === updatedPinId
+                ? { ...rest, pinId, sequence }
+                : { ...rest, pinId };
+        });
+        setMarkers(updatedMarkers);
+    });
+
+    useEventListeners('marker:rename', (event) => {
+        const { pinId: updatedPinId, pinName } = event.detail;
+        const updatedMarkers = markers.map(({ pinId, ...rest }) => {
+            return pinId === updatedPinId
+                ? { ...rest, pinId, pinName }
+                : { ...rest, pinId };
+        });
+        setMarkers(updatedMarkers);
+    });
+
     useEffect(() => {
         if (!tmapModule) return;
 
         const initMarkerList = pinResList
             .map((pin) => tmapModule.createMarker(pin))
             .filter((marker): marker is MarkerType => !!marker);
-            
+
+        initMarkerList.sort((a, b) => {
+            const aSequence = LexoRank.parse(a.sequence);
+            const bSequence = LexoRank.parse(b.sequence);
+            return aSequence.compareTo(bSequence);
+        });
+
         setMarkers(initMarkerList);
     }, [pinResList, tmapModule]);
 
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModule) return;
 
-        const modifiedMarkers = newOrder.map((marker, index) => ({
-            ...marker,
-            sequence: markers[index].sequence,
-        }));
+        let sortingType = 0;
+        newOrder.some((marker, index) => {
+            const originMarker = markers[index];
+            const currentSortingType = LexoRank.parse(
+                originMarker.sequence,
+            ).compareTo(LexoRank.parse(marker.sequence));
 
-        tmapModule.reorderMarkers(modifiedMarkers);
-        setMarkers(modifiedMarkers);
+            if (!sortingType) {
+                sortingType = currentSortingType
+                return false;
+            }
+
+            if (sortingType !== currentSortingType) {
+                let modifiedIndex = 1;
+                if (currentSortingType === -1) modifiedIndex = index - 1;
+                if (currentSortingType === 1) modifiedIndex = index;
+
+                stompClient.modifyPinSequence({
+                    pinId: newOrder[modifiedIndex].pinId,
+                    order: modifiedIndex,
+                });
+                return true;
+            }
+        });
+
+
+
     }, REORDER_DELAY);
 
     const handleReorderMarker = (newOrder: MarkerType[]) => {
@@ -100,7 +145,7 @@ const PathView = () => {
             >
                 {markers.map((marker, index) => (
                     <PathItem
-                        key={marker.pinId}
+                        key={`${marker.pinId}-${marker.pinName}`}
                         marker={marker}
                         order={index + 1}
                     />

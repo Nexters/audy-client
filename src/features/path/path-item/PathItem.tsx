@@ -82,7 +82,7 @@ const PathItem = ({ marker, order }: PropsType) => {
                 name={marker.pinName}
                 address={marker.address}
             />
-            <ThreeDotButton pinId={marker.pinId} />
+            <ThreeDotButton pinId={marker.pinId} pinName={marker.pinName} />
         </Reorder.Item>
     );
 };

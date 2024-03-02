@@ -165,10 +165,8 @@ export class TMapModule {
         };
 
         this.#markers.push(newMarker);
-
-        // this.#markers.push(newMarker);
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -197,7 +195,7 @@ export class TMapModule {
         removedMarkerInstance.setMap(null);
 
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -221,7 +219,7 @@ export class TMapModule {
         removedMarkerInstance.setMap(null);
 
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -241,19 +239,29 @@ export class TMapModule {
 
     // 마커 Sequence 를 기반으로 특정 마커를 반환하는 메서드 getMarkerBySequence
     getMarkerBySequence(sequence: string) {
-        console.log(this.#markers);
         return this.#markers.find((marker) => marker.sequence === sequence);
     }
 
     // 마커 위경도 를 기반으로 특정 마커를 반환하는 메서드 getMarkerByPKey
-    getMarkerByLatLng({ latitude, longitude }: Pick<MarkerType, 'latitude' | 'longitude'>) {
-        return this.#markers.find((marker) => marker.latitude === latitude && marker.longitude === longitude);
+    getMarkerByLatLng({
+        latitude,
+        longitude,
+    }: Pick<MarkerType, 'latitude' | 'longitude'>) {
+        return this.#markers.find(
+            (marker) =>
+                marker.latitude === latitude && marker.longitude === longitude,
+        );
     }
 
-    // 마커의 순서가 변경되었을 경우 이를 지도에 반영하는 메서드 reorderMarkers
-    reorderMarkers(reorderedMarkers: MarkerType[]) {
-        this.#markers = reorderedMarkers;
-        this.#sortMarkers();
+    // 특정 마커의 순서를 변경하는 메서드 setMarkerSequence
+    setMarkerSequence({
+        pinId,
+        sequence,
+    }: Pick<MarkerType, 'pinId' | 'sequence'>) {
+        const modifiedMarker = this.getMarkerById(pinId);
+        if (!modifiedMarker) return;
+
+        modifiedMarker.sequence = sequence;
         this.#drawMarkers();
         // this.drawPathBetweenMarkers();
     }
@@ -263,7 +271,25 @@ export class TMapModule {
         if (!renamedMarker) return;
 
         renamedMarker.pinName = pinName;
+        this.removeInfoWindow();
         this.#drawMarkers();
+
+        window.dispatchEvent(
+            new CustomEvent('marker:rename', { detail: { pinId, pinName } }),
+        );
+    }
+
+    reorderMarker({ pinId, sequence }: Pick<MarkerType, 'pinId' | 'sequence'>) {
+        const renamedMarker = this.getMarkerById(pinId);
+        if (!renamedMarker) return;
+
+        renamedMarker.sequence = sequence;
+        this.removeInfoWindow();
+        this.#drawMarkers();
+
+        window.dispatchEvent(
+            new CustomEvent('marker:reorder', { detail: { pinId, sequence } }),
+        );
     }
 
     // 마커의 숨김 여부를 전환하는 메서드 toggleMarkerHiddenState
@@ -290,7 +316,6 @@ export class TMapModule {
         });
 
         this.#markerInstanceMap.set(pinId, updatedMarkerInstance);
-
         // this.drawPathBetweenMarkers();
 
         return !isHidden;
@@ -307,18 +332,7 @@ export class TMapModule {
         this.#sortMarkers();
 
         this.#markers.map(
-            (
-                {
-                    latitude,
-                    longitude,
-                    isHidden,
-                    pinName,
-                    address,
-                    pinId,
-                    sequence,
-                },
-                index,
-            ) => {
+            ({ latitude, longitude, isHidden, pinId, ...rest }, index) => {
                 const oldMarkerInstance = this.#markerInstanceMap.get(pinId);
                 if (oldMarkerInstance) oldMarkerInstance.setMap(null);
 
@@ -334,11 +348,9 @@ export class TMapModule {
                     this.createInfoWindow({
                         latitude,
                         longitude,
-                        pinName,
                         pinId,
-                        address,
-                        sequence,
                         isPinned: true,
+                        ...rest,
                     }),
                 );
 
@@ -349,17 +361,9 @@ export class TMapModule {
 
     // lexoRank 알고리즘을 기반으로 Marker 를 정렬하는 private 메서드 sortMarkers
     #sortMarkers() {
-        this.#markers.sort((a, b) => {
-            const aSequence = LexoRank.parse(a.sequence);
-            const bSequence = LexoRank.parse(b.sequence);
-            return aSequence.compareTo(bSequence);
-        });
-
-        this.#markers.sort((a, b) => {
-            const aSequence = LexoRank.parse(a.sequence);
-            const bSequence = LexoRank.parse(b.sequence);
-            return aSequence.compareTo(bSequence);
-        });
+        this.#markers.sort((a, b) =>
+            LexoRank.parse(a.sequence).compareTo(LexoRank.parse(b.sequence)),
+        );
     }
 
     // 현재 Sequence 를 기반으로 전체 마커 중 몇 번째 순서인지를 파악하는 private 메서드 getMarkerIndexBySequence
@@ -435,15 +439,19 @@ export class TMapModule {
 
             // NOTE : 총 경로 시간은 시작점 Point 에서만 반환된다.
             totalDuration += features[0].properties.totalTime;
+            const invalidPointTypes = ['B1', 'B2', 'B3'];
 
-            features.forEach((feature) => {
+            features.slice(0, -1).forEach((feature) => {
                 if (feature.geometry.type === 'LineString') {
                     feature.geometry.coordinates.forEach(([lng, lat]) =>
                         path.push(new Tmapv3.LatLng(lat, lng)),
                     );
                 }
 
-                if (feature.geometry.type === 'Point') {
+                if (
+                    feature.geometry.type === 'Point' &&
+                    !invalidPointTypes.includes(feature.properties.pointType)
+                ) {
                     const [lng, lat] = feature.geometry.coordinates;
                     path.push(new Tmapv3.LatLng(lat, lng));
                 }
@@ -484,7 +492,7 @@ export class TMapModule {
     // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
     async togglePathMode(pathType: PathModeType) {
         this.#pathMode = pathType;
-        // await this.drawPathBetweenMarkers();
+        await this.drawPathBetweenMarkers();
     }
 
     // 지도 내 경로를 이동하는데 걸리는 시간을 반환하는 메서드 getPathDuration
@@ -595,7 +603,7 @@ export class TMapModule {
 
     // 인포창 전체 삭제
     removeInfoWindow() {
-        this.#infoWindow.setMap(null);
+        this.#infoWindow?.setMap(null);
         this.#infoWindow = null;
     }
 

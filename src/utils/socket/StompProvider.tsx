@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import type { ApiResponseType } from '@/apis/api';
 import type { CourseSocketSubType } from '@/apis/course/type';
+import { UserSocketSubType } from '@/apis/user/type';
 import { TmapContext } from '@/utils/tmap/TmapModuleProvider';
 
 interface StompProviderType {
@@ -48,7 +49,7 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                             data: { pinId, pinName },
                         }: ApiResponseType<CourseSocketSubType['modifyName']> =
                             JSON.parse(message.body);
-                        console.log(pinId, pinName); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
+                        tmapModule?.renameMarker({ pinId, pinName });
                     },
                 );
 
@@ -60,7 +61,11 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                         }: ApiResponseType<
                             CourseSocketSubType['modifySequence']
                         > = JSON.parse(message.body);
-                        console.log(pinId, sequence); // TODO : TMapModule 에서 Marker 에 Sequence 개념 도입 이후 수정 예정
+
+                        tmapModule?.setMarkerSequence({
+                            pinId,
+                            sequence: sequence,
+                        });
                     },
                 );
 
@@ -72,9 +77,29 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
 
                     tmapModule?.removeMarker(pinId);
                 });
+
+                stomp.subscribe(`/sub/${courseId}/user`, (message) => {
+                    const {
+                        data: { total, users },
+                    }: ApiResponseType<UserSocketSubType['getUserList']> =
+                        JSON.parse(message.body);
+
+                    window.dispatchEvent(
+                        new CustomEvent('user:list', {
+                            detail: { total, users },
+                        }),
+                    );
+                });
+
+                // NOTE : 유저가 접속했을 때 Trigger 하도록 유도
+                stompClient.current?.publish({
+                    destination: `/pub/${courseId}/user`,
+                });
             },
             onDisconnect: () => {
-                console.log('Disconnected from the broker');
+                stompClient.current?.publish({
+                    destination: `/pub/${courseId}/user`,
+                });
                 stomp.deactivate();
             },
             onStompError: (frame) => {
