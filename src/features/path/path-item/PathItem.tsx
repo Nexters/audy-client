@@ -53,6 +53,7 @@ const PathItem = ({ marker, order }: PropsType) => {
         event: React.PointerEvent<SVGSVGElement>,
     ) => {
         controls.start(event);
+        console.log(order);
     };
 
     return (

@@ -262,6 +262,8 @@ export class TMapModule {
         const modifiedMarker = this.getMarkerById(pinId);
         if (!modifiedMarker) return;
 
+        console.log('modified', modifiedMarker);
+
         modifiedMarker.sequence = sequence;
         this.#drawMarkers();
         // this.drawPathBetweenMarkers();
@@ -329,6 +331,7 @@ export class TMapModule {
     // 현재 마커 배열을 기준으로 맵 위에 마커를 재구성하는 private 메서드 modifyMarker
     #drawMarkers() {
         this.#sortMarkers();
+
         this.#markers.map(
             ({ latitude, longitude, isHidden, pinId, ...rest }, index) => {
                 const oldMarkerInstance = this.#markerInstanceMap.get(pinId);
@@ -359,11 +362,9 @@ export class TMapModule {
 
     // lexoRank 알고리즘을 기반으로 Marker 를 정렬하는 private 메서드 sortMarkers
     #sortMarkers() {
-        this.#markers.sort((a, b) => {
-            const aSequence = LexoRank.parse(a.sequence);
-            const bSequence = LexoRank.parse(b.sequence);
-            return aSequence.compareTo(bSequence);
-        });
+        this.#markers.sort((a, b) =>
+            LexoRank.parse(a.sequence).compareTo(LexoRank.parse(b.sequence)),
+        );
     }
 
     // 현재 Sequence 를 기반으로 전체 마커 중 몇 번째 순서인지를 파악하는 private 메서드 getMarkerIndexBySequence

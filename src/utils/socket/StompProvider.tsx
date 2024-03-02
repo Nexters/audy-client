@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import type { ApiResponseType } from '@/apis/api';
 import type { CourseSocketSubType } from '@/apis/course/type';
+import { UserSocketSubType } from '@/apis/user/type';
 import { TmapContext } from '@/utils/tmap/TmapModuleProvider';
 
 interface StompProviderType {
@@ -76,9 +77,31 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
 
                     tmapModule?.removeMarker(pinId);
                 });
+
+                stomp.subscribe(`/sub/${courseId}/user`, (message) => {
+                    const {
+                        data: { total, users },
+                    }: ApiResponseType<UserSocketSubType['getUserList']> =
+                        JSON.parse(message.body);
+
+                    console.log('user list', users);
+
+                    window.dispatchEvent(
+                        new CustomEvent('user:list', {
+                            detail: { total, users },
+                        }),
+                    );
+                });
+
+                // NOTE : 유저가 접속했을 때 Trigger 하도록 유도
+                stompClient.current?.publish({
+                    destination: `/pub/${courseId}/user`,
+                });
             },
             onDisconnect: () => {
-                console.log('Disconnected from the broker');
+                stompClient.current?.publish({
+                    destination: `/pub/${courseId}/user`,
+                });
                 stomp.deactivate();
             },
             onStompError: (frame) => {

@@ -1,4 +1,5 @@
 import type { CourseSocketPubType } from '@/apis/course/type';
+import { UserSocketSubType } from '@/apis/user/type';
 import type { MarkerType } from '@/types/map';
 
 // T-MAP API NameSpace
@@ -19,6 +20,7 @@ declare global {
         >;
         'infoWindow:revert': CustomEvent<string>;
         'duration:update': CustomEvent<number>;
+        'user:list': CustomEvent<UserSocketSubType['getUserList']>;
     }
 
     interface WindowEventMap extends CustomEventMap {}

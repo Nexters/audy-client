@@ -30,7 +30,7 @@ const PathView = () => {
     } = useGetCourseDetail({ courseId: Number(courseId) });
 
     const [markers, setMarkers] = useState<MarkerType[]>([]);
-    const { isSearchMode } = useContext(SearchContextValue);
+        const { isSearchMode } = useContext(SearchContextValue);
 
     useEventListeners('infoWindow:confirm', (event) => {
         if (!courseId) return;
@@ -67,6 +67,9 @@ const PathView = () => {
                 ? { ...rest, pinId, sequence }
                 : { ...rest, pinId };
         });
+
+        console.log(updatedMarkers);
+
         setMarkers(updatedMarkers);
     });
 
@@ -79,7 +82,7 @@ const PathView = () => {
         });
         setMarkers(updatedMarkers);
     });
-    
+
     useEffect(() => {
         if (!tmapModule) return;
 
@@ -99,43 +102,39 @@ const PathView = () => {
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModule) return;
 
+        console.log(markers);
+
+        let sortingType = 0;
         newOrder.some((marker, index) => {
-            const beforeSequence =
-                index > 0
-                    ? LexoRank.parse(newOrder[index - 1].sequence)
-                    : LexoRank.min();
+            const originMarker = markers[index];
+            const currentSortingType = LexoRank.parse(
+                originMarker.sequence,
+            ).compareTo(LexoRank.parse(marker.sequence));
 
-            const afterSequence =
-                index < newOrder.length - 1
-                    ? LexoRank.parse(newOrder[index + 1].sequence)
-                    : LexoRank.min();
+            console.log(marker.sequence, originMarker.sequence, currentSortingType);
 
-            const currentSequence = LexoRank.parse(marker.sequence);
+            if (!sortingType) {
+                sortingType = currentSortingType
+                return false;
+            }
 
-            const isBigEachSide =
-                currentSequence.compareTo(beforeSequence) === 1 &&
-                currentSequence.compareTo(afterSequence) === 1;
+            if (sortingType !== currentSortingType) {
+                let modifiedIndex = 1;
+                if (currentSortingType === 1) modifiedIndex = index - 1;
+                if (currentSortingType === -1) modifiedIndex = index;
 
-            const isSmallEachSide =
-                currentSequence.compareTo(beforeSequence) === -1 &&
-                currentSequence.compareTo(afterSequence) === -1;
-
-            if (isBigEachSide || isSmallEachSide) {
-
-                const order =
-                index === 0
-                    ? index
-                    : index + 1;
-
-                console.log(marker.pinName, order);
+                console.log(modifiedIndex);
 
                 stompClient.modifyPinSequence({
                     pinId: marker.pinId,
-                    order,
+                    order: modifiedIndex,
                 });
                 return true;
             }
         });
+
+
+
     }, REORDER_DELAY);
 
     const handleReorderMarker = (newOrder: MarkerType[]) => {
