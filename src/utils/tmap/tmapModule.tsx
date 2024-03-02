@@ -166,6 +166,7 @@ export class TMapModule {
 
         this.#markers.push(newMarker);
         this.#drawMarkers();
+        this.drawPathBetweenMarkers();
         this.clusterMarkers();
 
         window.dispatchEvent(
@@ -439,21 +440,16 @@ export class TMapModule {
 
             // NOTE : 총 경로 시간은 시작점 Point 에서만 반환된다.
             totalDuration += features[0].properties.totalTime;
-            const invalidPointTypes = ['B1', 'B2', 'B3'];
 
             features.slice(0, -1).forEach((feature) => {
-                if (feature.geometry.type === 'LineString') {
+                if (
+                    feature.geometry.type === 'LineString' &&
+                    feature.properties?.description !==
+                        '경유지와 연결된 가상의 라인입니다'
+                ) {
                     feature.geometry.coordinates.forEach(([lng, lat]) =>
                         path.push(new Tmapv3.LatLng(lat, lng)),
                     );
-                }
-
-                if (
-                    feature.geometry.type === 'Point' &&
-                    !invalidPointTypes.includes(feature.properties.pointType)
-                ) {
-                    const [lng, lat] = feature.geometry.coordinates;
-                    path.push(new Tmapv3.LatLng(lat, lng));
                 }
             });
         }
@@ -485,7 +481,7 @@ export class TMapModule {
     // Map 상에 존재하는 경로의 드러남 여부를 전환하는 메서드 togglePathVisibility
     togglePathVisibility() {
         const updatedVisibility = !this.#isPathVisible;
-        this.#polyline.setMap(updatedVisibility ? this.#mapInstance : null);
+        this.#polyline?.setMap(updatedVisibility ? this.#mapInstance : null);
         this.#isPathVisible = updatedVisibility;
     }
 

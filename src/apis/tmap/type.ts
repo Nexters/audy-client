@@ -48,6 +48,7 @@ export interface TmapResponseType {
                   };
             properties: {
                 index: number;
+                description: string;
                 totalDistance: number;
                 totalTime: number;
                 pointType: 'S' | 'E' | 'B1' | 'B2' | 'B3' | 'N';
@@ -68,6 +69,7 @@ export interface TmapResponseType {
                   };
             properties: {
                 index: number;
+                description: string;
                 totalDistance: number;
                 totalTime: number;
                 pointType: 'S' | 'E' | 'B1' | 'B2' | 'B3' | 'N';
