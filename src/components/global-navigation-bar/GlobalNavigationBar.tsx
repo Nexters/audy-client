@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import AudyLogoIcon from '@/assets/icons/audyLogo.svg?react';
 import SettingIcon from '@/assets/icons/setting.svg?react';
@@ -16,6 +16,7 @@ import * as S from './GlobalNavigationBar.css';
 const GlobalNavigationBar = () => {
     const { pathname } = useLocation();
     const { openModal } = useModal();
+    const navigate = useNavigate();
 
     const [isSaving, setIsSaving] = useState(false);
 
@@ -50,10 +51,17 @@ const GlobalNavigationBar = () => {
         };
     }, []);
 
+    const handleAudyLogoClick = () => {
+        navigate('/');
+    };
+
     return (
         <div className={S.wrapper}>
             <div className={S.leftContainer}>
-                <AudyLogoIcon />
+                <AudyLogoIcon
+                    className={S.audyLogo}
+                    onClick={handleAudyLogoClick}
+                />
                 {isSaving && (
                     <p className={S.savingStatus}>수정된 코스 저장중...</p>
                 )}
