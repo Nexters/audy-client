@@ -25,8 +25,8 @@ const FloatMenu = () => {
 
     const handleToggleShowPath = () => {
         if (!tmapModule) return;
-        toggleShowPath();
         tmapModule.togglePathVisibility();
+        toggleShowPath();
     };
 
     useEventListeners('duration:update', (event) =>
