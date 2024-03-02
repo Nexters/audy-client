@@ -166,7 +166,7 @@ export class TMapModule {
 
         this.#markers.push(newMarker);
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -195,7 +195,7 @@ export class TMapModule {
         removedMarkerInstance.setMap(null);
 
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -219,7 +219,7 @@ export class TMapModule {
         removedMarkerInstance.setMap(null);
 
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -274,6 +274,7 @@ export class TMapModule {
         if (!renamedMarker) return;
 
         renamedMarker.pinName = pinName;
+        this.removeInfoWindow();
         this.#drawMarkers();
 
         window.dispatchEvent(
@@ -286,6 +287,7 @@ export class TMapModule {
         if (!renamedMarker) return;
 
         renamedMarker.sequence = sequence;
+        this.removeInfoWindow();
         this.#drawMarkers();
 
         window.dispatchEvent(
@@ -440,15 +442,19 @@ export class TMapModule {
 
             // NOTE : 총 경로 시간은 시작점 Point 에서만 반환된다.
             totalDuration += features[0].properties.totalTime;
+            const invalidPointTypes = ['B1', 'B2', 'B3'];
 
-            features.forEach((feature) => {
+            features.slice(0, -1).forEach((feature) => {
                 if (feature.geometry.type === 'LineString') {
                     feature.geometry.coordinates.forEach(([lng, lat]) =>
                         path.push(new Tmapv3.LatLng(lat, lng)),
                     );
                 }
 
-                if (feature.geometry.type === 'Point') {
+                if (
+                    feature.geometry.type === 'Point' &&
+                    !invalidPointTypes.includes(feature.properties.pointType)
+                ) {
                     const [lng, lat] = feature.geometry.coordinates;
                     path.push(new Tmapv3.LatLng(lat, lng));
                 }
@@ -489,7 +495,7 @@ export class TMapModule {
     // 지도 내 경로 모드를 전환하는 메서드 togglePathMode
     async togglePathMode(pathType: PathModeType) {
         this.#pathMode = pathType;
-        // await this.drawPathBetweenMarkers();
+        await this.drawPathBetweenMarkers();
     }
 
     // 지도 내 경로를 이동하는데 걸리는 시간을 반환하는 메서드 getPathDuration
@@ -600,7 +606,7 @@ export class TMapModule {
 
     // 인포창 전체 삭제
     removeInfoWindow() {
-        this.#infoWindow.setMap(null);
+        this.#infoWindow?.setMap(null);
         this.#infoWindow = null;
     }
 
