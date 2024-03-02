@@ -1,5 +1,3 @@
-import { useCallback } from 'react';
-
 import { useParams } from 'react-router-dom';
 
 import EditIcon from '@/assets/icons/edit.svg?react';
