@@ -166,7 +166,7 @@ export class TMapModule {
 
         this.#markers.push(newMarker);
         this.#drawMarkers();
-        this.drawPathBetweenMarkers();
+        
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -195,7 +195,7 @@ export class TMapModule {
         removedMarkerInstance.setMap(null);
 
         this.#drawMarkers();
-        this.drawPathBetweenMarkers();
+        //  this.drawPathBetweenMarkers();
         // this.clusterMarkers();
 
         window.dispatchEvent(
@@ -263,7 +263,7 @@ export class TMapModule {
 
         modifiedMarker.sequence = sequence;
         this.#drawMarkers();
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
     }
 
     renameMarker({ pinId, pinName }: Pick<MarkerType, 'pinId' | 'pinName'>) {
@@ -286,6 +286,7 @@ export class TMapModule {
         renamedMarker.sequence = sequence;
         this.removeInfoWindow();
         this.#drawMarkers();
+        this.drawPathBetweenMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:reorder', { detail: { pinId, sequence } }),
@@ -316,7 +317,7 @@ export class TMapModule {
         });
 
         this.#markerInstanceMap.set(pinId, updatedMarkerInstance);
-        // this.drawPathBetweenMarkers();
+        this.drawPathBetweenMarkers();
 
         return !isHidden;
     }
