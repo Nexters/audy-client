@@ -96,17 +96,17 @@ export class TMapModule {
 
         this.#mapInstance.on('Click', handleMapClick);
 
-        // let throttleTimeout: NodeJS.Timeout | null = null;
-        // const THROTTLE_TIME = 800;
+        let throttleTimeout: NodeJS.Timeout | null = null;
+        const THROTTLE_TIME = 800;
 
-        // this.#mapInstance.on('Zoom', () => {
-        //     if (!throttleTimeout) {
-        //         throttleTimeout = setTimeout(() => {
-        //             this.clusterMarkers();
-        //             throttleTimeout = null;
-        //         }, THROTTLE_TIME);
-        //     }
-        // });
+        this.#mapInstance.on('Zoom', () => {
+            if (!throttleTimeout) {
+                throttleTimeout = setTimeout(() => {
+                    this.clusterMarkers();
+                    throttleTimeout = null;
+                }, THROTTLE_TIME);
+            }
+        });
     }
 
     // 특정 위경도로 줌인
@@ -166,8 +166,7 @@ export class TMapModule {
 
         this.#markers.push(newMarker);
         this.#drawMarkers();
-        
-        // this.clusterMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:create', {
@@ -195,8 +194,8 @@ export class TMapModule {
         removedMarkerInstance.setMap(null);
 
         this.#drawMarkers();
-        //  this.drawPathBetweenMarkers();
-        // this.clusterMarkers();
+        this.drawPathBetweenMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:remove', { detail: removedMarkerId }),
@@ -220,7 +219,7 @@ export class TMapModule {
 
         this.#drawMarkers();
         this.drawPathBetweenMarkers();
-        // this.clusterMarkers();
+        this.clusterMarkers();
 
         window.dispatchEvent(
             new CustomEvent('marker:remove', { detail: removedMarkerId }),
