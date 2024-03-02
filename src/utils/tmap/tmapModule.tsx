@@ -239,7 +239,6 @@ export class TMapModule {
 
     // 마커 Sequence 를 기반으로 특정 마커를 반환하는 메서드 getMarkerBySequence
     getMarkerBySequence(sequence: string) {
-        console.log(this.#markers);
         return this.#markers.find((marker) => marker.sequence === sequence);
     }
 
@@ -261,8 +260,6 @@ export class TMapModule {
     }: Pick<MarkerType, 'pinId' | 'sequence'>) {
         const modifiedMarker = this.getMarkerById(pinId);
         if (!modifiedMarker) return;
-
-        console.log('modified', modifiedMarker);
 
         modifiedMarker.sequence = sequence;
         this.#drawMarkers();

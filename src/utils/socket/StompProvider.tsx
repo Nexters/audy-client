@@ -84,8 +84,6 @@ export const StompProvider = ({ children }: PropsWithChildren) => {
                     }: ApiResponseType<UserSocketSubType['getUserList']> =
                         JSON.parse(message.body);
 
-                    console.log('user list', users);
-
                     window.dispatchEvent(
                         new CustomEvent('user:list', {
                             detail: { total, users },

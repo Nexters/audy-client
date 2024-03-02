@@ -41,9 +41,7 @@ const PathView = () => {
     });
 
     useEventListeners('infoWindow:revert', (event) => {
-        console.log(event.detail);
         const removedMarker = tmapModule?.getMarkerBySequence(event.detail);
-        console.log(removedMarker);
         if (!removedMarker) return;
         stompClient.removePin({ pinId: removedMarker.pinId });
     });
@@ -67,9 +65,6 @@ const PathView = () => {
                 ? { ...rest, pinId, sequence }
                 : { ...rest, pinId };
         });
-
-        console.log(updatedMarkers);
-
         setMarkers(updatedMarkers);
     });
 
@@ -102,16 +97,12 @@ const PathView = () => {
     const debouncedModifyMarker = debounce((newOrder: MarkerType[]) => {
         if (!tmapModule) return;
 
-        console.log(markers);
-
         let sortingType = 0;
         newOrder.some((marker, index) => {
             const originMarker = markers[index];
             const currentSortingType = LexoRank.parse(
                 originMarker.sequence,
             ).compareTo(LexoRank.parse(marker.sequence));
-
-            console.log(marker.sequence, originMarker.sequence, currentSortingType);
 
             if (!sortingType) {
                 sortingType = currentSortingType
@@ -120,13 +111,11 @@ const PathView = () => {
 
             if (sortingType !== currentSortingType) {
                 let modifiedIndex = 1;
-                if (currentSortingType === 1) modifiedIndex = index - 1;
-                if (currentSortingType === -1) modifiedIndex = index;
-
-                console.log(modifiedIndex);
+                if (currentSortingType === -1) modifiedIndex = index - 1;
+                if (currentSortingType === 1) modifiedIndex = index;
 
                 stompClient.modifyPinSequence({
-                    pinId: marker.pinId,
+                    pinId: newOrder[modifiedIndex].pinId,
                     order: modifiedIndex,
                 });
                 return true;
