@@ -13,7 +13,7 @@ import { invitePageLoader } from '@/pages/invite/InvitePage.loader';
 import LoginPage from '@/pages/login';
 import MainPage from '@/pages/main';
 import { TmapProvider } from '@/utils/tmap/TmapModuleProvider';
-import { FeedbacksProvider } from '@/utils/ui/FeedBacksProvider';
+import { FeedbacksProvider } from '@/utils/ui/FeedbacksProvider';
 import { ModalProvider } from '@/utils/ui/ModalProvider';
 
 const queryClient = new QueryClient({

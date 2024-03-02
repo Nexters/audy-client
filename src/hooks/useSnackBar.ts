@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { FeedbacksContext } from '@/utils/ui/FeedBacksProvider';
+import { FeedbacksContext } from '@/utils/ui/FeedbacksProvider';
 
 /**
  * SnackBar를 사용할 수 있는 Hook useSnackBar

@@ -8,8 +8,8 @@ export class ClusterModule {
 
     addMarker(marker: MarkerType) {
         this.markers.push(marker);
-        this.lat += parseFloat(marker.lat);
-        this.lng += parseFloat(marker.lng);
+        this.lat += parseFloat(marker.latitude);
+        this.lng += parseFloat(marker.longitude);
     }
 
     getCenter() {

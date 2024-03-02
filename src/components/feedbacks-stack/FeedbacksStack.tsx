@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { FeedbacksContext } from '@/utils/ui/FeedBacksProvider';
+import { FeedbacksContext } from '@/utils/ui/FeedbacksProvider';
 
 import AppPortal from '../app-portal';
 import SnackBar from '../snack-bar';
