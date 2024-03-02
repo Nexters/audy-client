@@ -50,7 +50,7 @@ export interface TmapResponseType {
                 index: number;
                 totalDistance: number;
                 totalTime: number;
-                pointType: 'S' | 'E' | 'B1' | 'B2' | 'B3' | 'N'
+                pointType: 'S' | 'E' | 'B1' | 'B2' | 'B3' | 'N';
             };
         }[];
     };
@@ -70,7 +70,7 @@ export interface TmapResponseType {
                 index: number;
                 totalDistance: number;
                 totalTime: number;
-                pointType: 'S' | 'E' | 'B1' | 'B2' | 'B3' | 'N'
+                pointType: 'S' | 'E' | 'B1' | 'B2' | 'B3' | 'N';
             };
         }[];
     };

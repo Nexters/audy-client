@@ -1,6 +1,6 @@
 export interface EditorType {
     imageUrl: string;
-    role: "MEMBER" | "OWNER";
+    role: 'MEMBER' | 'OWNER';
     userId: number;
     userName: string;
     isOnline?: boolean;
